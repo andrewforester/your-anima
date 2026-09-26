@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -12,12 +13,12 @@ concurrency:
 permissions:
   contents: read
 
-# Push events run checks, Android and Web on every branch.
-# iOS runs on macOS (10x billed minutes), so only for PRs, main and manual runs.
+# PRs run only lint and JVM tests. Builds (Android, Web, iOS) and the Pages deploy run
+# after merge (push to main) or on a manual run. Pushes to feature branches trigger nothing:
+# sessions run `ktlintCheck :composeApp:jvmTest` locally, the PR re-checks it.
 jobs:
   checks:
     name: Lint & unit tests
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -77,7 +78,7 @@ jobs:
 
   ios:
     name: iOS
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'pull_request'
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
@@ -92,12 +93,12 @@ jobs:
         run: cd iosApp && xcodebuild -scheme iosApp -configuration Debug -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED='NO'
 
   # Publishes the web build to the gh-pages branch so it can be opened on a phone:
-  #   main             -> https://<owner>.github.io/<repo>/
-  #   any other branch -> https://<owner>.github.io/<repo>/preview/<branch-with-dashes>/
+  #   main                                 -> https://<owner>.github.io/<repo>/
+  #   manual run (Run workflow) on a branch -> https://<owner>.github.io/<repo>/preview/<branch-with-dashes>/
   web-preview:
     name: Publish web preview
     needs: web
-    if: github.event_name == 'push'
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write

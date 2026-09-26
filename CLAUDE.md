@@ -50,5 +50,5 @@ The source of truth for UI is the Figma file. When the Figma connector is availa
 ## Git & CI
 
 - Work in feature branches; `main` is updated only via PRs.
-- CI (`.github/workflows/ci.yml`): ktlint + JVM tests, Android APK (artifact), Web bundle, iOS (PRs/main only, macOS).
-- Every push publishes the web build to GitHub Pages: `main` → `/`, other branches → `/preview/<branch-with-dashes>/`. Link is in the CI run summary.
+- CI (`.github/workflows/ci.yml`): PRs run only ktlint + JVM tests. Builds (Android APK artifact, Web bundle, iOS on macOS) run on push to `main` (after merge) and on manual runs. Pushes to feature branches trigger no CI.
+- Push to `main` publishes the web build to GitHub Pages `/`. A branch preview (`/preview/<branch-with-dashes>/`) is published only by a manual run (Actions → CI → Run workflow on that branch). Link is in the CI run summary.
