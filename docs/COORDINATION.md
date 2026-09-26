@@ -80,7 +80,9 @@ Compose Resources собирает все XML из `values/`, поэтому `Re
 
 | Задача | Ветка | Зона | Сессия | Статус |
 |---|---|---|---|---|
-| Figma → Compose UI (тема + первый экран) | `claude/compose-parallel-sessions-98xomw` | `ui/**`, ресурсы | — | в работе, ждёт мержа `main` |
+| Оркестрация: план, запуск и контроль сессий | `claude/yo-anima-orchestration-p1rb39` | `docs/**`, `CLAUDE.md`, `.claude/**` | `session_01RkNbaNRRoJHv8Jk7BewHtb` | в работе |
+
+**Состояние на 2026-09-26:** каркас в `main` (#1, #4, #5 и Dependabot #2, #3), CI зелёный. Тема и экраны ещё не начаты, открытых PR и Issues нет. Следующий шаг — задача «Тема» по Figma (порядок слияния, п. 2).
 
 ## Решения каркаса (справочно)
 
