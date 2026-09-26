@@ -51,4 +51,4 @@ The source of truth for UI is the Figma file. When the Figma connector is availa
 
 - Work in feature branches; `main` is updated only via PRs.
 - CI (`.github/workflows/ci.yml`): PRs run only ktlint + JVM tests. Builds (Android APK artifact, Web bundle, iOS on macOS) run on push to `main` (after merge) and on manual runs. Pushes to feature branches trigger no CI.
-- Push to `main` publishes the web build to GitHub Pages `/`. A branch preview (`/preview/<branch-with-dashes>/`) is published only by a manual run (Actions → CI → Run workflow on that branch). Link is in the CI run summary.
+- Push to `main` publishes the web build to GitHub Pages `/`. A branch preview (`/preview/<branch-with-dashes>/`) is published only by a manual run (Actions → CI → Run workflow on that branch). The latest `main` debug APK is re-published to the `main-latest` prerelease: `https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk`. Links are in the CI run summary.

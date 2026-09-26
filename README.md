@@ -4,7 +4,7 @@ Compose Multiplatform app for **Android, iOS and mobile Web** from a single Kotl
 
 - Architecture, commands and conventions: [`CLAUDE.md`](CLAUDE.md)
 - Web preview (GitHub Pages): `https://andrewforester.github.io/your-anima/` (branches, via manual CI run: `/preview/<branch-with-dashes>/`)
-- Android APK: artifact `your-anima-debug-apk` on each CI run for `main`
+- Android APK (latest `main`): `https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk`
 
 ## Quick start
 
