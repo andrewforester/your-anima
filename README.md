@@ -3,8 +3,8 @@
 Compose Multiplatform app for **Android, iOS and mobile Web** from a single Kotlin codebase, developed AI-first with Claude Code.
 
 - Architecture, commands and conventions: [`CLAUDE.md`](CLAUDE.md)
-- Web preview (GitHub Pages): `https://andrewforester.github.io/your-anima/` (branches: `/preview/<branch-with-dashes>/`)
-- Android APK: artifact `your-anima-debug-apk` on each CI run
+- Web preview (GitHub Pages): `https://andrewforester.github.io/your-anima/` (branches, via manual CI run: `/preview/<branch-with-dashes>/`)
+- Android APK: artifact `your-anima-debug-apk` on each CI run for `main`
 
 ## Quick start
 
