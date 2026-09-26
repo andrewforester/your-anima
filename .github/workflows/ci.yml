@@ -27,9 +27,9 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
       - name: ktlint
-        run: ./gradlew ktlintCheck --stacktrace
-      - name: Shared UI tests (JVM)
-        run: ./gradlew :shared:jvmTest --stacktrace
+        run: ./gradlew ktlintCheck
+      - name: UI tests (JVM)
+        run: ./gradlew :composeApp:jvmTest
       - name: Upload test reports
         if: failure()
         uses: actions/upload-artifact@v7
@@ -49,7 +49,7 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
       - name: Build debug APK
-        run: ./gradlew :androidApp:assembleDebug --stacktrace
+        run: ./gradlew :androidApp:assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
@@ -68,12 +68,12 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
       - name: Build web distribution
-        run: ./gradlew :webApp:wasmJsBrowserDistribution --stacktrace
+        run: ./gradlew :composeApp:wasmJsBrowserDistribution
       - name: Upload web bundle
         uses: actions/upload-artifact@v7
         with:
           name: web
-          path: webApp/build/dist/wasmJs/productionExecutable/
+          path: composeApp/build/dist/wasmJs/productionExecutable/
 
   ios:
     name: iOS
@@ -86,8 +86,8 @@ jobs:
           distribution: zulu
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
-      - name: Shared tests on iOS simulator
-        run: ./gradlew :shared:iosSimulatorArm64Test --stacktrace
+      - name: Common tests on iOS simulator
+        run: ./gradlew :composeApp:iosSimulatorArm64Test
       - name: Build iOS app (simulator, unsigned)
         run: cd iosApp && xcodebuild -scheme iosApp -configuration Debug -sdk iphonesimulator -arch arm64 CODE_SIGNING_ALLOWED='NO'
 

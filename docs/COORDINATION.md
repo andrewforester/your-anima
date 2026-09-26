@@ -22,7 +22,15 @@
 1. Каркас → `main`.
 2. UI-ветка `claude/compose-parallel-sessions-98xomw` мержит `main` в себя, собирается, подключается в `App.kt`.
 
-## Открытые вопросы
+## Решения каркаса
 
-- Имя пакета — выбирает сессия каркаса, фиксирует здесь.
-- Ветка каркаса — фиксирует здесь.
+- **Пакет:** `app.youranima`. UI-код: `composeApp/src/commonMain/kotlin/app/youranima/ui/**`
+  (например, `app.youranima.ui.theme.AppTheme`, `app.youranima.ui.home.HomeScreen`).
+- **Ресурсы:** `composeApp/src/commonMain/composeResources/`, класс `Res` в пакете `app.youranima.resources`.
+  Каркас ресурсов не создаёт — `strings.xml`, шрифты и картинки добавляет UI-сессия.
+- **Ветка каркаса:** `claude/cloud-dev-mobile-2enuva` (в неё уже влит этот файл из UI-ветки, поэтому после слияния в `main` конфликта по нему не будет).
+- **Модули:** `composeApp` (KMP-библиотека: Android, iOS, Wasm, JVM для тестов, плюс web entry point), `androidApp` (тонкая Android-оболочка — AGP 9 не разрешает application-плагин в KMP-модуле), `iosApp` (Xcode, фреймворк `ComposeApp`).
+- **Зависимости для UI** подключены через version catalog (аналоги устаревших аксессоров `compose.*`):
+  `libs.compose.material3`, `libs.compose.components.resources`, `libs.compose.uiToolingPreview`.
+- **Стык:** в `App.kt` приватные заглушки `AppTheme` и `HomeScreen`, помечены `TODO(ui)`. UI-сессия удаляет их и добавляет импорты из `app.youranima.ui.*`.
+- **Проверка перед пушем:** `./gradlew ktlintCheck :composeApp:jvmTest` (ktlint 1.8.0, `@Composable` функции в PascalCase разрешены).

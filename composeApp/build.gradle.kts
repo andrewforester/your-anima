@@ -14,21 +14,28 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "Shared"
+            baseName = "ComposeApp"
             isStatic = true
         }
     }
 
-    // JVM target is used only for fast, emulator-free UI tests (`./gradlew :shared:jvmTest`).
+    // JVM target is used only for fast, emulator-free UI tests (`./gradlew :composeApp:jvmTest`).
     jvm()
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        browser()
+        outputModuleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
     }
 
+    // AGP 9: the Android *application* lives in :androidApp, this module is an Android library.
     androidLibrary {
-        namespace = "app.youranima.shared"
+        namespace = "app.youranima.composeapp"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -50,8 +57,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
             implementation(libs.compose.ui)
+            // Required by the UI layer (docs/COORDINATION.md)
+            implementation(libs.compose.material3)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.runtimeCompose)
@@ -67,7 +75,7 @@ kotlin {
 }
 
 compose.resources {
-    packageOfResClass = "app.youranima.shared.resources"
+    packageOfResClass = "app.youranima.resources"
 }
 
 dependencies {

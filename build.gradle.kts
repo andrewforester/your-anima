@@ -7,9 +7,11 @@ plugins {
     alias(libs.plugins.ktlint) apply false
 }
 
+val ktlintVersion: String = libs.versions.ktlint.get()
+
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        version.set(libs.versions.ktlint.get())
+        version.set(ktlintVersion)
     }
 }

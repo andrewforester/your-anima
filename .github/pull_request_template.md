@@ -3,7 +3,7 @@
 ## Why
 
 ## How verified
-- [ ] `./gradlew ktlintCheck :shared:jvmTest`
+- [ ] `./gradlew ktlintCheck :composeApp:jvmTest`
 - [ ] Checked web preview / APK
 
 ## Screenshots

@@ -10,7 +10,7 @@ Compose Multiplatform app for **Android, iOS and mobile Web** from a single Kotl
 
 ```bash
 ./gradlew :androidApp:assembleDebug            # Android
-./gradlew :webApp:wasmJsBrowserDevelopmentRun  # Web
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun  # Web
 open iosApp/iosApp.xcodeproj                   # iOS (macOS + Xcode)
 ```
 
