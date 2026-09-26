@@ -32,7 +32,7 @@ Platform hosts must stay thin. Put platform-specific code in `composeApp/src/<pl
 
 Before every push: `./gradlew ktlintCheck :composeApp:jvmTest` must pass.
 
-Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) installs the Android SDK. It needs `dl.google.com` in the environment's allowed domains; without it no Gradle build works in the container and CI is the only verifier.
+Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) installs the Android SDK, routes Maven Central through Google's mirror (the shared egress IP gets 429s), and seeds yarn's offline mirror with the `github:Kotlin/karma` tarball (codeload.github.com is blocked, git reads are not). After it, every command above except iOS works in the container. It needs `dl.google.com` in the environment's allowed domains; without it no Gradle build works in the container and CI is the only verifier.
 
 ## Conventions
 
