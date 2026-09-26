@@ -7,7 +7,7 @@ description: Implement a new app screen (from a Figma frame, screenshot or descr
 
 1. **Gather the design.** With a Figma link: fetch design context, variables and a screenshot of the frame. With an image: study it carefully (spacing, type scale, colors, states). Write down the component tree before coding.
 2. **Tokens first.** Any new color / text style / shape / spacing goes into `composeApp/src/commonMain/kotlin/app/youranima/ui/theme/`. Reuse existing tokens where values match within ~2px / near-identical color.
-3. **Assets.** Icons as vector drawables (`composeResources/drawable/*.xml`), images in `composeResources/drawable/`, strings in `composeResources/values/strings.xml`.
+3. **Assets.** Icons as vector drawables (`composeResources/drawable/*.xml`), images in `composeResources/drawable/`, strings in `composeResources/values/strings_<screen>.xml` with keys prefixed `<screen>_` (see `docs/COORDINATION.md`).
 4. **Components.** Reusable pieces go to `ui/components/`. Screen-specific pieces stay in `ui/<screen>/`.
 5. **Screen.** `ui/<screen>/<Name>Screen.kt`: stateless composable taking UI state + callbacks, `modifier` param, `<Name>ScreenTags`, `@Preview`. Mock data from `data/`.
 6. **Test.** Add `composeApp/src/commonTest/.../<Name>ScreenTest.kt` using `runComposeUiTest` that checks key content is displayed.
