@@ -34,7 +34,7 @@ kotlin {
     }
 
     // AGP 9: the Android *application* lives in :androidApp, this module is an Android library.
-    androidLibrary {
+    android {
         namespace = "app.youranima.composeapp"
         compileSdk =
             libs.versions.android.compileSdk

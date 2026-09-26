@@ -13,5 +13,9 @@ subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
         version.set(ktlintVersion)
+        filter {
+            // Generated sources (Compose resources accessors etc.) are not ours to format.
+            exclude { it.file.path.contains("${File.separator}build${File.separator}") }
+        }
     }
 }
