@@ -133,3 +133,34 @@ jobs:
       - name: Summary
         run: |
           echo "Web preview: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.target.outputs.path }}" >> "$GITHUB_STEP_SUMMARY"
+
+  # Keeps the latest debug APK from main at one stable, phone-friendly URL:
+  #   https://github.com/<owner>/<repo>/releases/download/main-latest/your-anima-debug.apk
+  apk-release:
+    name: Publish APK (main-latest)
+    needs: android
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: apk-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: your-anima-debug-apk
+          path: apk
+      - name: Replace main-latest release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cp apk/*.apk your-anima-debug.apk
+          gh release delete main-latest --cleanup-tag --yes || true
+          gh release create main-latest your-anima-debug.apk \
+            --target "$GITHUB_SHA" --prerelease --title "Latest main build" \
+            --notes "Debug APK from ${GITHUB_SHA::7} (CI run $GITHUB_RUN_ID)."
+      - name: Summary
+        run: |
+          echo "APK: https://github.com/${{ github.repository }}/releases/download/main-latest/your-anima-debug.apk" >> "$GITHUB_STEP_SUMMARY"
