@@ -1,0 +1,19 @@
+name: Screen
+description: A screen to build (from Figma or a screenshot)
+labels: [screen]
+body:
+  - type: input
+    id: figma
+    attributes:
+      label: Figma link
+      description: Link to the frame (Share → Copy link)
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot / reference
+      description: Paste an image if there is no Figma frame
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior
+      description: Taps, navigation, states (empty / loading / error)

@@ -1,0 +1,13 @@
+name: Task
+description: Feature, fix or chore
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs to be done
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
