@@ -48,7 +48,7 @@ Only existing `appTypography` styles. **No new type tokens.**
 
 ## Layout (top → bottom), width 402
 
-Screen = `Box` with the flat `background` fill; scrolling content column + `HomeBottomBar` pinned to the bottom (as `HomeScreen`). Edge-to-edge: pad the top bar with `WindowInsets.statusBars`.
+Screen = `Box` with the flat `background` fill and a scrolling content column; the bottom bar comes from the app shell (see 7). Edge-to-edge: pad the top bar with `WindowInsets.statusBars`.
 
 ### 1. Top bar
 - Height 56, horizontal padding 20 (same as home `TopBar`).
@@ -103,7 +103,7 @@ Width **168** (feed cards are 144; two buttons don't fit in 144, see Decisions),
 - The card itself is not clickable this round (profile is out of scope).
 
 ### 7. Bottom nav bar
-The existing `HomeBottomBar(selected = HomeNavItem.Psychics, …)` with the existing badges; **not re-specified**. (The screenshot's bar differs; ignore it.)
+Not part of this screen: the app shell (`ui/navigation/AppShell`, #35) draws the shared `ui/components/AppBottomBar` over every tab and selects `AppTab.Psychics`. The screen only keeps its content clear of the bar (bottom padding, as `HomeScreen`). **Not re-specified.** (The screenshot's bar differs; ignore it.)
 
 ## Texts
 
@@ -198,7 +198,6 @@ Pieces now needed by two screens; move them to `ui/components/` in a Theme-zone 
 | Now in | Component | Suggested shared name |
 |---|---|---|
 | `ui/home/HomeResources.kt` | `Modifier.homeCard(padding)` | `Modifier.appCard(padding)` |
-| `ui/home/HomeBottomBar.kt` (+ `HomeNavItem`, `NavBadges`) | bottom nav bar | `AppBottomBar` / `NavItem` |
 | `ui/home/ProfileHeader.kt` `BirthChartPill` | glass pill (radius 20, glass fill/border, padding 16×8, icon + `pill` label) | `GlassPill` (with a `selected` variant = `primary` fill for the filter) |
 | `ui/home/ReadingCard.kt` `AskButton` | glass button | fold into the Call/Chat button as its disabled style, or share `GlassButton` |
 | `ui/home/ReadingCard.kt` `QuestionRow` icon box | tinted icon container (size, radius, tint @ 10 %) | `TintedIconBox(size, radius, tint, icon)` — banner 42/12, section badge 28/8 |
@@ -222,6 +221,8 @@ None. Everything maps to existing colours, type styles and shapes (`shapes.mediu
 9. **Status chip label** is `onSurface`, only the dot is coloured (original colours the text too).
 10. **Top bar** scrolls with the content; no sticky header.
 11. **Filter** static: All selected, taps are no-ops (Issue).
+
+12. **Orchestrator review (2026-09-27):** all defaults above accepted. Bottom bar already shared by #35 (`AppBottomBar`, `AppTab`, `data/navigation/NavBadges`). The remaining shared pieces (`appCard`, `GlassPill`, `TintedIconBox`, shared `ic_*` icons) are moved to `ui/components/` by the screen Issue #36 itself, home keeps looking identical.
 
 ## Open questions
 
