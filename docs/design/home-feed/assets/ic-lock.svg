@@ -1,0 +1,4 @@
+<!-- Padlock glyph, 12x15 dp, filled white (#FFFFFF) with a keyhole cut out. Sits centred in a 34 dp circle #323996. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="15" viewBox="0 0 12 15">
+  <path fill="#FFFFFF" fill-rule="evenodd" d="M3 6V4A3 3 0 0 1 9 4V6H10.5A1.5 1.5 0 0 1 12 7.5V13.5A1.5 1.5 0 0 1 10.5 15H1.5A1.5 1.5 0 0 1 0 13.5V7.5A1.5 1.5 0 0 1 1.5 6ZM4.5 6H7.5V4A1.5 1.5 0 0 0 4.5 4ZM6 9A1.2 1.2 0 0 0 5.3 11.2V12.5H6.7V11.2A1.2 1.2 0 0 0 6 9Z"/>
+</svg>
