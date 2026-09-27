@@ -13,9 +13,10 @@ concurrency:
 permissions:
   contents: read
 
-# PRs run only lint and JVM tests. Builds (Android, Web, iOS) and the Pages deploy run
-# after merge (push to main) or on a manual run. Pushes to feature branches trigger nothing:
-# sessions run `ktlintCheck :composeApp:jvmTest` locally, the PR re-checks it.
+# PRs run lint, JVM tests and a web build + Playwright smoke test. Android/iOS builds
+# and the Pages deploy run after merge (push to main) or on a manual run. Pushes to
+# feature branches trigger nothing: sessions run `ktlintCheck :composeApp:jvmTest`
+# (and the web check) locally, the PR re-checks it.
 jobs:
   checks:
     name: Lint & unit tests
@@ -37,6 +38,48 @@ jobs:
         with:
           name: test-reports
           path: '**/build/reports/'
+
+  web-smoke:
+    name: Web smoke
+    runs-on: ubuntu-latest
+    env:
+      PLAYWRIGHT_VERSION: 1.56.1
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build web distribution
+        run: ./gradlew :composeApp:wasmJsBrowserDistribution
+      - name: Serve web build
+        run: |
+          python3 -m http.server 8000 --directory composeApp/build/dist/wasmJs/productionExecutable &
+          echo $! > "$RUNNER_TEMP/server.pid"
+          for i in $(seq 1 30); do curl -sf http://localhost:8000/ >/dev/null && exit 0; sleep 1; done
+          echo "Web server did not come up" >&2
+          exit 1
+      - name: Install Playwright (pinned, outside the repo)
+        run: |
+          mkdir -p "$RUNNER_TEMP/pw-smoke"
+          npm i --no-save --prefix "$RUNNER_TEMP/pw-smoke" "playwright@$PLAYWRIGHT_VERSION"
+          "$RUNNER_TEMP/pw-smoke/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Run web smoke test
+        env:
+          NODE_PATH: ${{ runner.temp }}/pw-smoke/node_modules
+          SMOKE_BASE_URL: http://localhost:8000
+          SMOKE_OUT_DIR: web-smoke-screenshots
+        run: node .github/scripts/web-smoke.mjs
+      - name: Stop web server
+        if: always()
+        run: kill "$(cat "$RUNNER_TEMP/server.pid")" 2>/dev/null || true
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-smoke-screenshots
+          path: web-smoke-screenshots/
 
   android:
     name: Android
