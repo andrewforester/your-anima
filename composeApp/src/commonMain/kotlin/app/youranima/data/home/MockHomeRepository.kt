@@ -25,6 +25,30 @@ object MockHomeRepository : HomeRepository {
                     ForecastPeriod.Week to mood(career = 60, love = 65, health = 70, family = 55),
                 ),
             badges = NavBadges(psychicsFree = true, unreadChats = 3),
+            categories =
+                listOf(
+                    CategoryForecast(
+                        id = "career",
+                        category = ForecastCategory.Career,
+                        preview = "Today’s energy enhances your focus, so tackle the task you’ve been putting off.",
+                        isLocked = true,
+                    ),
+                    CategoryForecast(
+                        id = "love",
+                        category = ForecastCategory.Love,
+                        preview = "In love, the Aries moon may spark a bold conversation with someone close.",
+                        isLocked = true,
+                    ),
+                    CategoryForecast(
+                        id = "health",
+                        category = ForecastCategory.Health,
+                        preview = "The Aries moon encourages you to move more and rest well.",
+                        isLocked = true,
+                    ),
+                ),
+            tipOfTheDay = "Let your adventures unfold naturally.",
+            yesForToday = listOf("Initiate new projects", "Plan spontaneous outings", "Engage in physical activity"),
+            noForToday = listOf("Rush decisions", "Ignore others' needs", "Overcommit financially"),
         )
 
     override fun homeData(): HomeData = data

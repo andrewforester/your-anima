@@ -11,10 +11,19 @@ object HomeScreenTags {
     const val BIRTH_CHART = "home_birth_chart"
     const val FOCUS_MOOD = "home_focus_mood"
     const val BOTTOM_BAR = "home_bottom_bar"
+    const val CATEGORIES = "home_categories"
+    const val TIP = "home_tip"
+    const val YES = "home_yes"
+    const val NO = "home_no"
+    const val TAROT = "home_tarot"
 
     fun readingCard(id: String) = "home_reading_$id"
 
     fun askButton(id: String) = "home_ask_$id"
+
+    fun categoryCard(id: String) = "home_category_$id"
+
+    fun lockBadge(id: String) = "home_lock_$id"
 
     fun tab(period: ForecastPeriod) = "home_tab_${period.name.lowercase()}"
 
