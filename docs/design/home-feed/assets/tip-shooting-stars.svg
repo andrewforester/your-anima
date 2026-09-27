@@ -1,0 +1,21 @@
+<!-- Approximation of the tip-banner illustration, 70x88 dp, anchored to the banner's top-right corner (clipped by the card shape).
+     Yellow 7-point stars #ECF074, each with a grey "shadow" copy rotated ~25deg (#8E8C74 @ ~70%) behind it;
+     magenta comet tails #D448BC fading to transparent toward the upper right; tiny 5-point stars #ECF074. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="88" viewBox="0 0 70 88">
+  <defs>
+    <linearGradient id="tail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#E490A0"/><stop offset=".35" stop-color="#D448BC"/><stop offset="1" stop-color="#D448BC" stop-opacity=".2"/></linearGradient>
+    <path id="s7" d="M0-10L2.6-5.4 7.8-6.2 5.6-1.4 9.7 2.2 4.5 3.4 4.3 8.6 0 5.6-4.3 8.6-4.5 3.4-9.7 2.2-5.6-1.4-7.8-6.2-2.6-5.4Z"/>
+  </defs>
+  <path d="M26 44C40 36 55 26 70 8V18C58 34 44 42 30 50Z" fill="url(#tail)"/>
+  <path d="M23 14C38 14 52 10 60 4C54 12 40 17 25 18Z" fill="url(#tail)"/>
+  <path d="M52 74C58 64 64 52 70 40V50C66 60 60 70 56 76Z" fill="url(#tail)"/>
+  <use href="#s7" transform="translate(22 45) scale(2.1) rotate(25)" fill="#8E8C74" fill-opacity=".7"/>
+  <use href="#s7" transform="translate(24 44) scale(2.0)" fill="#ECF074"/>
+  <use href="#s7" transform="translate(21 15) scale(.9) rotate(25)" fill="#8E8C74" fill-opacity=".7"/>
+  <use href="#s7" transform="translate(22 14) scale(.85)" fill="#ECF074"/>
+  <use href="#s7" transform="translate(51 72) scale(1.2) rotate(25)" fill="#8E8C74" fill-opacity=".7"/>
+  <use href="#s7" transform="translate(52 71) scale(1.1)" fill="#ECF074"/>
+  <use href="#s7" transform="translate(30 26) scale(.35)" fill="#ECF074"/>
+  <use href="#s7" transform="translate(56 42) scale(.35)" fill="#ECF074"/>
+  <use href="#s7" transform="translate(58 8) scale(.3)" fill="#ECF074"/>
+</svg>
