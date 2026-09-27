@@ -30,6 +30,7 @@ import app.youranima.data.home.ForecastPeriod
 import app.youranima.data.home.HomeRepository
 import app.youranima.data.home.MockHomeRepository
 import app.youranima.data.home.ReadingOffer
+import app.youranima.ui.components.HeroBackground
 import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
 

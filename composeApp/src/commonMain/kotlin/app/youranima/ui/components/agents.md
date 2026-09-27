@@ -12,7 +12,7 @@ The bottom nav bar, shown once by `AppShell` under whichever tab is selected (pr
 
 ## ComingSoonScreen (`ComingSoonScreen.kt`)
 
-Placeholder for tabs without a real screen yet (now Compatibility): centered title + "Coming soon" subtitle, theme tokens only. `ComingSoonScreen(title: String)` — the title string is passed in by `AppShell` per tab.
+Placeholder for tabs without a real screen yet (no tab uses it since Compatibility got its screen in #51): centered title + "Coming soon" subtitle, theme tokens only. `ComingSoonScreen(title: String)` — the title string is passed in by `AppShell` per tab.
 
 ## appCard (`AppCard.kt`)
 
@@ -46,10 +46,18 @@ Five 12dp stars (rating rounded; `accentGold` / `outline`), a 1×10 divider and 
 
 A psychic photo (crop, top-aligned) filling its bounds, or an `outline` fill with a centred `ic_user` of `iconSize`. The caller clips it: Psychics card header full-bleed, Chatroom avatars circle. Extracted from `ui/psychics/PsychicPhotoHeader` in #50.
 
+## HeroBackground (`HeroBackground.kt`)
+
+The 402×420 hero sky (`home_hero_background`: gradient, moon, sparkles), scaled with the width, overflowing 70 left. `Modifier.inHeroFrame(left, top, width, height)` places a sibling in the same frame units (Compatibility comets). Users: home, Compatibility. Moved from `ui/home/` in #51.
+
+## ProfileAvatar (`ProfileAvatar.kt`)
+
+`ProfileAvatar(painter, size, contentDescription)`: circular avatar, `ProfileAvatarInset` (4 dp) transparent ring, `background` fill, crop. Users: home header (100, via `HomeProfileAvatar`), Compatibility "You" (140). Extracted from `ui/home/ProfileParts` in #51.
+
 ## Shared icons
 
 `drawable/ic_heart`, `ic_message_circle`, `ic_user`, `ic_briefcase` (were `home_ic_*` / `home_ic_category_career`) are used by home, the bottom bar and Psychics; Theme owns `ic_*`.
 
 ## Stubs
 
-Compatibility renders `ComingSoonScreen` until its own screen exists (Psychics got its screen in #36, Readings in #42, Chatroom in #50). `RatingRow` still uses the Psychics-named `psychics_cd_rating` / `psychics_ic_star_filled` (renaming is a Theme task).
+`ComingSoonScreen` is currently unused (Psychics got its screen in #36, Readings in #42, Chatroom in #50, Compatibility in #51); kept until the orchestrator decides to drop it. `RatingRow` still uses the Psychics-named `psychics_cd_rating` / `psychics_ic_star_filled` (renaming is a Theme task).

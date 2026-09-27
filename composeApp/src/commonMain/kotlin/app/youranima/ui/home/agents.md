@@ -5,7 +5,7 @@ The "Today" tab: horoscope feed shown when `AppTab.Today` is selected in `AppShe
 ## Entry point
 
 - `HomeScreen()` (stateful): loads `HomeRepository.homeData()` once, keeps the selected `ForecastPeriod` (`rememberSaveable`), maps to `HomeUiState` via `HomeData.toUiState()`. No longer owns nav/tab state or the bottom bar — those moved to `ui/components/AppBottomBar.kt` and `ui/navigation/AppShell.kt` (#35).
-- `HomeScreen(state, onPeriodSelect, headerState, ...)` (stateless): one `verticalScroll` column — `HeroBackground` (scrolls away), `CollapsingProfileHeader`, then the feed: reading cards, `PinnedDateTabs`, `FocusMoodCard`, `CategoryRow`, `TipCard`, `YesNoCard`, `TarotCard`. `ContentBottomPadding` (100dp) reserves space so the last card isn't hidden under the shared bottom bar drawn by `AppShell`.
+- `HomeScreen(state, onPeriodSelect, headerState, ...)` (stateless): one `verticalScroll` column — the shared `ui/components/HeroBackground` (scrolls away), `CollapsingProfileHeader`, then the feed: reading cards, `PinnedDateTabs`, `FocusMoodCard`, `CategoryRow`, `TipCard`, `YesNoCard`, `TarotCard`. `ContentBottomPadding` (100dp) reserves space so the last card isn't hidden under the shared bottom bar drawn by `AppShell`.
 
 ## Collapsing header (#47)
 
@@ -15,7 +15,7 @@ The "Today" tab: horoscope feed shown when `AppTab.Today` is selected in `AppShe
 
 ## Components
 
-One file each: `TopBarButtons` (`AddStoryButton`, `AvatarThumb`, `SettingsButton`), `ProfileParts` (`ProfileAvatar`, `ProfileName`, `ZodiacRow`, `BirthChartPill`), `HeroBackground`, `ReadingCard`, `DateTabs`, `FocusMoodCard`, `CategoryCard` (+ `CategoryRow`), `TipCard`, `YesNoBlock`, `TarotCard`. `HomeResources.kt` holds shared label/color mappings (`ZodiacSign.label`, `MoodCategory.label/color`) and the preview helper `HomePreview`. Cards use the shared `appCard` modifier, the Birth Chart pill `GlassPill` and the reading-card chat icon `TintedIconBox`, all in `ui/components/` (moved there in #36).
+One file each: `TopBarButtons` (`AddStoryButton`, `AvatarThumb`, `SettingsButton`), `ProfileParts` (`HomeProfileAvatar` = shared `ProfileAvatar` at 100, `ProfileName`, `ZodiacRow`, `BirthChartPill`), `ReadingCard`, `DateTabs`, `FocusMoodCard`, `CategoryCard` (+ `CategoryRow`), `TipCard`, `YesNoBlock`, `TarotCard`. `HomeResources.kt` holds shared label/color mappings (`ZodiacSign.label`, `MoodCategory.label/color`) and the preview helper `HomePreview`. Cards use the shared `appCard` modifier, the Birth Chart pill `GlassPill` and the reading-card chat icon `TintedIconBox`, all in `ui/components/` (moved there in #36).
 
 ## State & tags
 

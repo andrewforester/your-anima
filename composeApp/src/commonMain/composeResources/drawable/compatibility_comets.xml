@@ -1,0 +1,16 @@
+<!-- Two shooting stars for the Compatibility background (docs/design/compatibility/assets/comets.svg).
+     Colours baked in (accentPurple #B388FF with alpha, white sparkle); not tinted. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="80dp"
+    android:viewportWidth="160"
+    android:viewportHeight="80">
+    <path android:pathData="M9.3,33.6L6.7,30.4L40,6Z" android:fillColor="#B388FF" android:fillAlpha="0.25" />
+    <path android:pathData="M9.3,33.6L6.7,30.4L27.2,16.4Z" android:fillColor="#B388FF" android:fillAlpha="0.45" />
+    <path android:pathData="M8,29a3,3 0,1 1,0 6a3,3 0,1 1,0 -6Z" android:fillColor="#B388FF" android:fillAlpha="0.35" />
+    <path android:pathData="M8,29Q8,32 11,32Q8,32 8,35Q8,32 5,32Q8,32 8,29Z" android:fillColor="#FFFFFF" />
+    <path android:pathData="M145,73.2L143,70.8L156,62Z" android:fillColor="#B388FF" android:fillAlpha="0.25" />
+    <path android:pathData="M145,73.2L143,70.8L151,66.4Z" android:fillColor="#B388FF" android:fillAlpha="0.45" />
+    <path android:pathData="M144,69.5a2.5,2.5 0,1 1,0 5a2.5,2.5 0,1 1,0 -5Z" android:fillColor="#B388FF" android:fillAlpha="0.35" />
+    <path android:pathData="M144,69.5Q144,72 146.5,72Q144,72 144,74.5Q144,72 141.5,72Q144,72 144,69.5Z" android:fillColor="#FFFFFF" />
+</vector>

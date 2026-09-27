@@ -1,13 +1,10 @@
 package app.youranima.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,11 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -43,6 +38,7 @@ import app.youranima.resources.home_ic_sun
 import app.youranima.resources.home_moon_symbol
 import app.youranima.resources.home_sun_symbol
 import app.youranima.ui.components.GlassPill
+import app.youranima.ui.components.ProfileAvatar
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -50,19 +46,14 @@ import org.jetbrains.compose.resources.stringResource
 
 // Pieces of the profile header (Figma item 4). [CollapsingProfileHeader] places and scales them.
 
-/** Avatar at its expanded size; the header scales it down to [TopBarButtonSize] when collapsed. */
+/** Home's [ProfileAvatar] at its expanded size; the header scales it down to [TopBarButtonSize] when collapsed. */
 @Composable
-fun ProfileAvatar(modifier: Modifier = Modifier) {
-    Image(
+fun HomeProfileAvatar(modifier: Modifier = Modifier) {
+    ProfileAvatar(
         painter = painterResource(Res.drawable.home_avatar_character),
+        size = ProfileAvatarSize,
         contentDescription = stringResource(Res.string.home_avatar),
-        contentScale = ContentScale.Crop,
-        modifier =
-            modifier
-                .size(ProfileAvatarSize)
-                .padding(4.dp)
-                .background(MaterialTheme.appColors.background, CircleShape)
-                .clip(CircleShape),
+        modifier = modifier,
     )
 }
 
@@ -176,7 +167,7 @@ internal val ProfileAvatarSize = 100.dp
 private fun ProfilePartsPreview() {
     HomePreview {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            ProfileAvatar()
+            HomeProfileAvatar()
             ProfileName(PreviewHomeUiState.user.name)
             ZodiacRow(PreviewHomeUiState.user)
             BirthChartPill(onClick = {})
