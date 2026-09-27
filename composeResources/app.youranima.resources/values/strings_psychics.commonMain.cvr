@@ -1,0 +1,17 @@
+version:0
+plurals|psychics_experience|ONE:JTEkZCB5ZWFyIG9mIGV4cGVyaWVuY2U=,OTHER:JTEkZCB5ZWFycyBvZiBleHBlcmllbmNl
+string|psychics_action_call|Q2FsbA==
+string|psychics_action_chat|Q2hhdA==
+string|psychics_cd_favourites|RmF2b3VyaXRlcw==
+string|psychics_cd_rating|UmF0aW5nICUxJGQgb2YgNSwgJTIkZCByZXZpZXdz
+string|psychics_filter_all|QWxs
+string|psychics_filter_call|Q2FsbA==
+string|psychics_filter_chat|Q2hhdA==
+string|psychics_free_minutes|JTEkZCBmcmVlIG1pbnV0ZXM=
+string|psychics_price_per_minute|dGhlbiAlMSRzL21pbg==
+string|psychics_promo_subtitle|d2l0aCAlMSRkIHBzeWNoaWNz
+string|psychics_promo_title|WW91IGhhdmUgJTEkZCBtaW51dGVzIEZSRUU=
+string|psychics_status_busy|YnVzeQ==
+string|psychics_status_online|b25saW5l
+string|psychics_title|UHN5Y2hpY3M=
+string|psychics_view_all|VmlldyBBbGw=
