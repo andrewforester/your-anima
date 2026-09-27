@@ -69,7 +69,7 @@ The human sends tasks one after another. File each one as soon as it arrives; do
 Merge a PR yourself when all of these hold:
 1. CI on the PR is green and the diff stays inside the Issue's zone (and outside its out-of-scope list). Code quality per `CLAUDE.md` → Architecture & code quality: no oversized files, no duplicated components, and an up-to-date `agents.md` in every code package the PR touches.
 2. There is a UI test, and for UI changes the session posted a web screenshot in the Issue.
-3. You checked it together with `main` and any other ready PRs: merge them locally, then run `./gradlew ktlintCheck :composeApp:jvmTest :composeApp:wasmJsBrowserDistribution`, serve the bundle, and take a Playwright screenshot at 402×874 with `locale: 'en-US'`. Any `pageerror` is a fail. A green build can still crash at startup.
+3. CI on the PR is green, including **Web smoke**. Look at 1–2 of its screenshots (artifact `web-smoke-screenshots`) or the session's screenshots in the Issue. Don't build locally. Build locally only when two ready PRs touch the same files and must be checked together; otherwise merge them one after another and let CI re-run on the second.
 4. Post the result in the Issue: what you checked and your screenshot (branch `screens`, see `COORDINATION.md`).
 
 After merging:
@@ -77,7 +77,7 @@ After merging:
 - Post a closing comment in the Issue: merged PR, verification summary, and a usage line:
   `Claude: <model> · $<cost> · context <used>k / <max>k · tokens in <input+cache_read+cache_write>k (cache read <cache_read>k) / out <output>k`.
 - Then run **Dispatch** (Queue with dependencies).
-- Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs).
+- Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs). After merging, watch CI on `main`. If it goes red, the top priority is a revert PR or a fix.
 - Report the result with these links. Use a `PushNotification` (it may not reach the phone) **and** a chat message:
   - Web: https://andrewforester.github.io/your-anima/
   - APK: https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk

@@ -30,6 +30,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
 
 ## Verify before every push
 - `./gradlew ktlintCheck :composeApp:jvmTest` must be green. Run `ktlintFormat` to auto-fix.
+- CI also runs a Web smoke job on the PR (build + Playwright startup/navigation check). That doesn't replace your own check below: the Issue needs your screenshot, and your own run catches problems before you push.
 - For UI:
   1. Build `./gradlew :composeApp:wasmJsBrowserDistribution`.
   2. Serve `composeApp/build/dist/wasmJs/productionExecutable` with `python3 -m http.server`.
