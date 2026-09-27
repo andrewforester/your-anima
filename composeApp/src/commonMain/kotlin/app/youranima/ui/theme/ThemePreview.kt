@@ -45,6 +45,14 @@ fun ThemeShowcase(modifier: Modifier = Modifier) {
             "textSoft" to colors.textSoft,
             "glassFill" to colors.glassFill,
             "glassBorder" to colors.glassBorder,
+            "lockBadge" to colors.lockBadge,
+            "tipGradientStart" to colors.tipGradientStart,
+            "tipGradientEnd" to colors.tipGradientEnd,
+            "yesGradientStart" to colors.yesGradientStart,
+            "yesGradientEnd" to colors.yesGradientEnd,
+            "noGradientStart" to colors.noGradientStart,
+            "noGradientEnd" to colors.noGradientEnd,
+            "cardGlow" to colors.cardGlow,
         )
     val styles: List<Pair<String, TextStyle>> =
         listOf(
@@ -59,6 +67,10 @@ fun ThemeShowcase(modifier: Modifier = Modifier) {
             "ringValue" to type.ringValue,
             "caption" to type.caption,
             "badge" to type.badge,
+            "sectionTitle" to type.sectionTitle,
+            "preview" to type.preview,
+            "bodyRegular" to type.bodyRegular,
+            "headline" to type.headline,
         )
     Column(
         modifier =
