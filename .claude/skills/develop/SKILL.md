@@ -24,6 +24,8 @@ You are one working session on one Issue. The orchestrator launched you; a human
   - a `@Preview` for every screen and component;
   - hoisted state;
   - mocks behind an interface in `data/<screen>/`.
+- **Architecture and code quality** (`CLAUDE.md` → Architecture & code quality): layered data → state → stateless UI, small files, no duplication (reuse `ui/components/` and tokens; if another screen already has the piece you need, say so in the Issue instead of copying it).
+- **`agents.md` in every package you touch.** As you go, create or update `agents.md` next to the code (e.g. `ui/<screen>/agents.md`, `data/<screen>/agents.md`): a short business description of what the package does, what the user sees, the main types and how they connect, where data comes from, stubs/TODOs. Update it in the same commit as the code it describes.
 - Commit and push early and often. The sandbox can restart, and the orchestrator watches your branch.
 
 ## Verify before every push
@@ -38,6 +40,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
 - If the environment can, also run `./gradlew :androidApp:assembleDebug`.
 
 ## Finish
+0. Self-review the diff: no file past ≈250 lines, no copy-pasted blocks, no hardcoded colours/sizes/strings, `agents.md` present and current in each package you touched.
 1. Re-read the Issue and all its comments: scope or decisions may have changed while you worked. Adjust.
 2. `git merge origin/main` again, re-run the checks, then push.
 3. Post the web screenshot(s) to the branch `screens` at `issue-<N>/<name>.png` (a worktree on `origin/screens`; `git pull --rebase` before pushing, it's append-only) and **comment on the Issue** with:

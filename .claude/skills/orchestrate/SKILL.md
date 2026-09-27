@@ -56,7 +56,7 @@ Then set `status: in progress` and comment on the Issue with the session id.
 
 ## Verify and merge (the human has allowed autonomous merging)
 Merge a PR yourself when all of these hold:
-1. CI on the PR is green and the diff stays inside the Issue's zone (and outside its out-of-scope list).
+1. CI on the PR is green and the diff stays inside the Issue's zone (and outside its out-of-scope list). Code quality per `CLAUDE.md` → Architecture & code quality: no oversized files, no duplicated components, and an up-to-date `agents.md` in every code package the PR touches.
 2. There is a UI test, and for UI changes the session posted a web screenshot in the Issue.
 3. You checked it together with `main` and any other ready PRs: merge them locally, then run `./gradlew ktlintCheck :composeApp:jvmTest :composeApp:wasmJsBrowserDistribution`, serve the bundle, and take a Playwright screenshot at 402×874 with `locale: 'en-US'`. Any `pageerror` is a fail. A green build can still crash at startup.
 4. Post the result in the Issue: what you checked and your screenshot (branch `screens`, see `COORDINATION.md`).
