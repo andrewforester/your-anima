@@ -268,7 +268,7 @@ No new shared component is created. The plan card, the tab and the dots stay in 
 
 None. Alphas of existing tokens (`accentPurple` 30 %, `cardGlow` 70 %, `primary` 35 % / 10 %) are literals as elsewhere (`primary` @ 20 % chip, `cardGlow` @ 50 % Compatibility glow).
 
-## Decisions (defaults, may be changed by the orchestrator)
+## Decisions (reviewed and accepted by the orchestrator, #58)
 
 1. **Glow colour** `accentPurple` 30 % core → `cardGlow` 70 % → transparent (Issue: our palette, not magenta). No `HeroBackground`: its moon would sit under "Restore" and compete with the slide icon.
 2. **Slide icon**: a 96 `TintedIconBox` per feature in the glow (the original shows an empty glow; an icon per slide makes the pager readable and reuses existing drawables). Drop it if the orchestrator wants the empty glow; the pager then starts with a 120 spacer.
@@ -284,6 +284,9 @@ None. Alphas of existing tokens (`accentPurple` 30 %, `cardGlow` 70 %, `primary`
 12. **Whole page scrolls**, the button is not pinned (fits 402 × 874 without scrolling).
 13. **Overlay without animation**, bottom bar hidden while it's shown; Android back closes it only if `BackHandler` is available without new dependencies.
 14. **Locked-card wiring** through a new `onLockedClick` on the stateful `HomeScreen`, the whole locked card as the target; unlocked cards unchanged.
+
+15. **Shared component extensions** (orchestrator): the paywall screen Issue may add the optional `trailing` slot to `ScreenTopBar` and the `height` parameter to `PrimaryButton`, both with defaults that keep every existing screen pixel-identical. No other `ui/components/**` change.
+16. **Open questions below: all defaults accepted** (icon in the glow, always start on slide 1, back only if `BackHandler` needs no new dependency, `accentOrange` for both badges).
 
 ## Open questions
 
