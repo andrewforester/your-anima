@@ -33,10 +33,6 @@ data class AppTypography(
     val ringValue: TextStyle,
     val caption: TextStyle,
     val badge: TextStyle,
-    val sectionTitle: TextStyle,
-    val preview: TextStyle,
-    val bodyRegular: TextStyle,
-    val headline: TextStyle,
 )
 
 @Composable
@@ -72,10 +68,6 @@ internal fun appTypography(fontFamily: FontFamily): AppTypography {
         ringValue = style(12, FontWeight.SemiBold),
         caption = style(11, FontWeight.Medium),
         badge = style(8, FontWeight.Bold),
-        sectionTitle = style(18, FontWeight.Bold, lineHeight = 26),
-        preview = style(16, FontWeight.Normal, lineHeight = 23),
-        bodyRegular = style(14, FontWeight.Normal, lineHeight = 18),
-        headline = style(22, FontWeight.Bold),
     )
 }
 

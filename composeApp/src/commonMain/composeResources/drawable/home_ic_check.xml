@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Converted from docs/design/home-feed/assets/ic-check-gradient.svg. Tinted white for the Yes badge. -->
+<!-- Converted from docs/design/home-feed/assets/ic-check-gradient.svg. Single colour, tinted in code. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="14dp"
     android:height="14dp"
     android:viewportWidth="14"
     android:viewportHeight="14">
     <path
         android:pathData="M1.5,7.5L5,11L12.5,2.5"
+        android:strokeColor="#FFFFFFFF"
         android:strokeWidth="2"
         android:strokeLineCap="round"
-        android:strokeLineJoin="round">
-        <aapt:attr name="android:strokeColor">
-            <gradient
-                android:type="linear"
-                android:startX="0"
-                android:startY="14"
-                android:endX="14"
-                android:endY="0">
-                <item android:offset="0" android:color="#FF2478A4" />
-                <item android:offset="1" android:color="#FF26A09B" />
-            </gradient>
-        </aapt:attr>
-    </path>
+        android:strokeLineJoin="round" />
 </vector>

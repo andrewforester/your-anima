@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Drawn after docs/design/home-feed/assets/category-health-pills-partial.png (the original is cut off):
-     two 20x44 capsules crossing at +-45deg, one with a divider line. -->
+     two 20x44 capsules crossing at +-45deg, one with a divider line. Single colour, tinted in code;
+     stroke 2.5 = ~2 dp at the 48 dp display size. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="60dp"
     android:height="60dp"
     android:viewportWidth="60"
@@ -13,16 +13,10 @@
         android:rotation="-45">
         <path
             android:pathData="M20,18A10,10 0,0 1,40 18V42A10,10 0,0 1,20 42Z"
-            android:strokeWidth="2.2"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="2.5"
             android:strokeLineCap="round"
-            android:strokeLineJoin="round">
-            <aapt:attr name="android:strokeColor">
-                <gradient android:type="linear" android:startX="4" android:startY="30" android:endX="56" android:endY="30">
-                    <item android:offset="0" android:color="#FF54D87C" />
-                    <item android:offset="1" android:color="#FF1CD08C" />
-                </gradient>
-            </aapt:attr>
-        </path>
+            android:strokeLineJoin="round" />
     </group>
     <group
         android:pivotX="30"
@@ -30,15 +24,9 @@
         android:rotation="45">
         <path
             android:pathData="M20,18A10,10 0,0 1,40 18V42A10,10 0,0 1,20 42ZM20,30H40"
-            android:strokeWidth="2.2"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="2.5"
             android:strokeLineCap="round"
-            android:strokeLineJoin="round">
-            <aapt:attr name="android:strokeColor">
-                <gradient android:type="linear" android:startX="4" android:startY="30" android:endX="56" android:endY="30">
-                    <item android:offset="0" android:color="#FF54D87C" />
-                    <item android:offset="1" android:color="#FF1CD08C" />
-                </gradient>
-            </aapt:attr>
-        </path>
+            android:strokeLineJoin="round" />
     </group>
 </vector>

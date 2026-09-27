@@ -114,7 +114,8 @@ class HomeScreenTest {
             onNodeWithText("Tip for the day").assertIsDisplayed()
             onNodeWithText(data.tipOfTheDay).assertIsDisplayed()
 
-            onNodeWithTag(HomeScreenTags.YES).performScrollTo().assertIsDisplayed()
+            onNodeWithTag(HomeScreenTags.YES_NO).performScrollTo().assertIsDisplayed()
+            onNodeWithTag(HomeScreenTags.YES, true).assertIsDisplayed()
             onNodeWithText("Yes for today").assertIsDisplayed()
             data.yesForToday.forEach { onNodeWithText(it).assertIsDisplayed() }
 

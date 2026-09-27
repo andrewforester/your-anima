@@ -1,8 +1,8 @@
 package app.youranima.ui.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,24 +38,24 @@ fun TarotCard(
             modifier
                 .fillMaxWidth()
                 .height(160.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(colors.surface)
+                .testTag(HomeScreenTags.TAROT)
+                .homeCard(PaddingValues())
+                .clip(MaterialTheme.shapes.large)
                 .drawBehind {
                     drawRect(
                         Brush.radialGradient(
-                            colors = listOf(colors.cardGlow, colors.surface),
+                            colors = listOf(colors.cardGlow, Color.Transparent),
                             center = Offset(size.width / 2, size.height),
                             radius = GlowRadius.toPx(),
                         ),
                     )
                 }.clickable(onClick = onClick)
-                .testTag(HomeScreenTags.TAROT),
+                .padding(horizontal = 16.dp, vertical = 20.dp),
     ) {
         Text(
             text = stringResource(Res.string.home_tarot_title),
-            style = MaterialTheme.appTypography.headline,
+            style = MaterialTheme.appTypography.cardTitle,
             color = colors.onSurface,
-            modifier = Modifier.padding(start = 12.dp, top = 24.dp),
         )
     }
 }

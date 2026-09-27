@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +26,7 @@ import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** "Tip for the day" banner: gradient fill, shooting stars bleeding off the top-right corner. */
+/** "Tip for the day": a card with a gradient fill, shooting stars bleeding off the top-right corner. */
 @Composable
 fun TipCard(
     tip: String,
@@ -42,9 +43,11 @@ fun TipCard(
         modifier =
             modifier
                 .fillMaxWidth()
-                .clip(MaterialTheme.shapes.medium)
-                .background(gradient)
-                .testTag(HomeScreenTags.TIP),
+                .testTag(HomeScreenTags.TIP)
+                // The card's border is drawn after its content, so it stays on top of the gradient.
+                .homeCard(PaddingValues())
+                .clip(MaterialTheme.shapes.large)
+                .background(gradient),
     ) {
         Image(
             painter = painterResource(Res.drawable.home_tip_stars),
@@ -52,17 +55,17 @@ fun TipCard(
             modifier = Modifier.align(Alignment.TopEnd),
         )
         Column(
-            modifier = Modifier.padding(start = 16.dp, end = 72.dp, top = 12.dp, bottom = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 72.dp, top = 16.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 text = stringResource(Res.string.home_tip_label),
-                style = MaterialTheme.appTypography.bodyRegular,
-                color = colors.onSurface,
+                style = MaterialTheme.appTypography.body,
+                color = colors.accentLavender,
             )
             Text(
                 text = tip,
-                style = MaterialTheme.appTypography.sectionTitle,
+                style = MaterialTheme.appTypography.cardLead,
                 color = colors.onSurface,
             )
         }
