@@ -2,12 +2,12 @@ package app.youranima
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import app.youranima.ui.theme.AppTheme
 
 /**
  * Root composable shared by Android, iOS and Web.
@@ -20,12 +20,6 @@ fun App() {
     AppTheme {
         HomeScreen()
     }
-}
-
-// TODO(ui): replace with app.youranima.ui.theme.AppTheme
-@Composable
-private fun AppTheme(content: @Composable () -> Unit) {
-    MaterialTheme(content = content)
 }
 
 // TODO(ui): replace with app.youranima.ui.home.HomeScreen
