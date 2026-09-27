@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,11 +32,13 @@ import app.youranima.data.home.ReadingOffer
 import app.youranima.data.home.ReadingType
 import app.youranima.resources.Res
 import app.youranima.resources.home_ask
-import app.youranima.resources.home_ic_message_circle
 import app.youranima.resources.home_reading_chat
 import app.youranima.resources.home_reading_free
 import app.youranima.resources.home_reading_lead
 import app.youranima.resources.home_reading_paid
+import app.youranima.resources.ic_message_circle
+import app.youranima.ui.components.TintedIconBox
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -57,7 +57,7 @@ fun ReadingCard(
             modifier
                 .fillMaxWidth()
                 .testTag(HomeScreenTags.readingCard(offer.id))
-                .homeCard(PaddingValues(16.dp)),
+                .appCard(PaddingValues(16.dp)),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
@@ -99,17 +99,14 @@ private fun leadText(type: ReadingType): AnnotatedString {
 private fun QuestionRow(question: String) {
     val colors = MaterialTheme.appColors
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier.size(42.dp).background(colors.accentPink.copy(alpha = 0.1f), MaterialTheme.shapes.medium),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.home_ic_message_circle),
-                contentDescription = stringResource(Res.string.home_reading_chat),
-                tint = colors.accentPink,
-                modifier = Modifier.size(20.dp),
-            )
-        }
+        TintedIconBox(
+            icon = painterResource(Res.drawable.ic_message_circle),
+            tint = colors.accentPink,
+            size = 42.dp,
+            iconSize = 20.dp,
+            shape = MaterialTheme.shapes.medium,
+            contentDescription = stringResource(Res.string.home_reading_chat),
+        )
         val fieldShape = RoundedCornerShape(21.dp)
         Box(
             modifier =

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import app.youranima.resources.Res
 import app.youranima.resources.home_tip_label
 import app.youranima.resources.home_tip_stars
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -45,7 +46,7 @@ fun TipCard(
                 .fillMaxWidth()
                 .testTag(HomeScreenTags.TIP)
                 // The card's border is drawn after its content, so it stays on top of the gradient.
-                .homeCard(PaddingValues())
+                .appCard(PaddingValues())
                 .clip(MaterialTheme.shapes.large)
                 .background(gradient),
     ) {

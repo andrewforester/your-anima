@@ -31,6 +31,7 @@ import app.youranima.resources.home_focus_mood_info
 import app.youranima.resources.home_focus_mood_title
 import app.youranima.resources.home_ic_info
 import app.youranima.resources.home_mood_percent
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -51,7 +52,7 @@ fun FocusMoodCard(
             modifier
                 .fillMaxWidth()
                 .testTag(HomeScreenTags.FOCUS_MOOD)
-                .homeCard(PaddingValues(horizontal = 16.dp, vertical = 20.dp)),
+                .appCard(PaddingValues(horizontal = 16.dp, vertical = 20.dp)),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Row(

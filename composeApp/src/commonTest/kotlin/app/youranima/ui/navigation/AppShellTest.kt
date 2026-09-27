@@ -13,13 +13,14 @@ import app.youranima.ui.components.AppBottomBarTags
 import app.youranima.ui.components.AppTab
 import app.youranima.ui.components.ComingSoonScreenTags
 import app.youranima.ui.home.HomeScreenTags
+import app.youranima.ui.psychics.PsychicsScreenTags
 import app.youranima.ui.theme.AppTheme
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class AppShellTest {
     @Test
-    fun switchesTabsBetweenHomeAndPlaceholders() =
+    fun switchesTabsBetweenHomePsychicsAndPlaceholders() =
         runComposeUiTest {
             setContent { AppTheme { AppShell() } }
 
@@ -30,8 +31,13 @@ class AppShellTest {
             onNodeWithTag(AppBottomBarTags.navItem(AppTab.Psychics)).performClick()
 
             onNodeWithTag(AppBottomBarTags.navItem(AppTab.Psychics)).assertIsSelected()
+            onNodeWithTag(PsychicsScreenTags.SCREEN).assertIsDisplayed()
+
+            onNodeWithTag(AppBottomBarTags.navItem(AppTab.Compatibility)).performClick()
+
+            onNodeWithTag(AppBottomBarTags.navItem(AppTab.Compatibility)).assertIsSelected()
             onNodeWithTag(ComingSoonScreenTags.SCREEN).assertIsDisplayed()
-            onNode(hasText("Psychics") and hasAnyAncestor(hasTestTag(ComingSoonScreenTags.SCREEN))).assertIsDisplayed()
+            onNode(hasText("Compatibility") and hasAnyAncestor(hasTestTag(ComingSoonScreenTags.SCREEN))).assertIsDisplayed()
 
             onNodeWithTag(AppBottomBarTags.navItem(AppTab.Today)).performClick()
 

@@ -35,10 +35,11 @@ import app.youranima.resources.home_category_career
 import app.youranima.resources.home_category_health
 import app.youranima.resources.home_category_love
 import app.youranima.resources.home_cd_locked
-import app.youranima.resources.home_ic_category_career
 import app.youranima.resources.home_ic_category_health
 import app.youranima.resources.home_ic_category_love
 import app.youranima.resources.home_ic_lock
+import app.youranima.resources.ic_briefcase
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.DrawableResource
@@ -71,7 +72,7 @@ internal val ForecastCategory.tint: Color
 internal val ForecastCategory.illustration: DrawableResource
     get() =
         when (this) {
-            ForecastCategory.Career -> Res.drawable.home_ic_category_career
+            ForecastCategory.Career -> Res.drawable.ic_briefcase
             ForecastCategory.Love -> Res.drawable.home_ic_category_love
             ForecastCategory.Health -> Res.drawable.home_ic_category_health
         }
@@ -106,7 +107,7 @@ fun CategoryCard(
             modifier
                 .width(CardWidth)
                 .testTag(HomeScreenTags.categoryCard(forecast.id))
-                .homeCard(PaddingValues())
+                .appCard(PaddingValues())
                 .clip(MaterialTheme.shapes.large)
                 .clickable(onClick = onClick)
                 .padding(16.dp),

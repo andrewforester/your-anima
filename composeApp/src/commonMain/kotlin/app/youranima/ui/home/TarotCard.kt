@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.youranima.resources.Res
 import app.youranima.resources.home_tarot_title
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +40,7 @@ fun TarotCard(
                 .fillMaxWidth()
                 .height(160.dp)
                 .testTag(HomeScreenTags.TAROT)
-                .homeCard(PaddingValues())
+                .appCard(PaddingValues())
                 .clip(MaterialTheme.shapes.large)
                 .drawBehind {
                     drawRect(

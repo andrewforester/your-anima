@@ -18,12 +18,12 @@ import app.youranima.data.home.MockHomeRepository
 import app.youranima.resources.Res
 import app.youranima.resources.nav_chatroom
 import app.youranima.resources.nav_compatibility
-import app.youranima.resources.nav_psychics
 import app.youranima.resources.nav_readings
 import app.youranima.ui.components.AppBottomBar
 import app.youranima.ui.components.AppTab
 import app.youranima.ui.components.ComingSoonScreen
 import app.youranima.ui.home.HomeScreen
+import app.youranima.ui.psychics.PsychicsScreen
 import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +39,7 @@ fun AppShell(
     Box(modifier.fillMaxSize().background(MaterialTheme.appColors.background)) {
         when (selectedTab) {
             AppTab.Today -> HomeScreen()
-            AppTab.Psychics -> ComingSoonScreen(title = stringResource(Res.string.nav_psychics))
+            AppTab.Psychics -> PsychicsScreen()
             AppTab.Compatibility -> ComingSoonScreen(title = stringResource(Res.string.nav_compatibility))
             AppTab.Chatroom -> ComingSoonScreen(title = stringResource(Res.string.nav_chatroom))
             AppTab.Readings -> ComingSoonScreen(title = stringResource(Res.string.nav_readings))

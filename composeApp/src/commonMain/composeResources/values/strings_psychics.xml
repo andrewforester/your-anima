@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="psychics_title">Psychics</string>
+    <string name="psychics_cd_favourites">Favourites</string>
+
+    <!-- Promo banner -->
+    <string name="psychics_promo_title">You have %1$d minutes FREE</string>
+    <string name="psychics_promo_subtitle">with %1$d psychics</string>
+
+    <!-- Filter -->
+    <string name="psychics_filter_all">All</string>
+    <string name="psychics_filter_call">Call</string>
+    <string name="psychics_filter_chat">Chat</string>
+
+    <!-- Sections -->
+    <string name="psychics_view_all">View All</string>
+
+    <!-- Psychic card -->
+    <string name="psychics_status_online">online</string>
+    <string name="psychics_status_busy">busy</string>
+    <plurals name="psychics_experience">
+        <item quantity="one">%1$d year of experience</item>
+        <item quantity="other">%1$d years of experience</item>
+    </plurals>
+    <string name="psychics_cd_rating">Rating %1$d of 5, %2$d reviews</string>
+    <string name="psychics_action_call">Call</string>
+    <string name="psychics_action_chat">Chat</string>
+    <string name="psychics_free_minutes">%1$d free minutes</string>
+    <string name="psychics_price_per_minute">then %1$s/min</string>
+</resources>
