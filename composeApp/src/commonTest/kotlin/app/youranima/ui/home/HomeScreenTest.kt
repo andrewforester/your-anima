@@ -4,6 +4,7 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasAnyAncestor
@@ -11,6 +12,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performSemanticsAction
@@ -131,5 +133,25 @@ class HomeScreenTest {
 
             assertEquals(love, clickedCategory)
             assertEquals(1, tarotClicks)
+        }
+
+    @Test
+    fun headerCollapsesAndTabsStayPinnedWhenScrolled() =
+        runComposeUiTest {
+            showHome()
+            onNodeWithTag(HomeScreenTags.ADD_STORY).assertIsDisplayed()
+
+            onNodeWithTag(HomeScreenTags.SCREEN).performScrollToNode(hasTestTag(HomeScreenTags.TAROT))
+
+            // Compact bar: name and settings stay, add-story and Birth Chart are gone.
+            onNodeWithTag(HomeScreenTags.USER_NAME).assertIsDisplayed()
+            onNodeWithTag(HomeScreenTags.SETTINGS).assertIsDisplayed()
+            onNodeWithTag(HomeScreenTags.ADD_STORY).assertIsNotDisplayed()
+            onNodeWithTag(HomeScreenTags.BIRTH_CHART).assertIsNotDisplayed()
+
+            // Tabs are pinned under the bar, and a real tap on them still selects.
+            onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Tomorrow)).assertIsDisplayed().performClick()
+            onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Tomorrow)).assertIsSelected()
+            onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Today)).assertIsNotSelected()
         }
 }

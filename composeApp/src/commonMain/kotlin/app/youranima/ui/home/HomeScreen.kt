@@ -1,6 +1,5 @@
 package app.youranima.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,8 +9,8 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -22,22 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import app.youranima.data.home.ForecastPeriod
 import app.youranima.data.home.HomeRepository
 import app.youranima.data.home.MockHomeRepository
 import app.youranima.data.home.ReadingOffer
-import app.youranima.resources.Res
-import app.youranima.resources.home_hero_background
 import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
-import org.jetbrains.compose.resources.painterResource
-import kotlin.math.roundToInt
 
 /** Stateful entry point: loads the data and keeps the date-tab selection. */
 @Composable
@@ -59,6 +53,7 @@ fun HomeScreen(
     state: HomeUiState,
     onPeriodSelect: (ForecastPeriod) -> Unit,
     modifier: Modifier = Modifier,
+    headerState: CollapsingHeaderState = rememberCollapsingHeaderState(),
     onAddStoryClick: () -> Unit = {},
     onAvatarClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
@@ -74,17 +69,21 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.appColors.background)
                 .testTag(HomeScreenTags.SCREEN)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(headerState.scrollState),
     ) {
         Box {
             HeroBackground()
-            Column(Modifier.statusBarsPadding()) {
-                TopBar(
+            Column {
+                // Pinned to the top of the viewport; above the feed, which scrolls under it.
+                CollapsingProfileHeader(
+                    user = state.user,
+                    state = headerState,
+                    modifier = Modifier.zIndex(2f).offset { IntOffset(0, headerState.scrollState.value) },
                     onAddStoryClick = onAddStoryClick,
                     onAvatarClick = onAvatarClick,
                     onSettingsClick = onSettingsClick,
+                    onBirthChartClick = onBirthChartClick,
                 )
-                ProfileHeader(user = state.user, onBirthChartClick = onBirthChartClick)
                 Column(
                     modifier =
                         Modifier
@@ -93,74 +92,53 @@ fun HomeScreen(
                             .padding(WindowInsets.navigationBars.asPaddingValues()),
                     verticalArrangement = Arrangement.spacedBy(ContentGap),
                 ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(ContentGap),
-                    ) {
-                        state.readings.forEach { offer ->
-                            ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
-                        }
-                        DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
-                        FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
+                    state.readings.forEach { offer ->
+                        ReadingCard(offer = offer, onAskClick = { onAskClick(offer) }, modifier = CardPadding)
                     }
+                    PinnedDateTabs(
+                        selected = state.selectedPeriod,
+                        onSelect = onPeriodSelect,
+                        headerState = headerState,
+                        modifier = Modifier.zIndex(1f),
+                    )
+                    FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick, modifier = CardPadding)
                     // Full width: the row scrolls under the screen edges.
                     CategoryRow(categories = state.categories, onCategoryClick = onCategoryClick)
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(ContentGap),
-                    ) {
-                        TipCard(tip = state.tipOfTheDay)
-                        YesNoCard(yes = state.yesForToday, no = state.noForToday)
-                        TarotCard(onClick = onTarotClick)
-                    }
+                    TipCard(tip = state.tipOfTheDay, modifier = CardPadding)
+                    YesNoCard(yes = state.yesForToday, no = state.noForToday, modifier = CardPadding)
+                    TarotCard(onClick = onTarotClick, modifier = CardPadding)
                 }
             }
         }
     }
 }
 
-/** Gap between the blocks of the content column. */
+/** Gap between the blocks of the feed. */
 private val ContentGap = 20.dp
+
+/** Side margins of the feed cards. */
+private val CardPadding = Modifier.padding(horizontal = 16.dp)
 
 /** Clearance under the scrollable content for the shared bottom bar drawn by [app.youranima.ui.navigation.AppShell]. */
 private val ContentBottomPadding = 100.dp
-
-// Hero art in the design: a 402x420 sky inside a 550x480 vector that overflows 70dp to the left
-// (Figma inset 0 -19.4% -14.29% -17.41%). Scaled with the screen width.
-private const val HERO_FRAME_WIDTH = 402f
-private const val HERO_FRAME_HEIGHT = 420f
-private const val HERO_ART_WIDTH = 550f
-private const val HERO_ART_HEIGHT = 480f
-private const val HERO_ART_LEFT = 70f
-
-@Composable
-private fun HeroBackground() {
-    Image(
-        painter = painterResource(Res.drawable.home_hero_background),
-        contentDescription = null,
-        contentScale = ContentScale.FillBounds,
-        modifier =
-            Modifier.layout { measurable, constraints ->
-                val width = constraints.maxWidth
-                val scale = width / HERO_FRAME_WIDTH
-                val placeable =
-                    measurable.measure(
-                        Constraints.fixed(
-                            (HERO_ART_WIDTH * scale).roundToInt(),
-                            (HERO_ART_HEIGHT * scale).roundToInt(),
-                        ),
-                    )
-                layout(width, (HERO_FRAME_HEIGHT * scale).roundToInt()) {
-                    placeable.place(-(HERO_ART_LEFT * scale).roundToInt(), 0)
-                }
-            },
-    )
-}
 
 @Preview
 @Composable
 private fun HomeScreenPreview() {
     AppTheme {
         HomeScreen(state = PreviewHomeUiState, onPeriodSelect = {})
+    }
+}
+
+/** Compact state: scrolled to the end, header collapsed, date tabs pinned. */
+@Preview
+@Composable
+private fun HomeScreenCompactPreview() {
+    AppTheme {
+        HomeScreen(
+            state = PreviewHomeUiState,
+            onPeriodSelect = {},
+            headerState = rememberCollapsingHeaderState(rememberScrollState(Int.MAX_VALUE)),
+        )
     }
 }
