@@ -44,6 +44,15 @@ Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) install
 - Every screen gets at least one UI test in `commonTest`.
 - Mock data lives in `composeApp/src/commonMain/kotlin/app/youranima/data/` as plain Kotlin objects, behind a small interface so a real backend can replace it later.
 
+## Architecture & code quality
+
+- **Layers:** `data/` (models, repository interfaces, mocks) → screen state holder (UI state + events, e.g. a `ViewModel`/presenter when a screen gets logic) → stateless composables (state in, callbacks out). UI never reads mocks directly; it gets state.
+- **Unidirectional data flow:** immutable UI state (`data class`, `@Immutable` where useful), events as callbacks, no business logic in composables.
+- **Small files:** one component (plus its preview) per file; split a file when it grows past ≈200–250 lines or does two jobs. Composables past ≈60 lines get split into named sub-composables.
+- **Don't duplicate (DRY):** before writing a component, look in `ui/components/` and other screens. If a second screen needs the same piece, move it to `ui/components/` (a Theme-zone PR, see `docs/COORDINATION.md`) instead of copying it. Same for dimensions and styles: reuse tokens, add a token rather than repeat a literal.
+- **Single responsibility, clear names, no dead code**, no speculative abstractions (YAGNI): build what the Issue asks, in a shape a real backend can plug into.
+- **Package docs:** every code package you create or change has an `agents.md`: a short business description of what the package does (which screen or feature, what the user sees, main types and how they connect, where the data comes from, known stubs). Keep it under ≈40 lines, write it for the next agent, update it in the same PR as the code.
+
 ## Skills (roles)
 
 `.claude/skills/`: `orchestrate` (coordinator: Issues, sessions, merge, reports), `develop` (a session working one Issue), `design` (design package from a screenshot, no Figma), `implement-screen` (how to build a screen), `quick-fix` (small fixes: filing, launching, working them).
