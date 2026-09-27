@@ -131,7 +131,7 @@ private fun AscendantSymbol() {
         text =
             buildAnnotatedString {
                 append(symbol.take(1))
-                withStyle(SpanStyle(fontSize = 0.6.em, baselineShift = BaselineShift.Superscript)) {
+                withStyle(SpanStyle(fontSize = 0.7.em, baselineShift = BaselineShift.Superscript)) {
                     append(symbol.drop(1))
                 }
             },

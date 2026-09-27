@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -56,6 +57,9 @@ import org.jetbrains.compose.resources.stringResource
 /** Bottom padding of the bar in the design (home indicator area); the real inset wins if it is larger. */
 private val BarBottomPadding = 24.dp
 
+/** Bar content height: 84 (design) - 12 top - 24 bottom. */
+private val NavItemMinHeight = 48.dp
+
 @Composable
 fun HomeBottomBar(
     selected: HomeNavItem,
@@ -71,7 +75,7 @@ fun HomeBottomBar(
                 Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets(bottom = BarBottomPadding)))
-                    .padding(top = 11.dp)
+                    .padding(top = 11.dp) // + 1dp top border = 12
                     .selectableGroup(),
         ) {
             HomeNavItem.entries.forEach { item ->
@@ -98,8 +102,8 @@ private fun NavItem(
     val colors = MaterialTheme.appColors
     val tint = if (selected) colors.primary else colors.onSurfaceMuted
     Column(
-        modifier = modifier.selectable(selected = selected, onClick = onClick, role = Role.Tab),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier.heightIn(min = NavItemMinHeight).selectable(selected = selected, onClick = onClick, role = Role.Tab),
+        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box {

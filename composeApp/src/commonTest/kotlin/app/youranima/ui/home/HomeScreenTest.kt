@@ -1,5 +1,6 @@
 package app.youranima.ui.home
 
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -9,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.runComposeUiTest
 import app.youranima.data.home.ForecastPeriod
 import app.youranima.data.home.MockHomeRepository
@@ -52,7 +54,8 @@ class HomeScreenTest {
             }
             onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Today)).assertIsSelected()
 
-            onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Week)).performClick()
+            // Semantics click: in the small test window the tab can sit under the bottom bar.
+            onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Week)).performSemanticsAction(SemanticsActions.OnClick)
 
             onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Week)).assertIsSelected()
             onNodeWithTag(HomeScreenTags.tab(ForecastPeriod.Today)).assertIsNotSelected()
