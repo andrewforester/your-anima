@@ -5,6 +5,10 @@ string|home_ask|QXNr
 string|home_avatar|UHJvZmlsZSBwaWN0dXJl
 string|home_badge_free|RnJlZQ==
 string|home_birth_chart|QmlydGggQ2hhcnQ=
+string|home_category_career|Q2FyZWVy
+string|home_category_health|SGVhbHRo
+string|home_category_love|TG92ZQ==
+string|home_cd_locked|TG9ja2Vk
 string|home_focus_mood_info|QWJvdXQgRm9jdXMgJiBNb29k
 string|home_focus_mood_title|Rm9jdXMgJiBNb29k
 string|home_mood_career|Q2FyZWVy
@@ -18,6 +22,7 @@ string|home_nav_compatibility|Q29tcGF0aWJpbGl0eQ==
 string|home_nav_psychics|UHN5Y2hpY3M=
 string|home_nav_readings|UmVhZGluZ3M=
 string|home_nav_today|VG9kYXk=
+string|home_no_title|Tm8gZm9yIHRvZGF5
 string|home_reading_chat|Q2hhdA==
 string|home_reading_free|YSBmcmVlIHBlcnNvbmFsIHJlYWRpbmc=
 string|home_reading_lead|WW91IGhhdmUgJTEkcw==
@@ -40,3 +45,6 @@ string|home_tab_today|VG9kYXk=
 string|home_tab_tomorrow|VG9tb3Jyb3c=
 string|home_tab_week|V2Vlaw==
 string|home_tab_yesterday|WWVzdGVyZGF5
+string|home_tarot_title|VGFyb3QgSW5zaWdodA==
+string|home_tip_label|VGlwIGZvciB0aGUgZGF5
+string|home_yes_title|WWVzIGZvciB0b2RheQ==
