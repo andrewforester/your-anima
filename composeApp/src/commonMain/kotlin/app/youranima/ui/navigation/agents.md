@@ -8,6 +8,10 @@ The root composable rendered by `App()` (`AppTheme { AppShell() }`). Holds the s
 - the current tab's content (`when (selectedTab)`): `Today` → `ui/home/HomeScreen`, `Psychics` → `ui/psychics/PsychicsScreen` (#36), `Readings` → `ui/readings/ReadingsScreen` (#42), `Chatroom` → `ui/chatroom/ChatroomScreen` (#50), `Compatibility` → `ui/compatibility/CompatibilityScreen` (#51);
 - `ui/components/AppBottomBar` pinned to the bottom, receiving `NavBadges` from `HomeRepository.navBadges()` (the existing Today-screen mock — badges are not hardcoded here).
 
+## Paywall overlay (#59)
+
+`showPaywall` (`rememberSaveable`): when `true`, `ui/paywall/PaywallScreen` is drawn over the tab content **instead of** the bottom bar (the tab stays composed underneath, so its scroll position survives). Opened by `HomeScreen(onLockedClick = …)` (locked category cards), closed by the paywall's X (`onClose`). No enter/exit animation, no system back handling (`BackHandler` would need a new dependency).
+
 No navigation library, back stack or deep links (out of scope for #35) — just a `when` over an enum and one piece of saved state.
 
 ## Stubs

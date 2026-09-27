@@ -29,7 +29,8 @@ fun LegalText(
 ) {
     val colors = MaterialTheme.appColors
     val intro = stringResource(Res.string.paywall_legal_intro)
-    val charge = stringResource(Res.string.paywall_legal_charge, plan.price, plan.period)
+    // Non-breaking spaces keep "1 349,99 UAH" and "3 months" on one line.
+    val charge = stringResource(Res.string.paywall_legal_charge, plan.price.nonBreaking(), plan.period.nonBreaking())
     val outro = stringResource(Res.string.paywall_legal_outro)
     val text =
         buildAnnotatedString {
@@ -47,6 +48,8 @@ fun LegalText(
         modifier = modifier.fillMaxWidth().padding(horizontal = ScreenPadding).testTag(PaywallScreenTags.LEGAL),
     )
 }
+
+private fun String.nonBreaking() = replace(' ', '\u00A0')
 
 @Preview
 @Composable

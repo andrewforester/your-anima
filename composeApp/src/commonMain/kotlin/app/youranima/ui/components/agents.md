@@ -28,7 +28,7 @@ Icon on a square container filled with the icon's tint at 10 % (`size`, `iconSiz
 
 ## ScreenTopBar (`ScreenTopBar.kt`)
 
-Tab-screen top bar: 56 high, padding 20, centred `cardTitle` title, optional `leading` icon (≤ `ScreenTopBarIconSize` = 22dp, the title is inset by the same width on both sides so it stays centred). `titleModifier` goes on the title text (test tags). Users: Psychics (heart, via `PsychicsTopBar`), Readings (no icon). Moved from `ui/psychics/PsychicsTopBar` in #42.
+Tab-screen top bar: 56 high, padding 20, centred `cardTitle` title, optional `leading` icon (≤ `ScreenTopBarIconSize` = 22dp, the title is inset by the same width on both sides so it stays centred). `titleModifier` goes on the title text (test tags). Optional `trailing` slot (#59) at the right edge for a short text button; when set, the title is inset 64dp on both sides. Users: Psychics (heart, via `PsychicsTopBar`), Readings (no icon), Paywall (close X + "Restore"). Moved from `ui/psychics/PsychicsTopBar` in #42.
 
 ## TagChip (`TagChip.kt`)
 
@@ -36,7 +36,7 @@ Non-interactive chip: 20 high, radius 10, padding 8, gap 4, optional `leading` +
 
 ## PrimaryButton (`PrimaryButton.kt`)
 
-32-high button, radius 16, `pill` label, optional 14dp leading `icon`: `primary` fill when `enabled`, glass + muted content (no clicks) when not. Users: Psychics Call/Chat (with icons), Chatroom "See Psychics" (no icon). Moved from `ui/psychics/ChannelButton` in #50.
+Fully rounded button, `height` 32 by default (`pill` label; from 40 up the `button` label), optional 14dp leading `icon`: `primary` fill when `enabled`, glass + muted content (no clicks) when not. Users: Psychics Call/Chat (with icons), Chatroom "See Psychics" (no icon), Paywall "Subscribe" (48, full width, #59). Moved from `ui/psychics/ChannelButton` in #50.
 
 ## RatingRow (`RatingRow.kt`)
 
