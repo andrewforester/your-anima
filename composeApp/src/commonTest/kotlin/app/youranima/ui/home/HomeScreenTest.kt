@@ -6,7 +6,9 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -74,7 +76,7 @@ class HomeScreenTest {
                 onNodeWithTag(HomeScreenTags.moodRing(category)).assertIsDisplayed()
             }
             onNodeWithText("50%").assertIsDisplayed()
-            onNodeWithText("Career").assertIsDisplayed()
+            onNode(hasText("Career") and hasAnyAncestor(hasTestTag(HomeScreenTags.FOCUS_MOOD))).assertIsDisplayed()
         }
 
     @Test
@@ -105,7 +107,7 @@ class HomeScreenTest {
                 onNodeWithTag(HomeScreenTags.CATEGORIES)
                     .performScrollToNode(hasTestTag(HomeScreenTags.categoryCard(forecast.id)))
                 onNodeWithTag(HomeScreenTags.categoryCard(forecast.id)).assertIsDisplayed()
-                onNodeWithTag(HomeScreenTags.lockBadge(forecast.id)).assertIsDisplayed()
+                onNodeWithTag(HomeScreenTags.lockBadge(forecast.id), true).assertIsDisplayed()
             }
 
             onNodeWithTag(HomeScreenTags.TIP).performScrollTo().assertIsDisplayed()

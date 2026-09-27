@@ -50,17 +50,20 @@ fun YesNoBlock(
                 YesNoKind.No -> Res.drawable.home_ic_cross
             },
         )
+    // Yes: teal top-right -> blue bottom-left. No: red top-left -> plum bottom-right.
     val badgeBrush =
         when (kind) {
-            // Teal top-right -> blue bottom-left.
-            YesNoKind.Yes ->
+            YesNoKind.Yes -> {
                 Brush.linearGradient(
                     colors = listOf(colors.yesGradientStart, colors.yesGradientEnd),
                     start = Offset(Float.POSITIVE_INFINITY, 0f),
                     end = Offset(0f, Float.POSITIVE_INFINITY),
                 )
-            // Red top-left -> plum bottom-right.
-            YesNoKind.No -> Brush.linearGradient(listOf(colors.noGradientStart, colors.noGradientEnd))
+            }
+
+            YesNoKind.No -> {
+                Brush.linearGradient(listOf(colors.noGradientStart, colors.noGradientEnd))
+            }
         }
     Row(
         modifier =
