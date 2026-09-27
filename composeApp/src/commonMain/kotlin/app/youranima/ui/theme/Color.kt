@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-/** Colour tokens from the Figma frame `astrology-home` (docs/design/astrology-home/SPEC.md). */
+/** Colour tokens from docs/design/astrology-home/SPEC.md and docs/design/home-feed/SPEC.md. */
 @Immutable
 data class AppColors(
     val background: Color,
@@ -25,6 +25,14 @@ data class AppColors(
     val textSoft: Color,
     val glassFill: Color,
     val glassBorder: Color,
+    val lockBadge: Color,
+    val tipGradientStart: Color,
+    val tipGradientEnd: Color,
+    val yesGradientStart: Color,
+    val yesGradientEnd: Color,
+    val noGradientStart: Color,
+    val noGradientEnd: Color,
+    val cardGlow: Color,
 )
 
 internal val DarkAppColors =
@@ -47,6 +55,14 @@ internal val DarkAppColors =
         textSoft = Color(0xFFEFEAEA),
         glassFill = Color.White.copy(alpha = 0.07f),
         glassBorder = Color.White.copy(alpha = 0.10f),
+        lockBadge = Color(0xFF323996),
+        tipGradientStart = Color(0xFF051B6F),
+        tipGradientEnd = Color(0xFF36327A),
+        yesGradientStart = Color(0xFF26A09B),
+        yesGradientEnd = Color(0xFF2478A4),
+        noGradientStart = Color(0xFFB24044),
+        noGradientEnd = Color(0xFF6C235F),
+        cardGlow = Color(0xFF252B78),
     )
 
 internal val LocalAppColors = staticCompositionLocalOf { DarkAppColors }
