@@ -7,6 +7,11 @@ updates:
     groups:
       kotlin-and-compose:
         patterns: ["org.jetbrains.kotlin*", "org.jetbrains.compose*", "org.jetbrains.androidx*"]
+    ignore:
+      # material3 alphas are cut against the NEXT Compose line (1.13.0-alpha01 pulls ui 1.13 + a newer
+      # skiko than the web bundle ships -> LinkError, blank web app). Bump it by hand with compose-multiplatform.
+      - dependency-name: "org.jetbrains.compose.material3:material3"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

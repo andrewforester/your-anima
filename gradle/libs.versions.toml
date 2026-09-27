@@ -5,7 +5,9 @@ android-minSdk = "24"
 android-targetSdk = "37"
 androidx-activity = "1.13.0"
 androidx-lifecycle = "2.11.0"
-compose-material3 = "1.13.0-alpha01"
+# Keep on the same line as compose-multiplatform: a newer material3 alpha drags in the next Compose UI
+# and skiko, and the web app fails to start (LinkError). Dependabot ignores its minor bumps.
+compose-material3 = "1.12.0-alpha03"
 compose-multiplatform = "1.12.1"
 kotlin = "2.4.20"
 ktlintGradle = "14.2.0"
