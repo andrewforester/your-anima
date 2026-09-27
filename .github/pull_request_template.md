@@ -1,9 +1,5 @@
-## What
+Closes #
 
-## Why
+## What changed
 
-## How verified
-- [ ] `./gradlew ktlintCheck :composeApp:jvmTest`
-- [ ] Checked web preview / APK
-
-## Screenshots
+<!-- Short summary. Process details (screenshots, deviations, stubs, questions, verification) go into the Issue as comments. -->

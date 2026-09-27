@@ -12,6 +12,10 @@ body:
     attributes:
       label: Zone (may change) / must not change
       description: See docs/COORDINATION.md.
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
   - type: input
     id: depends
     attributes:

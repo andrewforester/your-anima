@@ -5,46 +5,54 @@ description: Coordinate work on Your Anima as the orchestrator session — turn 
 
 # Orchestrate
 
-You plan, launch, watch and merge. You do **not** write feature code. You may edit only `docs/**`, `CLAUDE.md`, `.claude/**`, `.github/ISSUE_TEMPLATE/**` (via your own PRs). Read `CLAUDE.md` and `docs/COORDINATION.md` first.
+You plan, launch, watch and merge. You do **not** write feature code. You may edit only `docs/**`, `CLAUDE.md`, `.claude/**`, `.github/ISSUE_TEMPLATE/**`, `.github/pull_request_template.md` (via your own PRs), and a design package on its design branch before merging it. Read `CLAUDE.md` and `docs/COORDINATION.md` first, especially **Design source of truth** and **Process lives in Issues**.
 
 ## State lives in GitHub Issues
 - One task = one Issue = one session = one branch `claude/<short>` = one PR with `Closes #N`.
-- Labels (see `docs/COORDINATION.md`): type `screen|theme|infra|docs|design`; status `status: ready` → `status: in progress` → `status: review`; `status: blocked`, `needs: human`. Swap the status label as it changes; comment with the session link when you launch.
-- Never keep task tables in the repo. `COORDINATION.md` changes only when a standing rule changes.
+- Labels (see `docs/COORDINATION.md`): type `screen|theme|infra|docs|design`; status `status: ready` → `status: in progress` → closed by the PR; `status: blocked`, `needs: human`. Swap the status label as it changes.
+- Everything about the process is an Issue comment: launch (session id), scope changes, answers to questions, decisions, your verification result with the web screenshot. Never keep task tables or status in the repo.
+
+## Before writing Issues: settle the scope
+Ask the human, in one message, what is **out of scope** when the request doesn't say so (e.g. "the header and the nav bar visible in the screenshot: include or not?"). A running session doesn't reliably see later Issue edits, so scope must be final before launch. If it does change later, comment on the Issue **and** check the result for it before merging.
 
 ## Turn a request into Issues
-1. Split into tasks with non-overlapping zones (the ownership table in `COORDINATION.md`). Hot spots (theme, build files, `App.kt`, `.github/**`) are separate tasks with one owner. At most 3 sessions in parallel.
-2. Design first. A screen needs `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`) in `main` before its developer starts.
-   - From a **screenshot**: create a `design` Issue for a session running the `design` skill.
+1. Split into tasks with non-overlapping zones (the ownership table in `COORDINATION.md`). Hot spots (theme, build files, `App.kt`, `.github/workflows/**`) are separate tasks with one owner. At most 3 sessions in parallel.
+2. Design first. A screen (or a new part of a screen) needs `docs/design/<name>/` (`SPEC.md`, `screenshot.png`, `assets/`) in `main` before its developer starts.
+   - From a **screenshot**: sessions never see the chat, so put the image in the repo yourself. Create `claude/design-<name>` from `main`, commit it as `docs/design/<name>/screenshot.png`, push, then create a `design` Issue (template `design.yml`) that embeds it by raw URL, and launch the session on that branch.
    - From **Figma**: the account is on Starter, **20 Figma MCP calls per month**. Only you call Figma: one `get_design_context` (+ `get_variable_defs` if needed) per frame. Download the assets right away (URLs expire in 7 days), write the package yourself, and merge it.
-3. Write each Issue from `.github/ISSUE_TEMPLATE/`: what to build, the design package path, the zone (may change / must not change), what it depends on, and when it's done. It must be self-contained: the session never sees your conversation.
-4. Theme and screen can run in parallel only if the theme Issue fixes the API contract (exact token names) and the screen Issue says to merge the theme branch as soon as it exists.
+   - Figma is the style reference; a screenshot only sets content (see `COORDINATION.md`). Check that a screenshot-based package restyles blocks in the Figma language.
+3. Review the design PR: scope matches the Issue, questions are in the Issue. For each open question pick a default and write it into `SPEC.md` → **Decisions** (you may edit the package on its branch), and post the list in the Issue. Then merge.
+4. Write each implementation Issue from `.github/ISSUE_TEMPLATE/`: what to build, design package path, zone (may change / must not change), **out of scope**, dependencies, done-when. It must be self-contained: the session never sees your conversation.
+5. Theme and screen can run in parallel only if the theme Issue fixes the API contract (exact token names) and the screen Issue says to merge the theme branch as soon as it exists.
 
 ## Launch a session
-`create_session` with `source_url` = repo, `outcome_branch` = `claude/<short>`, `permission_mode: auto`, tags `your-anima`, `issue-N`, and a prompt like:
+`create_session` with `source_url` = repo, `outcome_branch` = `claude/<short>` (and `source_revision` = that branch if you pre-created it), `permission_mode: auto`, tags `your-anima`, `issue-N`, a `model` by task size (below), and a prompt like:
 
 ```
 You are a working session on Your Anima. No human is watching; work until the PR is open.
 Task: GitHub Issue #N in andrewforester/your-anima. Branch: claude/<short>.
-Use the `develop` skill (or `design` for a design Issue). Read the Issue in full via the GitHub MCP tools.
+Use the `develop` skill (or `design` for a design Issue). Read the Issue and all its comments via the GitHub MCP tools.
 Start with `git fetch origin && git merge origin/main`.
 Don't call Figma MCP. Don't merge the PR; the orchestrator does.
-If blocked, comment on the Issue with exactly what is missing, push what you have, and stop.
+Never wait for an answer: post questions in the Issue, take the conservative option, continue.
 ```
 
 Then set `status: in progress` and comment on the Issue with the session id.
 
+**Model:** `claude-sonnet-5` for theme tokens, small fixes, docs and mechanical tasks; the default (Opus) for design packages and screens.
+
 ## Follow by events, not polling
 - **No recurring check-ins.** Every wake-up re-reads your whole context and burns the usage limit.
-- You get notified when a child session's turn fails. A clean finish does **not** notify you. So when a session should be done, set a one-off `send_later` for that time (screens take about 20–30 min). As soon as its PR exists, call `subscribe_pr_activity` on it.
-- You **cannot message a cloud session directly**. Steer it with a comment on its Issue or PR, which it reads when it checks. If it's idle and needs more, launch a follow-up session on the same branch with a precise prompt.
+- You get notified when a child session's turn fails. A clean finish does **not** notify you. So set a one-off `send_later` for when it should be done: design ≈ 15 min, theme ≈ 10 min, screen part ≈ 20–25 min. As soon as its PR exists, call `subscribe_pr_activity` on it.
+- You **cannot message a cloud session directly**. Steer it with an Issue comment, which it reads when it checks. If it's idle and needs more, launch a follow-up session on the same branch with a precise prompt.
 - Check the rate limit (`get_session` → `rate_limit_info`) before launching a batch. If you're near the limit, launch fewer sessions.
 
 ## Verify and merge (the human has allowed autonomous merging)
 Merge a PR yourself when all of these hold:
-1. CI on the PR is green and the diff stays inside the Issue's zone.
-2. There is a UI test, and for UI changes a web screenshot.
+1. CI on the PR is green and the diff stays inside the Issue's zone (and outside its out-of-scope list).
+2. There is a UI test, and for UI changes the session posted a web screenshot in the Issue.
 3. You checked it together with `main` and any other ready PRs: merge them locally, then run `./gradlew ktlintCheck :composeApp:jvmTest :composeApp:wasmJsBrowserDistribution`, serve the bundle, and take a Playwright screenshot at 402×874 with `locale: 'en-US'`. Any `pageerror` is a fail. A green build can still crash at startup.
+4. Post the result in the Issue: what you checked and your screenshot (branch `screens`, see `COORDINATION.md`).
 
 After merging:
 - Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs).
@@ -59,7 +67,7 @@ Ask the human (`needs: human`) about:
 - new dependencies or version bumps;
 - CI changes;
 - deleting anything;
-- design decisions the source doesn't answer.
+- design decisions that neither Figma nor the screenshot answers and that are costly to change later (cheap ones: pick a default, record it, tell the human in the report).
 
 ## Talking to the human
 Write only when something is finished (with links), blocked, or needs a decision. No progress chatter.

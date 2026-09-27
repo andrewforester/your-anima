@@ -1,0 +1,42 @@
+name: Design
+description: Design package from a screenshot of the original app (no Figma)
+labels: [design]
+body:
+  - type: input
+    id: package
+    attributes:
+      label: Design package
+      description: docs/design/<name>/ — the orchestrator commits the screenshot there on branch claude/design-<name> before launch.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Embed it by raw URL from the design branch, plus size in px and assumed width in dp.
+  - type: textarea
+    id: scope
+    attributes:
+      label: In scope
+      description: Which blocks of the screenshot to specify, top to bottom, and where they go on the screen.
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: Parts visible in the screenshot that must NOT be specified (separate tasks).
+      value: "- "
+  - type: textarea
+    id: style
+    attributes:
+      label: Style
+      value: Figma is the style reference (theme + docs/design/astrology-home/); the screenshot sets content only. See docs/COORDINATION.md → Design source of truth.
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - docs/design/<name>/SPEC.md (with Decisions), screenshot.png, assets/
+        - Open questions and new tokens posted as an Issue comment
+        - PR to main with "Closes #N"; only docs/design/<name>/** changed
