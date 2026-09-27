@@ -6,7 +6,12 @@ body:
     id: figma
     attributes:
       label: Figma link
-      description: Link to the frame (Share → Copy link)
+      description: Link to the frame (Share → Copy link). The coordinator exports it once into docs/design/<screen>/.
+  - type: input
+    id: spec
+    attributes:
+      label: Design package
+      description: Path to the exported spec, e.g. docs/design/<screen>/ (SPEC.md, screenshot.png, assets/). Sessions don't call Figma MCP.
   - type: textarea
     id: screenshot
     attributes:
@@ -17,3 +22,29 @@ body:
     attributes:
       label: Behavior
       description: Taps, navigation, states (empty / loading / error)
+  - type: textarea
+    id: zone
+    attributes:
+      label: Zone (may change) / must not change
+      description: See docs/COORDINATION.md.
+      value: |
+        May change:
+        - composeApp/src/commonMain/kotlin/app/youranima/ui/<screen>/**
+        - composeApp/src/commonMain/kotlin/app/youranima/data/<screen>/**
+        - composeApp/src/commonTest/kotlin/app/youranima/ui/<screen>/**
+        - composeResources/values/strings_<screen>.xml, composeResources/drawable/<screen>_*
+        Must not change: build files, ui/theme/**, other ui/<screen>/**, App.kt (unless stated)
+  - type: input
+    id: depends
+    attributes:
+      label: Depends on
+      description: Issues / PRs that must be in main first (or whose branch to merge)
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - Matches the design (web screenshot 402×874 attached to the PR)
+        - @Preview for the screen and components, UI test in commonTest
+        - ./gradlew ktlintCheck :composeApp:jvmTest green
+        - PR to main with "Closes #N"

@@ -8,6 +8,15 @@ body:
     validations:
       required: true
   - type: textarea
+    id: zone
+    attributes:
+      label: Zone (may change) / must not change
+      description: See docs/COORDINATION.md.
+  - type: input
+    id: depends
+    attributes:
+      label: Depends on
+  - type: textarea
     id: done
     attributes:
       label: Done when
