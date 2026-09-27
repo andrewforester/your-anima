@@ -15,7 +15,8 @@ Demo clone of an existing mobile app. One Compose Multiplatform codebase for **A
 | `composeApp/src/iosMain/` | `MainViewController()` for the iOS host. |
 | `androidApp/` | Thin Android host (`MainActivity` → `App()`). Separate module because AGP 9 forbids an application in a KMP module. |
 | `iosApp/` | Thin Xcode host (SwiftUI → `MainViewControllerKt.MainViewController()`), framework `ComposeApp`. |
-| `docs/COORDINATION.md` | File ownership between parallel Claude sessions. Read it before touching files. |
+| `docs/COORDINATION.md` | Standing rules for parallel Claude sessions: file ownership, Issue labels. Read it before touching files. Task status lives in GitHub Issues, not in the repo. |
+| `docs/design/<screen>/` | Design package exported once from Figma (`SPEC.md`, `screenshot.png`, `assets/`). Build from it; don't call Figma MCP. |
 
 Platform hosts must stay thin. Put platform-specific code in `composeApp/src/<platform>Main` via `expect`/`actual` only when unavoidable.
 
