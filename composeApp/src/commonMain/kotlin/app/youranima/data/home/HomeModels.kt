@@ -45,12 +45,6 @@ data class MoodScore(
     val percent: Int,
 )
 
-@Immutable
-data class NavBadges(
-    val psychicsFree: Boolean,
-    val unreadChats: Int,
-)
-
 /** Topic of a category forecast card; picks its title and illustration. */
 enum class ForecastCategory { Career, Love, Health }
 
@@ -67,7 +61,6 @@ data class HomeData(
     val user: UserProfile,
     val readings: List<ReadingOffer>,
     val moodByPeriod: Map<ForecastPeriod, List<MoodScore>>,
-    val badges: NavBadges,
     val categories: List<CategoryForecast>,
     val tipOfTheDay: String,
     val yesForToday: List<String>,

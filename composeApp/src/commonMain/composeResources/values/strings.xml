@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared bottom nav bar (AppBottomBar) -->
+    <string name="nav_today">Today</string>
+    <string name="nav_psychics">Psychics</string>
+    <string name="nav_compatibility">Compatibility</string>
+    <string name="nav_chatroom">Chatroom</string>
+    <string name="nav_readings">Readings</string>
+    <string name="nav_badge_free">Free</string>
+
+    <!-- Placeholder for tabs without a screen yet -->
+    <string name="coming_soon_subtitle">Coming soon</string>
+</resources>

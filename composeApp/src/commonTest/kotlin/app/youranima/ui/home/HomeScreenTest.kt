@@ -11,7 +11,6 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performSemanticsAction
@@ -80,24 +79,6 @@ class HomeScreenTest {
         }
 
     @Test
-    fun showsFiveNavItemsAndSwitchesSelection() =
-        runComposeUiTest {
-            showHome()
-
-            HomeNavItem.entries.forEach { item ->
-                onNodeWithTag(HomeScreenTags.navItem(item)).assertIsDisplayed()
-            }
-            onNodeWithTag(HomeScreenTags.navItem(HomeNavItem.Today)).assertIsSelected()
-            onNodeWithText("FREE").assertIsDisplayed()
-            onNodeWithText("3").assertIsDisplayed()
-
-            onNodeWithTag(HomeScreenTags.navItem(HomeNavItem.Readings)).performClick()
-
-            onNodeWithTag(HomeScreenTags.navItem(HomeNavItem.Readings)).assertIsSelected()
-            onNodeWithTag(HomeScreenTags.navItem(HomeNavItem.Today)).assertIsNotSelected()
-        }
-
-    @Test
     fun showsFeedBlocksBelowFocusMood() =
         runComposeUiTest {
             showHome()
@@ -135,9 +116,8 @@ class HomeScreenTest {
             setContent {
                 AppTheme {
                     HomeScreen(
-                        state = data.toUiState(ForecastPeriod.Today, HomeNavItem.Today),
+                        state = data.toUiState(ForecastPeriod.Today),
                         onPeriodSelect = {},
-                        onNavSelect = {},
                         onCategoryClick = { clickedCategory = it },
                         onTarotClick = { tarotClicks++ },
                     )

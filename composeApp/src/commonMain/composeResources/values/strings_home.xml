@@ -34,14 +34,6 @@
     <string name="home_mood_health">Health</string>
     <string name="home_mood_family">Family</string>
 
-    <!-- Bottom navigation -->
-    <string name="home_nav_today">Today</string>
-    <string name="home_nav_psychics">Psychics</string>
-    <string name="home_nav_compatibility">Compatibility</string>
-    <string name="home_nav_chatroom">Chatroom</string>
-    <string name="home_nav_readings">Readings</string>
-    <string name="home_badge_free">Free</string>
-
     <!-- Category forecasts -->
     <string name="home_category_career">Career</string>
     <string name="home_category_love">Love</string>
