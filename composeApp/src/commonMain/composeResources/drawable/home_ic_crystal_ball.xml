@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="14dp"
+    android:height="14dp"
+    android:viewportWidth="14"
+    android:viewportHeight="14">
+    <!-- Crystal ball emoji (U+1F52E) drawn as a vector: web builds have no emoji font. -->
+    <path android:pathData="M2,6a5,5 0,1 1,10,0a5,5 0,1 1,-10,0Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="5.4"
+                android:centerY="4.2"
+                android:gradientRadius="6.5">
+                <item android:offset="0" android:color="#FFF3B6FF" />
+                <item android:offset="0.45" android:color="#FFB45CF0" />
+                <item android:offset="1" android:color="#FF6A1FB3" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.7"
+        android:pathData="M4,4.6a1.1,0.8 -40,1 1,2.2,-1.6a1.1,0.8 -40,1 1,-2.2,1.6Z" />
+    <path
+        android:fillColor="#C77A3A"
+        android:pathData="M3.6,10.2h6.8l1.1,2.4q0.2,0.6 -0.4,0.6h-8.2q-0.6,0 -0.4,-0.6Z" />
+    <path
+        android:fillColor="#8A4A1E"
+        android:pathData="M3.6,10.2h6.8l0.3,0.7h-7.4Z" />
+</vector>

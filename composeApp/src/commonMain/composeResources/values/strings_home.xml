@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Top bar -->
+    <string name="home_add_story">Add story</string>
+    <string name="home_avatar">Profile picture</string>
+    <string name="home_settings">Settings</string>
+
+    <!-- Profile header -->
+    <string name="home_birth_chart">Birth Chart</string>
+    <string name="home_sun_symbol">⊙</string>
+    <string name="home_moon_symbol">☽</string>
+    <!-- First letter normal, the rest drawn as superscript: "Aˢᶜ". -->
+    <string name="home_ascendant_symbol">Asc</string>
+
+    <!-- Reading cards -->
+    <string name="home_reading_lead">You have %1$s</string>
+    <string name="home_reading_free">a free personal reading</string>
+    <string name="home_reading_paid">a paid personal reading</string>
+    <string name="home_reading_chat">Chat</string>
+    <string name="home_ask">Ask</string>
+
+    <!-- Date tabs -->
+    <string name="home_tab_yesterday">Yesterday</string>
+    <string name="home_tab_today">Today</string>
+    <string name="home_tab_tomorrow">Tomorrow</string>
+    <string name="home_tab_week">Week</string>
+
+    <!-- Focus & Mood -->
+    <string name="home_focus_mood_title">Focus &amp; Mood</string>
+    <string name="home_focus_mood_info">About Focus &amp; Mood</string>
+    <string name="home_mood_percent">%1$d%</string>
+    <string name="home_mood_career">Career</string>
+    <string name="home_mood_love">Love</string>
+    <string name="home_mood_health">Health</string>
+    <string name="home_mood_family">Family</string>
+
+    <!-- Bottom navigation -->
+    <string name="home_nav_today">Today</string>
+    <string name="home_nav_psychics">Psychics</string>
+    <string name="home_nav_compatibility">Compatibility</string>
+    <string name="home_nav_chatroom">Chatroom</string>
+    <string name="home_nav_readings">Readings</string>
+    <string name="home_badge_free">Free</string>
+
+    <!-- Zodiac signs -->
+    <string name="home_sign_aries">Aries</string>
+    <string name="home_sign_taurus">Taurus</string>
+    <string name="home_sign_gemini">Gemini</string>
+    <string name="home_sign_cancer">Cancer</string>
+    <string name="home_sign_leo">Leo</string>
+    <string name="home_sign_virgo">Virgo</string>
+    <string name="home_sign_libra">Libra</string>
+    <string name="home_sign_scorpio">Scorpio</string>
+    <string name="home_sign_sagittarius">Sagittarius</string>
+    <string name="home_sign_capricorn">Capricorn</string>
+    <string name="home_sign_aquarius">Aquarius</string>
+    <string name="home_sign_pisces">Pisces</string>
+</resources>
