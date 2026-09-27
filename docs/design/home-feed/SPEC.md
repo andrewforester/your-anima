@@ -4,6 +4,45 @@ The part of the home screen that shows **after scrolling down** past the blocks 
 
 **Out of scope** (separate tasks later, don't build): the collapsed/sticky top header with pinned date tabs, and the bottom navigation bar. Both are visible in the screenshot but are not specified here. The existing TopBar, DateTabs and HomeBottomBar stay as they are.
 
+## Figma style (authoritative, round 2)
+
+Added 2026-09-27 after the rule "Figma is the style reference, the screenshot sets content" (`docs/COORDINATION.md` → Design source of truth). **This section overrides the Colours, Typography and Layout values below wherever they conflict.** Content, order, texts, icons and behaviour stay as specified below. Reference: `docs/design/astrology-home/SPEC.md` and the existing `ui/home/` code.
+
+### Common
+- **Every block is a Figma card**, the same as the reading cards and Focus & Mood: reuse the existing `homeCard(...)` modifier in `ui/home/` (`surface` fill, 1 dp `outline` border, radius 20 = `shapes.large`, drop shadow `0 4 2 rgba(0,0,0,0.25)`).
+- Blocks go into the existing content column after Focus & Mood, with its standard **gap 20** (not 32/40). Horizontal padding 16 like everything else.
+- Text colours: titles `onSurface`; secondary text `accentLavender`; no other text colours.
+- Type: only existing `appTypography` styles (mapping below). Geist.
+
+### 1. Category cards
+- Row: full-width `LazyRow`, content padding 16, item spacing **12**.
+- Card: width 144, `homeCard` with padding 16, column gap 12. Height = content (all cards the same height: 2 preview lines always reserved, `minLines = 2`).
+- Illustration: 48 dp line icon, single-colour **tint** (no gradients), stroke ≈2: Career `primary`, Love `accentOrange`, Health `accentTeal` (the same colours as the Focus & Mood rings). Keep the existing vector shapes, drop their gradients.
+- Lock badge (locked cards): 28 dp circle, `glassFill` + 1 dp `glassBorder`, `home_ic_lock` 14 dp `onSurface`; top-right corner of the card, aligned with the illustration top.
+- Title: `cardTitle` (16 SemiBold) `onSurface`.
+- Preview: `body` (13 Medium) `accentLavender`, max 2 lines, ellipsis.
+
+### 2. Tip for the day
+- `homeCard` with padding 16 but the fill is the horizontal gradient `tipGradientStart` → `tipGradientEnd` (kept: Figma has no colour for this role); border and radius as `homeCard`.
+- "Tip for the day": `body` (13 Medium) `accentLavender`. Gap 4. Tip text: `cardLead` (16 Medium) `onSurface`, end padding 72 for the illustration.
+- Shooting stars illustration unchanged, clipped by the card shape.
+
+### 3. Yes / No for today
+- **One card** containing both lists: `homeCard` with padding horizontal 16 / vertical 20 (like Focus & Mood), column gap 20.
+- Each list: header row (badge + title, gap 8) then the 3 items below it (not two columns), item gap 8, 28 dp start indent under the title.
+  - Badge: 20 dp circle, **flat** fill: Yes `accentTeal`, No `accentOrange`; white ✓ / × glyph 12 dp.
+  - Title: `cardTitle` `onSurface` ("Yes for today" / "No for today").
+  - Item: mark 14 dp tinted `accentTeal` (✓) / `accentOrange` (×), gap 8, text `body` (13 Medium) `onSurface`, max 2 lines.
+- A 1 dp `outline` divider between the Yes and No lists.
+
+### 4. Tarot Insight
+- `homeCard` with padding horizontal 16 / vertical 20, height 160.
+- Title `cardTitle` `onSurface`. Radial glow `cardGlow` → transparent, centred at the bottom, clipped by the card shape (kept: hero-like accent, no Figma equivalent).
+
+### Tokens after the restyle
+- Keep: `tipGradientStart`, `tipGradientEnd`, `cardGlow`.
+- **Remove (unused after the restyle):** colours `lockBadge`, `yesGradientStart`, `yesGradientEnd`, `noGradientStart`, `noGradientEnd`; typography `sectionTitle`, `preview`, `bodyRegular`, `headline`. The vectors `home_ic_check` / `home_ic_cross` become single-colour (tinted in code).
+
 ## Source
 
 - `screenshot.png`: 864×1920 px, Android screenshot of the original app (not our Figma), received 2026-09-27 (Issue #17). No status bar is drawn in it; the bottom 50 px (≈23 dp, `#151821`) is the system navigation bar.
