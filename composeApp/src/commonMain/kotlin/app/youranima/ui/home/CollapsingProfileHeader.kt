@@ -55,7 +55,7 @@ fun CollapsingProfileHeader(
             AvatarThumb(onClick = onAvatarClick, modifier = Modifier.layoutId(HeaderPart.Thumb))
             SettingsButton(onClick = onSettingsClick, modifier = Modifier.layoutId(HeaderPart.Settings))
             BirthChartPill(onClick = onBirthChartClick, modifier = Modifier.layoutId(HeaderPart.Pill))
-            ProfileAvatar(Modifier.layoutId(HeaderPart.Avatar))
+            HomeProfileAvatar(Modifier.layoutId(HeaderPart.Avatar))
             ProfileName(name = user.name, modifier = Modifier.layoutId(HeaderPart.Name))
             ZodiacRow(
                 user = user,

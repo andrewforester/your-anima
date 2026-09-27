@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="compatibility_title">Compatibility</string>
+    <string name="compatibility_headline">Check your love compatibility</string>
+    <string name="compatibility_subtitle">Add your partner to see the result</string>
+    <string name="compatibility_you">You</string>
+    <string name="compatibility_partner">Partner</string>
+    <string name="compatibility_add_partner">Add partner</string>
+    <string name="compatibility_your_avatar">Your avatar</string>
+</resources>
