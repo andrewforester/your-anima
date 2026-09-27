@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="paywall_title">Anima Premium</string>
+    <string name="paywall_restore">Restore</string>
+    <string name="paywall_cd_close">Close</string>
+    <string name="paywall_cd_page">Page %1$d of %2$d</string>
+    <string name="paywall_feature_horoscope_title">Daily horoscope</string>
+    <string name="paywall_feature_horoscope_subtitle">Personal forecasts for love, career and health, every day</string>
+    <string name="paywall_feature_compatibility_title">Compatibility readings</string>
+    <string name="paywall_feature_compatibility_subtitle">Accurate insights and practices to support your love journey</string>
+    <string name="paywall_feature_tarot_title">Tarot readings</string>
+    <string name="paywall_feature_tarot_subtitle">Daily draws and full spreads to guide your decisions</string>
+    <string name="paywall_feature_psychics_title">Chat with psychics</string>
+    <string name="paywall_feature_psychics_subtitle">Get answers from trusted advisors whenever you need them</string>
+    <string name="paywall_hot_deal">HOT DEAL</string>
+    <string name="paywall_save">Save %1$d%</string>
+    <string name="paywall_legal_intro">By tapping “Subscribe”, you agree to enroll in an automatically renewing subscription.</string>
+    <string name="paywall_legal_charge">Starting today, you’ll be automatically charged %1$s every %2$s until you cancel.</string>
+    <string name="paywall_legal_outro">To avoid future charges, you must cancel before your next subscription renewal date. Cancel by visiting your account settings at Manage Subscription.</string>
+    <string name="paywall_subscribe">Subscribe</string>
+    <string name="paywall_cancel_anytime">Cancel anytime. Recurring billing.</string>
+    <string name="paywall_terms">Terms of Service</string>
+    <string name="paywall_privacy">Privacy Policy</string>
+    <string name="paywall_subscription_terms">Subscription Terms</string>
+    <string name="paywall_link_separator">·</string>
+</resources>

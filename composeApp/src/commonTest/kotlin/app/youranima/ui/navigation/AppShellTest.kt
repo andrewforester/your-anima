@@ -5,11 +5,14 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
+import app.youranima.data.home.MockHomeRepository
 import app.youranima.ui.compatibility.CompatibilityScreenTags
 import app.youranima.ui.components.AppBottomBarTags
 import app.youranima.ui.components.AppTab
 import app.youranima.ui.home.HomeScreenTags
+import app.youranima.ui.paywall.PaywallScreenTags
 import app.youranima.ui.psychics.PsychicsScreenTags
 import app.youranima.ui.theme.AppTheme
 import kotlin.test.Test
@@ -39,5 +42,30 @@ class AppShellTest {
 
             onNodeWithTag(AppBottomBarTags.navItem(AppTab.Today)).assertIsSelected()
             onNodeWithTag(HomeScreenTags.SCREEN).assertIsDisplayed()
+        }
+
+    @Test
+    fun lockedCategoryCardOpensPaywallAndCloseReturns() =
+        runComposeUiTest {
+            setContent { AppTheme { AppShell() } }
+
+            val lockedCard =
+                HomeScreenTags.categoryCard(
+                    MockHomeRepository
+                        .homeData()
+                        .categories
+                        .first { it.isLocked }
+                        .id,
+                )
+            onNodeWithTag(lockedCard).performScrollTo().performClick()
+
+            onNodeWithTag(PaywallScreenTags.SCREEN).assertIsDisplayed()
+            onNodeWithTag(AppBottomBarTags.BAR).assertDoesNotExist()
+
+            onNodeWithTag(PaywallScreenTags.CLOSE).performClick()
+
+            onNodeWithTag(PaywallScreenTags.SCREEN).assertDoesNotExist()
+            onNodeWithTag(AppBottomBarTags.BAR).assertIsDisplayed()
+            onNodeWithTag(AppBottomBarTags.navItem(AppTab.Today)).assertIsSelected()
         }
 }

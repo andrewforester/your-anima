@@ -27,9 +27,13 @@ import org.jetbrains.compose.resources.painterResource
 /** Width reserved for [ScreenTopBar]'s leading icon, mirrored on the right so the title stays centred. */
 val ScreenTopBarIconSize = 22.dp
 
+/** Title inset on both sides when [ScreenTopBar] has a `trailing` slot: room for a short text button ("Restore"). */
+private val TrailingSlotInset = 64.dp
+
 /**
  * Tab-screen top bar (56 high, padding 20): centred `cardTitle` [title], optional [leading] icon (at most
- * [ScreenTopBarIconSize] wide) on the left. [titleModifier] is applied to the title text (e.g. a test tag).
+ * [ScreenTopBarIconSize] wide) on the left and optional [trailing] content (a short text button, at most
+ * [TrailingSlotInset] wide) on the right. [titleModifier] is applied to the title text (e.g. a test tag).
  */
 @Composable
 fun ScreenTopBar(
@@ -37,8 +41,14 @@ fun ScreenTopBar(
     modifier: Modifier = Modifier,
     titleModifier: Modifier = Modifier,
     leading: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
-    val titleInset = if (leading != null) ScreenTopBarIconSize else 0.dp
+    val titleInset =
+        when {
+            trailing != null -> TrailingSlotInset
+            leading != null -> ScreenTopBarIconSize
+            else -> 0.dp
+        }
     Box(
         modifier = modifier.fillMaxWidth().height(56.dp).padding(horizontal = 20.dp),
         contentAlignment = Alignment.CenterStart,
@@ -53,6 +63,9 @@ fun ScreenTopBar(
             overflow = TextOverflow.Ellipsis,
             modifier = titleModifier.fillMaxWidth().padding(horizontal = titleInset),
         )
+        if (trailing != null) {
+            Box(Modifier.align(Alignment.CenterEnd)) { trailing() }
+        }
     }
 }
 
@@ -70,6 +83,10 @@ private fun ScreenTopBarPreview() {
                     modifier = Modifier.size(ScreenTopBarIconSize),
                 )
             }
+            ScreenTopBar(
+                title = "Premium",
+                trailing = { Text("Restore", style = MaterialTheme.appTypography.pill, color = MaterialTheme.appColors.primary) },
+            )
         }
     }
 }
