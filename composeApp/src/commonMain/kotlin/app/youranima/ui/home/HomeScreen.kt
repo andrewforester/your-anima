@@ -5,10 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -69,6 +71,8 @@ fun HomeScreen(
     onBirthChartClick: () -> Unit = {},
     onAskClick: (ReadingOffer) -> Unit = {},
     onMoodInfoClick: () -> Unit = {},
+    onCategoryClick: (String) -> Unit = {},
+    onTarotClick: () -> Unit = {},
 ) {
     Box(
         modifier =
@@ -96,16 +100,30 @@ fun HomeScreen(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
                                 .padding(bottom = ContentBottomPadding)
                                 .padding(WindowInsets.navigationBars.asPaddingValues()),
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
                     ) {
-                        state.readings.forEach { offer ->
-                            ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
+                        Column(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                        ) {
+                            state.readings.forEach { offer ->
+                                ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
+                            }
+                            DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
+                            FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
                         }
-                        DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
-                        FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
+                        Spacer(Modifier.height(32.dp))
+                        // Full width: the row scrolls under the screen edges.
+                        CategoryRow(categories = state.categories, onCategoryClick = onCategoryClick)
+                        Spacer(Modifier.height(32.dp))
+                        TipCard(tip = state.tipOfTheDay, modifier = Modifier.padding(horizontal = 16.dp))
+                        Spacer(Modifier.height(36.dp))
+                        YesNoBlock(kind = YesNoKind.Yes, items = state.yesForToday)
+                        Spacer(Modifier.height(32.dp))
+                        YesNoBlock(kind = YesNoKind.No, items = state.noForToday)
+                        Spacer(Modifier.height(32.dp))
+                        TarotCard(onClick = onTarotClick, modifier = Modifier.padding(horizontal = 16.dp))
                     }
                 }
             }

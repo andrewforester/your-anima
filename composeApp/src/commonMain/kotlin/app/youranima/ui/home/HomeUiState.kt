@@ -1,6 +1,7 @@
 package app.youranima.ui.home
 
 import androidx.compose.runtime.Immutable
+import app.youranima.data.home.CategoryForecast
 import app.youranima.data.home.ForecastPeriod
 import app.youranima.data.home.HomeData
 import app.youranima.data.home.MockHomeRepository
@@ -19,6 +20,10 @@ data class HomeUiState(
     val mood: List<MoodScore>,
     val selectedNavItem: HomeNavItem,
     val badges: NavBadges,
+    val categories: List<CategoryForecast>,
+    val tipOfTheDay: String,
+    val yesForToday: List<String>,
+    val noForToday: List<String>,
 )
 
 fun HomeData.toUiState(
@@ -31,6 +36,10 @@ fun HomeData.toUiState(
     mood = moodByPeriod[selectedPeriod].orEmpty(),
     selectedNavItem = selectedNavItem,
     badges = badges,
+    categories = categories,
+    tipOfTheDay = tipOfTheDay,
+    yesForToday = yesForToday,
+    noForToday = noForToday,
 )
 
 internal val PreviewHomeUiState =

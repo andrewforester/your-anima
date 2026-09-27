@@ -42,6 +42,18 @@
     <string name="home_nav_readings">Readings</string>
     <string name="home_badge_free">Free</string>
 
+    <!-- Category forecasts -->
+    <string name="home_category_career">Career</string>
+    <string name="home_category_love">Love</string>
+    <string name="home_category_health">Health</string>
+    <string name="home_cd_locked">Locked</string>
+
+    <!-- Tip, Yes / No, Tarot -->
+    <string name="home_tip_label">Tip for the day</string>
+    <string name="home_yes_title">Yes for today</string>
+    <string name="home_no_title">No for today</string>
+    <string name="home_tarot_title">Tarot Insight</string>
+
     <!-- Zodiac signs -->
     <string name="home_sign_aries">Aries</string>
     <string name="home_sign_taurus">Taurus</string>

@@ -51,10 +51,25 @@ data class NavBadges(
     val unreadChats: Int,
 )
 
+/** Topic of a category forecast card; picks its title and illustration. */
+enum class ForecastCategory { Career, Love, Health }
+
+@Immutable
+data class CategoryForecast(
+    val id: String,
+    val category: ForecastCategory,
+    val preview: String,
+    val isLocked: Boolean,
+)
+
 @Immutable
 data class HomeData(
     val user: UserProfile,
     val readings: List<ReadingOffer>,
     val moodByPeriod: Map<ForecastPeriod, List<MoodScore>>,
     val badges: NavBadges,
+    val categories: List<CategoryForecast>,
+    val tipOfTheDay: String,
+    val yesForToday: List<String>,
+    val noForToday: List<String>,
 )
