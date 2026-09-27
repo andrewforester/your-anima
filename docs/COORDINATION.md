@@ -23,7 +23,7 @@ Standing rules only: who changes which files and how sessions stay out of each o
 
 ## Process lives in Issues
 
-Everything about *how the work is going* goes into the Issue, as comments: launch (session id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**. The repository holds only the product (code, resources, design packages) and the standing rules. The PR body stays short: what changed and `Closes #N`.
+Everything about *how the work is going* goes into the Issue, as comments: launch (session id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**, and at closing **the Claude cost of the work (USD, model)**. The repository holds only the product (code, resources, design packages) and the standing rules. The PR body stays short: what changed and `Closes #N`.
 
 **Screenshots** are stored on the orphan branch `screens` (never merged), path `issue-<N>/<name>.png`, and embedded in the Issue comment by their raw URL:
 `https://raw.githubusercontent.com/andrewforester/your-anima/screens/issue-<N>/<name>.png`.
@@ -74,5 +74,6 @@ Scaffold first, then theme, then screens (in parallel, any order). A screen can 
   - `androidApp`: thin host (AGP 9 doesn't allow the application plugin in a KMP module);
   - `iosApp`: Xcode project, framework `ComposeApp`.
 - **Dependencies** go through the version catalog. Keep `compose-material3` on the same line as `compose-multiplatform`: a newer alpha breaks the web start (LinkError in skiko). Dependabot doesn't bump it.
+- **Vector drawables** in `composeResources`: plain single-colour paths only; `aapt:attr` gradients render broken on Android. Gradients are drawn in code with a `Brush`.
 - **Theme:** `app.youranima.ui.theme.AppTheme`, `MaterialTheme.appColors`, `MaterialTheme.appTypography`. Font: Geist. Glyphs outside Geist (emoji, ⊙, ☽) don't exist on web, so draw them as vectors.
 - **ktlint** 1.8.0. `@Composable` functions in PascalCase are allowed.

@@ -37,11 +37,16 @@ Use the `develop` skill (or `design` for a design Issue). Read the Issue and all
 Start with `git fetch origin && git merge origin/main`.
 Don't call Figma MCP. Don't merge the PR; the orchestrator does.
 Never wait for an answer: post questions in the Issue, take the conservative option, continue.
+After the PR is open and green, stop: don't schedule check-ins (send_later); the orchestrator follows the PR.
 ```
 
 Then set `status: in progress` and comment on the Issue with the session id.
 
-**Model:** `claude-sonnet-5` for theme tokens, small fixes, docs and mechanical tasks; the default (Opus) for design packages and screens.
+**Model:** `claude-sonnet-5` for theme tokens, small fixes, docs and mechanical tasks; the default (Opus) for design packages and screens. The model is not the main cost driver: long exploration and repeated heavy checks are. Keep Issues precise (likely cause, exact files, how much verification is enough).
+
+**Two tasks touching the same file** run one after the other: file both, mark the second `status: blocked` with "Depends on #N", and launch it right after the first is merged.
+
+**Screenshots from the human** (bug reports from a device): push them to the `screens` branch (`issue-<N>/…` or `bugs/…`) and embed them in the Issue; the session never sees the chat.
 
 ## Follow by events, not polling
 - **No recurring check-ins.** Every wake-up re-reads your whole context and burns the usage limit.
@@ -57,12 +62,21 @@ Merge a PR yourself when all of these hold:
 4. Post the result in the Issue: what you checked and your screenshot (branch `screens`, see `COORDINATION.md`).
 
 After merging:
+- **Close out the session right away** (it may have scheduled its own check-ins): read its cost with `get_session` → `external_metadata.usage.cost_usd` (and the model), then archive it.
+- Post a closing comment in the Issue: merged PR, verification summary, **Claude cost of the session in USD and its model**.
 - Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs).
 - Report the result with these links. Use a `PushNotification` (it may not reach the phone) **and** a chat message:
   - Web: https://andrewforester.github.io/your-anima/
   - APK: https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk
+  - **Cost** table: each Issue's session (model, USD), the orchestrator's own spend since the previous report (`get_session` without an id → `usage.cost_usd`; subtract the total you gave last time), and the round total.
+  - What a human still has to check on a device (Android visuals, iOS): there is no emulator in the container.
 - A red `main` is the top priority.
-- Once the Issue is closed, archive the session.
+
+## Keep the orchestrator cheap
+The orchestrator is usually the most expensive session: every wake-up re-reads the whole conversation. So:
+- Wake up only for real events (a session's expected finish, CI on `main`); combine several checks into one wake-up.
+- Don't paste large outputs into the conversation (diffs, logs, screenshots): look at `--stat`, grep for errors, view one screenshot.
+- When the conversation passes ≈300k tokens of context or a round is finished, suggest to the human to continue in a fresh orchestrator session; the state is all in Issues, so nothing is lost.
 
 Ask the human (`needs: human`) about:
 - changes to process rules;
