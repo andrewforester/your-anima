@@ -13,3 +13,5 @@ Mock data source for the "Today" tab (`ui/home/HomeScreen`).
 - `navBadges(): NavBadges` — badge counts for the shared bottom bar (psychics "Free" pill, chatroom unread count). Kept on this repository (rather than a new one) because it's the same mock/backend source; `AppShell` (`ui/navigation/`) is the only caller outside this screen.
 
 `MockHomeRepository` is the only implementation: a single static `HomeData` plus a static `NavBadges(psychicsFree = true, unreadChats = 3)`. No backend yet — everything is hardcoded mock data.
+
+`readings` holds one `ReadingOffer` (`free`) — the Today feed shows a single reading card. `ReadingType.Paid` and its string (`home_reading_paid`) still exist and `ReadingCard` still branches on `ReadingType`, so a real backend can add a paid offer later without UI changes; the list-based rendering is unchanged (#57).

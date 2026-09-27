@@ -17,7 +17,6 @@ object MockHomeRepository : HomeRepository {
             readings =
                 listOf(
                     ReadingOffer(id = "free", type = ReadingType.Free, suggestedQuestion = QUESTION),
-                    ReadingOffer(id = "paid", type = ReadingType.Paid, suggestedQuestion = QUESTION),
                 ),
             moodByPeriod =
                 mapOf(
