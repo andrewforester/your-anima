@@ -23,7 +23,7 @@ Standing rules only: who changes which files and how sessions stay out of each o
 
 ## Process lives in Issues
 
-Everything about *how the work is going* goes into the Issue, as comments: launch (session id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**, and at closing **the Claude cost of the work (USD, model)**. The repository holds only the product (code, resources, design packages) and the standing rules. The PR body stays short: what changed and `Closes #N`.
+Everything about *how the work is going* goes into the Issue, as comments: launch (session id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**, and at closing **the Claude usage of the work (model, USD, context, tokens)**. The repository holds only the product (code, resources, design packages) and the standing rules. The PR body stays short: what changed and `Closes #N`.
 
 **Screenshots** are stored on the orphan branch `screens` (never merged), path `issue-<N>/<name>.png`, and embedded in the Issue comment by their raw URL:
 `https://raw.githubusercontent.com/andrewforester/your-anima/screens/issue-<N>/<name>.png`.
@@ -59,7 +59,11 @@ One Issue = one session = one PR (`Closes #N`). Issues use the templates in `.gi
 | `status: blocked` | waiting for a dependency or a decision, reason in a comment |
 | `needs: human` | needs an answer from the human |
 
-When the status changes, remove the old label. The PR closes the Issue via `Closes #N`; labels on closed Issues don't matter.
+When the status changes, remove the old label.
+
+**Dependencies.** Every Issue body has a line `Depends on: #A, #B` (merged first) or `Depends on: none`, and optionally `Starts on branch of: #C` (may start once #C's branch exists and merge it). An Issue with an unmet dependency is `status: blocked`; the orchestrator flips it to `status: ready` and launches it when the dependencies are merged (at most 3 sessions at once). Details: `.claude/skills/orchestrate` → Queue with dependencies.
+
+**Closing comment** (orchestrator): merged PR, verification, and the session's Claude usage: model, USD, context used / max, input and output tokens. The PR closes the Issue via `Closes #N`; labels on closed Issues don't matter.
 
 ## Merge order
 

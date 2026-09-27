@@ -44,9 +44,20 @@ Then set `status: in progress` and comment on the Issue with the session id.
 
 **Model:** `claude-sonnet-5` for theme tokens, small fixes, docs and mechanical tasks; the default (Opus) for design packages and screens. The model is not the main cost driver: long exploration and repeated heavy checks are. Keep Issues precise (likely cause, exact files, how much verification is enough).
 
-**Two tasks touching the same file** run one after the other: file both, mark the second `status: blocked` with "Depends on #N", and launch it right after the first is merged.
 
 **Screenshots from the human** (bug reports from a device): push them to the `screens` branch (`issue-<N>/…` or `bugs/…`) and embed them in the Issue; the session never sees the chat.
+
+## Queue with dependencies (intake → dispatch)
+The human sends tasks one after another. File each one as soon as it arrives; don't wait for the batch.
+
+- **Dependencies are explicit.** Every Issue body has a `Depends on` line: `Depends on: #12, #15` (must be merged first) and optionally `Starts on branch of: #14` (a soft dependency: may start as soon as #14's branch exists, because #14's Issue fixes the API contract; the session merges that branch, per the theme/screen rule above). `Depends on: none` when free. Two tasks touching the same file are always a hard dependency. A screen always depends on its design Issue.
+- **Status on filing:** any open hard dependency (or a soft one without a branch yet) → `status: blocked` with a comment "Waiting for #12, #15"; otherwise `status: ready`.
+- **Dispatch** is one step you run at every wake-up (a new task from the human, a merge, a session's expected finish, a failed session):
+  1. For each `status: blocked` Issue: if every hard dependency is closed (merged) and every soft one has a branch, swap to `status: ready` and comment "Unblocked by #N".
+  2. Count running sessions (`status: in progress`). While fewer than 3 are running and `rate_limit_info` allows, launch the `status: ready` Issues, oldest first (Launch a session, above).
+  3. Nothing launchable: do nothing, write nothing.
+- **Merge first, then dispatch**, in the same wake-up: a merge is what unblocks the next Issues, so the queue moves without the human.
+- A dependency closed as not planned doesn't unblock: set `needs: human` on the dependent and ask.
 
 ## Follow by events, not polling
 - **No recurring check-ins.** Every wake-up re-reads your whole context and burns the usage limit.
@@ -62,13 +73,16 @@ Merge a PR yourself when all of these hold:
 4. Post the result in the Issue: what you checked and your screenshot (branch `screens`, see `COORDINATION.md`).
 
 After merging:
-- **Close out the session right away** (it may have scheduled its own check-ins): read its cost with `get_session` → `external_metadata.usage.cost_usd` (and the model), then archive it.
-- Post a closing comment in the Issue: merged PR, verification summary, **Claude cost of the session in USD and its model**.
+- **Close out the session right away** (it may have scheduled its own check-ins): read its usage with `get_session`, then archive it. From `external_metadata`: `usage.cost_usd`, `usage.input_tokens`, `usage.output_tokens`, `usage.cache_read_tokens`, `usage.cache_write_tokens`, `context_usage.used_tokens` / `context_usage.max_tokens`, and the model (`last_served_model`). Subagents a session starts with the `Agent` tool are included in its numbers; they aren't reported separately.
+- Post a closing comment in the Issue: merged PR, verification summary, and a usage line:
+  `Claude: <model> · $<cost> · context <used>k / <max>k · tokens in <input+cache_read+cache_write>k (cache read <cache_read>k) / out <output>k`.
+- Then run **Dispatch** (Queue with dependencies).
 - Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs).
 - Report the result with these links. Use a `PushNotification` (it may not reach the phone) **and** a chat message:
   - Web: https://andrewforester.github.io/your-anima/
   - APK: https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk
-  - **Cost** table: each Issue's session (model, USD), the orchestrator's own spend since the previous report (`get_session` without an id → `usage.cost_usd`; subtract the total you gave last time), and the round total.
+  - **Cost** table: each Issue's session (model, USD, context used, output tokens), the orchestrator's own spend since the previous report (`get_session` without an id → `usage.cost_usd`; subtract the total you gave last time) and its current context (`context_usage.used_tokens`), and the round total.
+  - The queue: Issues still `ready`/`blocked` and what each waits for.
   - What a human still has to check on a device (Android visuals, iOS): there is no emulator in the container.
 - A red `main` is the top priority.
 
@@ -76,7 +90,7 @@ After merging:
 The orchestrator is usually the most expensive session: every wake-up re-reads the whole conversation. So:
 - Wake up only for real events (a session's expected finish, CI on `main`); combine several checks into one wake-up.
 - Don't paste large outputs into the conversation (diffs, logs, screenshots): look at `--stat`, grep for errors, view one screenshot.
-- When the conversation passes ≈300k tokens of context or a round is finished, suggest to the human to continue in a fresh orchestrator session; the state is all in Issues, so nothing is lost.
+- Watch your own `context_usage.used_tokens` (`get_session` without an id; it updates after each turn). When the conversation passes ≈300k tokens of context or a round is finished, suggest to the human to continue in a fresh orchestrator session; the state is all in Issues, so nothing is lost.
 
 Ask the human (`needs: human`) about:
 - changes to process rules;
