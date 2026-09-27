@@ -4,7 +4,7 @@ The "Today" tab: horoscope feed shown when `AppTab.Today` is selected in `AppShe
 
 ## Entry point
 
-- `HomeScreen()` (stateful): loads `HomeRepository.homeData()` once, keeps the selected `ForecastPeriod` (`rememberSaveable`), maps to `HomeUiState` via `HomeData.toUiState()`. No longer owns nav/tab state or the bottom bar — those moved to `ui/components/AppBottomBar.kt` and `ui/navigation/AppShell.kt` (#35).
+- `HomeScreen()` (stateful): loads `HomeRepository.homeData()` once, keeps the selected `ForecastPeriod` (`rememberSaveable`), maps to `HomeUiState` via `HomeData.toUiState()`. `onLockedClick` (#59): a tap on a locked category card (`CategoryForecast.isLocked`) calls it (`AppShell` opens the paywall); unlocked cards do nothing yet. No longer owns nav/tab state or the bottom bar — those moved to `ui/components/AppBottomBar.kt` and `ui/navigation/AppShell.kt` (#35).
 - `HomeScreen(state, onPeriodSelect, headerState, ...)` (stateless): one `verticalScroll` column — the shared `ui/components/HeroBackground` (scrolls away), `CollapsingProfileHeader`, then the feed: reading cards, `PinnedDateTabs`, `FocusMoodCard`, `CategoryRow`, `TipCard`, `YesNoCard`, `TarotCard`. `ContentBottomPadding` (100dp) reserves space so the last card isn't hidden under the shared bottom bar drawn by `AppShell`.
 
 ## Collapsing header (#47)

@@ -20,33 +20,42 @@ import app.youranima.ui.compatibility.CompatibilityScreen
 import app.youranima.ui.components.AppBottomBar
 import app.youranima.ui.components.AppTab
 import app.youranima.ui.home.HomeScreen
+import app.youranima.ui.paywall.PaywallScreen
 import app.youranima.ui.psychics.PsychicsScreen
 import app.youranima.ui.readings.ReadingsScreen
 import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
 
-/** App-level shell: holds the selected [AppTab] and draws its content under the shared [AppBottomBar]. */
+/**
+ * App-level shell: holds the selected [AppTab] and draws its content under the shared [AppBottomBar]. A tap on a
+ * locked element opens the [PaywallScreen] over everything (the bottom bar is hidden while it is shown).
+ */
 @Composable
 fun AppShell(
     modifier: Modifier = Modifier,
     homeRepository: HomeRepository = MockHomeRepository,
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(AppTab.Today) }
+    var showPaywall by rememberSaveable { mutableStateOf(false) }
     val badges = remember(homeRepository) { homeRepository.navBadges() }
     Box(modifier.fillMaxSize().background(MaterialTheme.appColors.background)) {
         when (selectedTab) {
-            AppTab.Today -> HomeScreen()
+            AppTab.Today -> HomeScreen(onLockedClick = { showPaywall = true })
             AppTab.Psychics -> PsychicsScreen()
             AppTab.Compatibility -> CompatibilityScreen()
             AppTab.Chatroom -> ChatroomScreen()
             AppTab.Readings -> ReadingsScreen()
         }
-        AppBottomBar(
-            selected = selectedTab,
-            badges = badges,
-            onSelect = { selectedTab = it },
-            modifier = Modifier.align(Alignment.BottomCenter),
-        )
+        if (showPaywall) {
+            PaywallScreen(onClose = { showPaywall = false })
+        } else {
+            AppBottomBar(
+                selected = selectedTab,
+                badges = badges,
+                onSelect = { selectedTab = it },
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
     }
 }
 

@@ -34,11 +34,15 @@ import app.youranima.ui.components.HeroBackground
 import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
 
-/** Stateful entry point: loads the data and keeps the date-tab selection. */
+/**
+ * Stateful entry point: loads the data and keeps the date-tab selection. A tap on a locked category card calls
+ * [onLockedClick] (the paywall); unlocked cards do nothing yet.
+ */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     repository: HomeRepository = MockHomeRepository,
+    onLockedClick: () -> Unit = {},
 ) {
     val data = remember(repository) { repository.homeData() }
     var period by rememberSaveable { mutableStateOf(ForecastPeriod.Today) }
@@ -46,6 +50,7 @@ fun HomeScreen(
         state = data.toUiState(period),
         onPeriodSelect = { period = it },
         modifier = modifier,
+        onCategoryClick = { id -> if (data.categories.any { it.id == id && it.isLocked }) onLockedClick() },
     )
 }
 
