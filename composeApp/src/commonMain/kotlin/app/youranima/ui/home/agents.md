@@ -9,7 +9,7 @@ The "Today" tab: horoscope feed shown when `AppTab.Today` is selected in `AppShe
 
 ## Components
 
-One file each: `TopBar`, `ProfileHeader`, `ReadingCard`, `DateTabs`, `FocusMoodCard`, `CategoryCard` (+ `CategoryRow`), `TipCard`, `YesNoBlock`, `TarotCard`. `HomeResources.kt` holds shared label/color mappings (`ZodiacSign.label`, `MoodCategory.label/color`) and preview helpers (`HomePreview`, `homeCard` modifier).
+One file each: `TopBar`, `ProfileHeader`, `ReadingCard`, `DateTabs`, `FocusMoodCard`, `CategoryCard` (+ `CategoryRow`), `TipCard`, `YesNoBlock`, `TarotCard`. `HomeResources.kt` holds shared label/color mappings (`ZodiacSign.label`, `MoodCategory.label/color`) and the preview helper `HomePreview`. Cards use the shared `appCard` modifier, the Birth Chart pill `GlassPill` and the reading-card chat icon `TintedIconBox`, all in `ui/components/` (moved there in #36).
 
 ## State & tags
 

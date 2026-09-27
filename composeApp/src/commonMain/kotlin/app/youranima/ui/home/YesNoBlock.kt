@@ -28,6 +28,7 @@ import app.youranima.resources.home_ic_check
 import app.youranima.resources.home_ic_cross
 import app.youranima.resources.home_no_title
 import app.youranima.resources.home_yes_title
+import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -50,7 +51,7 @@ fun YesNoCard(
             modifier
                 .fillMaxWidth()
                 .testTag(HomeScreenTags.YES_NO)
-                .homeCard(PaddingValues(horizontal = 16.dp, vertical = 20.dp)),
+                .appCard(PaddingValues(horizontal = 16.dp, vertical = 20.dp)),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         YesNoList(kind = YesNoKind.Yes, items = yes)

@@ -1,19 +1,14 @@
 package app.youranima.ui.home
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +40,7 @@ import app.youranima.resources.home_ic_moon
 import app.youranima.resources.home_ic_sun
 import app.youranima.resources.home_moon_symbol
 import app.youranima.resources.home_sun_symbol
+import app.youranima.ui.components.GlassPill
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -143,31 +139,18 @@ private fun AscendantSymbol() {
 
 @Composable
 private fun BirthChartPill(onClick: () -> Unit) {
-    val colors = MaterialTheme.appColors
-    val shape = RoundedCornerShape(20.dp)
-    Row(
-        modifier =
-            Modifier
-                .clip(shape)
-                .background(colors.glassFill, shape)
-                .border(BorderStroke(1.dp, colors.glassBorder), shape)
-                .clickable(onClick = onClick)
-                .padding(PaddingValues(horizontal = 16.dp, vertical = 8.dp))
-                .testTag(HomeScreenTags.BIRTH_CHART),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Image(
-            painter = painterResource(Res.drawable.home_ic_crystal_ball),
-            contentDescription = null,
-            modifier = Modifier.size(14.dp),
-        )
-        Text(
-            text = stringResource(Res.string.home_birth_chart),
-            style = MaterialTheme.appTypography.pill,
-            color = colors.onSurface,
-        )
-    }
+    GlassPill(
+        label = stringResource(Res.string.home_birth_chart),
+        onClick = onClick,
+        modifier = Modifier.testTag(HomeScreenTags.BIRTH_CHART),
+        icon = {
+            Image(
+                painter = painterResource(Res.drawable.home_ic_crystal_ball),
+                contentDescription = null,
+                modifier = Modifier.size(14.dp),
+            )
+        },
+    )
 }
 
 @Preview

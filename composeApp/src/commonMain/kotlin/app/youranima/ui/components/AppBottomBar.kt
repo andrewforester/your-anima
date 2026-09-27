@@ -37,10 +37,10 @@ import androidx.compose.ui.unit.dp
 import app.youranima.data.navigation.NavBadges
 import app.youranima.resources.Res
 import app.youranima.resources.home_ic_book
-import app.youranima.resources.home_ic_heart
-import app.youranima.resources.home_ic_message_circle
 import app.youranima.resources.home_ic_star
-import app.youranima.resources.home_ic_user
+import app.youranima.resources.ic_heart
+import app.youranima.resources.ic_message_circle
+import app.youranima.resources.ic_user
 import app.youranima.resources.nav_badge_free
 import app.youranima.resources.nav_chatroom
 import app.youranima.resources.nav_compatibility
@@ -184,9 +184,9 @@ private val AppTab.icon: DrawableResource
     get() =
         when (this) {
             AppTab.Today -> Res.drawable.home_ic_star
-            AppTab.Psychics -> Res.drawable.home_ic_user
-            AppTab.Compatibility -> Res.drawable.home_ic_heart
-            AppTab.Chatroom -> Res.drawable.home_ic_message_circle
+            AppTab.Psychics -> Res.drawable.ic_user
+            AppTab.Compatibility -> Res.drawable.ic_heart
+            AppTab.Chatroom -> Res.drawable.ic_message_circle
             AppTab.Readings -> Res.drawable.home_ic_book
         }
 
