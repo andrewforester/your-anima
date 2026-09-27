@@ -12,7 +12,7 @@ Standing rules only: who changes which files and how sessions stay out of each o
 3. **Small PRs, frequent merges of `main`.** Run `git merge origin/main` before starting and before the PR. No rebase.
 4. **CI is the referee.** Before pushing, run `./gradlew ktlintCheck :composeApp:jvmTest`. PR CI runs only lint and JVM tests. Android/Web/iOS builds run after merge to `main`. If `main` goes red after a merge, fixing it is the top priority.
 5. **Need something outside your zone?** Don't change it. Say so in an Issue comment and continue on a local stub.
-6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen).
+6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen), `quick-fix` (small fixes).
 7. **Only the coordinator calls Figma MCP.** The plan allows 20 calls a month. The coordinator exports each frame once into `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`). Sessions work from those files.
 
 ## Design source of truth
@@ -53,6 +53,7 @@ One Issue = one session = one PR (`Closes #N`). Issues use the templates in `.gi
 | Label | Meaning |
 |---|---|
 | `design`, `screen`, `theme`, `infra`, `docs` | task type (default zone). `design` = design package from a screenshot, zone `docs/design/<screen>/**` |
+| `fix` | small fix, handled with the `quick-fix` skill (combined with a type label for the zone) |
 | `status: ready` | the Issue is complete and can be launched |
 | `status: in progress` | a session works on it (session id in a comment) |
 | `status: blocked` | waiting for a dependency or a decision, reason in a comment |

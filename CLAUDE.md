@@ -46,7 +46,7 @@ Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) install
 
 ## Skills (roles)
 
-`.claude/skills/`: `orchestrate` (coordinator: Issues, sessions, merge, reports), `develop` (a session working one Issue), `design` (design package from a screenshot, no Figma), `implement-screen` (how to build a screen).
+`.claude/skills/`: `orchestrate` (coordinator: Issues, sessions, merge, reports), `develop` (a session working one Issue), `design` (design package from a screenshot, no Figma), `implement-screen` (how to build a screen), `quick-fix` (small fixes: filing, launching, working them).
 
 ## Design
 
