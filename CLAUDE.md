@@ -44,6 +44,10 @@ Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) install
 - Every screen gets at least one UI test in `commonTest`.
 - Mock data lives in `composeApp/src/commonMain/kotlin/app/youranima/data/` as plain Kotlin objects, behind a small interface so a real backend can replace it later.
 
+## Skills (roles)
+
+`.claude/skills/`: `orchestrate` (coordinator: Issues, sessions, merge, reports), `develop` (a session working one Issue), `design` (design package from a screenshot, no Figma), `implement-screen` (how to build a screen).
+
 ## Design (Figma)
 
 The source of truth for UI is the Figma file. When the Figma connector is available: read variables/styles first and map them into `ui/theme` before building screens; then build screens from frames. See `.claude/skills/implement-screen`.
