@@ -29,6 +29,8 @@ import app.youranima.resources.psychics_experience
 import app.youranima.resources.psychics_free_minutes
 import app.youranima.resources.psychics_ic_phone
 import app.youranima.resources.psychics_price_per_minute
+import app.youranima.ui.components.PrimaryButton
+import app.youranima.ui.components.RatingRow
 import app.youranima.ui.components.appCard
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
@@ -81,14 +83,14 @@ private fun ChannelButtons(
 ) {
     val online = psychic.status == PsychicStatus.Online
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        ChannelButton(
+        PrimaryButton(
             label = stringResource(Res.string.psychics_action_call),
             icon = Res.drawable.psychics_ic_phone,
             enabled = online && psychic.canCall,
             onClick = onCallClick,
             modifier = Modifier.weight(1f).testTag(PsychicsScreenTags.callButton(psychic.id)),
         )
-        ChannelButton(
+        PrimaryButton(
             label = stringResource(Res.string.psychics_action_chat),
             icon = Res.drawable.ic_message_circle,
             enabled = online && psychic.canChat,

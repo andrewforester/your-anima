@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chatroom_title">Chatroom</string>
+
+    <!-- Promo card -->
+    <string name="chatroom_promo_title">Check our Psychics</string>
+    <string name="chatroom_promo_subtitle">More than %1$d psychics</string>
+    <string name="chatroom_see_psychics">See Psychics</string>
+
+    <!-- Chat row -->
+    <string name="chatroom_cd_call_badge">Available for calls</string>
+    <string name="chatroom_cd_online">Online</string>
+    <string name="chatroom_cd_offline">Offline</string>
+    <plurals name="chatroom_cd_unread">
+        <item quantity="one">%1$d unread message</item>
+        <item quantity="other">%1$d unread messages</item>
+    </plurals>
+    <string name="chatroom_unread_overflow">99+</string>
+</resources>
