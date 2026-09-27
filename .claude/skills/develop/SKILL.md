@@ -34,6 +34,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
   3. Take a Playwright screenshot at 402×874 with `locale: 'en-US'`, and treat any `pageerror` as a failure.
   4. Compare with `screenshot.png` and fix visible differences.
 - Glyphs missing from Geist (emoji, ⊙, ☽) don't render on web; draw them as vectors.
+- There is no Android emulator: in your Issue report, list what needs a check on a real device.
 - If the environment can, also run `./gradlew :androidApp:assembleDebug`.
 
 ## Finish
@@ -46,6 +47,6 @@ You are one working session on one Issue. The orchestrator launched you; a human
    - how you verified it.
    Never commit screenshots to your feature branch.
 4. Open a PR to `main` (template: `.github/pull_request_template.md`): short summary of what changed and `Closes #N`. Process details stay in the Issue.
-5. `subscribe_pr_activity` on your PR. Fix red CI and review comments until it's green.
+5. `subscribe_pr_activity` on your PR. Fix red CI and review comments until it's green. Don't schedule check-ins (`send_later`): the orchestrator follows the PR and archives your session after merging.
 6. Don't merge. The orchestrator verifies and merges.
 7. If you're blocked (you can't continue even on a stub), comment on the Issue with exactly what is missing, push what you have, and stop.

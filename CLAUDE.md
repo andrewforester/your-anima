@@ -56,7 +56,7 @@ Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) install
 
 ## Process
 
-GitHub Issues hold the whole working process: status labels, session ids, scope changes, questions and decisions, web screenshots of results (stored on the orphan branch `screens`, embedded in Issue comments). The repository holds only the product and the standing rules; PR bodies are short (`Closes #N` + what changed).
+GitHub Issues hold the whole working process: status labels, session ids, scope changes, questions and decisions, web screenshots of results (stored on the orphan branch `screens`, embedded in Issue comments). Each closed Issue gets a closing comment with the Claude cost (USD, model), and the orchestrator's reports to the human include a cost table. The repository holds only the product and the standing rules; PR bodies are short (`Closes #N` + what changed).
 
 ## Git & CI
 
