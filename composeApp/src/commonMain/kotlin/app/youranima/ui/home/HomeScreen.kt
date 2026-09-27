@@ -5,12 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -102,10 +100,11 @@ fun HomeScreen(
                                 .fillMaxWidth()
                                 .padding(bottom = ContentBottomPadding)
                                 .padding(WindowInsets.navigationBars.asPaddingValues()),
+                        verticalArrangement = Arrangement.spacedBy(ContentGap),
                     ) {
                         Column(
                             modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(ContentGap),
                         ) {
                             state.readings.forEach { offer ->
                                 ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
@@ -113,17 +112,16 @@ fun HomeScreen(
                             DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
                             FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
                         }
-                        Spacer(Modifier.height(32.dp))
                         // Full width: the row scrolls under the screen edges.
                         CategoryRow(categories = state.categories, onCategoryClick = onCategoryClick)
-                        Spacer(Modifier.height(32.dp))
-                        TipCard(tip = state.tipOfTheDay, modifier = Modifier.padding(horizontal = 16.dp))
-                        Spacer(Modifier.height(36.dp))
-                        YesNoBlock(kind = YesNoKind.Yes, items = state.yesForToday)
-                        Spacer(Modifier.height(32.dp))
-                        YesNoBlock(kind = YesNoKind.No, items = state.noForToday)
-                        Spacer(Modifier.height(32.dp))
-                        TarotCard(onClick = onTarotClick, modifier = Modifier.padding(horizontal = 16.dp))
+                        Column(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(ContentGap),
+                        ) {
+                            TipCard(tip = state.tipOfTheDay)
+                            YesNoCard(yes = state.yesForToday, no = state.noForToday)
+                            TarotCard(onClick = onTarotClick)
+                        }
                     }
                 }
             }
@@ -136,6 +134,9 @@ fun HomeScreen(
         )
     }
 }
+
+/** Gap between the blocks of the content column. */
+private val ContentGap = 20.dp
 
 /** Clearance under the scrollable content for the bottom bar. */
 private val ContentBottomPadding = 100.dp

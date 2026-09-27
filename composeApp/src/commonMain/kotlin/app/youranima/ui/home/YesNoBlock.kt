@@ -4,19 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.testTag
@@ -33,16 +33,35 @@ import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-// The design splits the row 50/50, but Geist is wider than the original font and the longer items
-// would wrap; a bit more room for the list keeps them on one line at 402 dp.
-private const val TITLE_WEIGHT = 0.9f
-private const val ITEMS_WEIGHT = 1.1f
+private val BadgeSize = 20.dp
+private val ItemsIndent = 28.dp
 
 enum class YesNoKind { Yes, No }
 
-/** "Yes for today" / "No for today": badge + title on the left, three marked items on the right. */
+/** "Yes for today" and "No for today" in one card, separated by a divider. */
 @Composable
-fun YesNoBlock(
+fun YesNoCard(
+    yes: List<String>,
+    no: List<String>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .testTag(HomeScreenTags.YES_NO)
+                .homeCard(PaddingValues(horizontal = 16.dp, vertical = 20.dp)),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+    ) {
+        YesNoList(kind = YesNoKind.Yes, items = yes)
+        HorizontalDivider(thickness = 1.dp, color = MaterialTheme.appColors.outline)
+        YesNoList(kind = YesNoKind.No, items = no)
+    }
+}
+
+/** Badge + title, then the marked items below, indented under the title. */
+@Composable
+fun YesNoList(
     kind: YesNoKind,
     items: List<String>,
     modifier: Modifier = Modifier,
@@ -55,40 +74,24 @@ fun YesNoBlock(
                 YesNoKind.No -> Res.drawable.home_ic_cross
             },
         )
-    // Yes: teal top-right -> blue bottom-left. No: red top-left -> plum bottom-right.
-    val badgeBrush =
+    val accent =
         when (kind) {
-            YesNoKind.Yes -> {
-                Brush.linearGradient(
-                    colors = listOf(colors.yesGradientStart, colors.yesGradientEnd),
-                    start = Offset(Float.POSITIVE_INFINITY, 0f),
-                    end = Offset(0f, Float.POSITIVE_INFINITY),
-                )
-            }
-
-            YesNoKind.No -> {
-                Brush.linearGradient(listOf(colors.noGradientStart, colors.noGradientEnd))
-            }
+            YesNoKind.Yes -> colors.accentTeal
+            YesNoKind.No -> colors.accentOrange
         }
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .testTag(if (kind == YesNoKind.Yes) HomeScreenTags.YES else HomeScreenTags.NO),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+    Column(
+        modifier = modifier.testTag(if (kind == YesNoKind.Yes) HomeScreenTags.YES else HomeScreenTags.NO),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
-            modifier = Modifier.weight(TITLE_WEIGHT),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier.size(20.dp).background(badgeBrush, CircleShape),
+                modifier = Modifier.size(BadgeSize).background(accent, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(painter = mark, contentDescription = null, tint = colors.onSurface, modifier = Modifier.size(10.dp))
+                Icon(painter = mark, contentDescription = null, tint = colors.onSurface, modifier = Modifier.size(12.dp))
             }
             Text(
                 text =
@@ -98,12 +101,17 @@ fun YesNoBlock(
                             YesNoKind.No -> Res.string.home_no_title
                         },
                     ),
-                style = MaterialTheme.appTypography.sectionTitle,
+                style = MaterialTheme.appTypography.cardTitle,
                 color = colors.onSurface,
             )
         }
-        Column(Modifier.weight(ITEMS_WEIGHT)) {
-            items.forEach { item -> MarkedItem(text = item, mark = mark, color = colors.onSurface) }
+        items.forEach { item ->
+            MarkedItem(
+                text = item,
+                mark = mark,
+                markColor = accent,
+                modifier = Modifier.padding(start = ItemsIndent),
+            )
         }
     }
 }
@@ -112,14 +120,19 @@ fun YesNoBlock(
 private fun MarkedItem(
     text: String,
     mark: Painter,
-    color: Color,
+    markColor: Color,
+    modifier: Modifier = Modifier,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
-        Icon(painter = mark, contentDescription = null, tint = Color.Unspecified, modifier = Modifier.size(14.dp))
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(painter = mark, contentDescription = null, tint = markColor, modifier = Modifier.size(14.dp))
         Text(
             text = text,
-            style = MaterialTheme.appTypography.bodyRegular,
-            color = color,
+            style = MaterialTheme.appTypography.body,
+            color = MaterialTheme.appColors.onSurface,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -128,11 +141,6 @@ private fun MarkedItem(
 
 @Preview
 @Composable
-private fun YesNoBlockPreview() {
-    HomePreview {
-        Column(verticalArrangement = Arrangement.spacedBy(32.dp)) {
-            YesNoBlock(kind = YesNoKind.Yes, items = PreviewHomeUiState.yesForToday)
-            YesNoBlock(kind = YesNoKind.No, items = PreviewHomeUiState.noForToday)
-        }
-    }
+private fun YesNoCardPreview() {
+    HomePreview { YesNoCard(yes = PreviewHomeUiState.yesForToday, no = PreviewHomeUiState.noForToday) }
 }

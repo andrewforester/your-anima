@@ -1,16 +1,17 @@
 package app.youranima.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -18,9 +19,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,10 +47,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private val CardWidth = 144.dp
-private val CardHeight = 182.dp
-private val ArtWidth = 80.dp
-private val ArtHeight = 64.dp
-private val LockBadgeSize = 34.dp
+private val IllustrationSize = 48.dp
+private val LockBadgeSize = 28.dp
 
 internal val ForecastCategory.title: StringResource
     get() =
@@ -55,6 +56,16 @@ internal val ForecastCategory.title: StringResource
             ForecastCategory.Career -> Res.string.home_category_career
             ForecastCategory.Love -> Res.string.home_category_love
             ForecastCategory.Health -> Res.string.home_category_health
+        }
+
+/** Same colours as the Focus & Mood rings. */
+internal val ForecastCategory.tint: Color
+    @Composable @ReadOnlyComposable
+    get() =
+        when (this) {
+            ForecastCategory.Career -> MaterialTheme.appColors.primary
+            ForecastCategory.Love -> MaterialTheme.appColors.accentOrange
+            ForecastCategory.Health -> MaterialTheme.appColors.accentTeal
         }
 
 internal val ForecastCategory.illustration: DrawableResource
@@ -75,7 +86,7 @@ fun CategoryRow(
     LazyRow(
         modifier = modifier.testTag(HomeScreenTags.CATEGORIES),
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(categories, key = { it.id }) { forecast ->
             CategoryCard(forecast = forecast, onClick = { onCategoryClick(forecast.id) })
@@ -90,54 +101,58 @@ fun CategoryCard(
     onClick: () -> Unit = {},
 ) {
     val colors = MaterialTheme.appColors
-    val shape = MaterialTheme.shapes.medium
-    Box(
+    Column(
         modifier =
             modifier
-                .size(CardWidth, CardHeight)
-                .clip(shape)
-                .background(colors.surface)
+                .width(CardWidth)
+                .testTag(HomeScreenTags.categoryCard(forecast.id))
+                .homeCard(PaddingValues())
+                .clip(MaterialTheme.shapes.large)
                 .clickable(onClick = onClick)
-                .testTag(HomeScreenTags.categoryCard(forecast.id)),
+                .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Column(Modifier.padding(start = 12.dp, end = 12.dp, top = 22.dp)) {
-            Box(Modifier.size(ArtWidth, ArtHeight), contentAlignment = Alignment.Center) {
-                Image(painter = painterResource(forecast.category.illustration), contentDescription = null)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Icon(
+                painter = painterResource(forecast.category.illustration),
+                contentDescription = null,
+                tint = forecast.category.tint,
+                modifier = Modifier.size(IllustrationSize),
+            )
+            if (forecast.isLocked) {
+                Box(
+                    modifier =
+                        Modifier
+                            .size(LockBadgeSize)
+                            .background(colors.glassFill, CircleShape)
+                            .border(1.dp, colors.glassBorder, CircleShape)
+                            .testTag(HomeScreenTags.lockBadge(forecast.id)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.home_ic_lock),
+                        contentDescription = stringResource(Res.string.home_cd_locked),
+                        tint = colors.onSurface,
+                        modifier = Modifier.size(14.dp),
+                    )
+                }
             }
-            Spacer(Modifier.height(9.dp))
+        }
+        Column {
             Text(
                 text = stringResource(forecast.category.title),
-                style = MaterialTheme.appTypography.sectionTitle,
+                style = MaterialTheme.appTypography.cardTitle,
                 color = colors.onSurface,
                 maxLines = 1,
             )
-            Spacer(Modifier.height(6.dp))
             Text(
                 text = forecast.preview,
-                style = MaterialTheme.appTypography.preview,
-                color = colors.onSurface,
+                style = MaterialTheme.appTypography.body,
+                color = colors.accentLavender,
+                minLines = 2,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-        }
-        if (forecast.isLocked) {
-            Box(
-                modifier =
-                    Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 16.dp, end = 12.dp)
-                        .size(LockBadgeSize)
-                        .background(colors.lockBadge, CircleShape)
-                        .testTag(HomeScreenTags.lockBadge(forecast.id)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.home_ic_lock),
-                    contentDescription = stringResource(Res.string.home_cd_locked),
-                    tint = colors.onSurface,
-                    modifier = Modifier.size(16.dp),
-                )
-            }
         }
     }
 }

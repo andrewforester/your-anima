@@ -15,6 +15,7 @@ object HomeScreenTags {
     const val TIP = "home_tip"
     const val YES = "home_yes"
     const val NO = "home_no"
+    const val YES_NO = "home_yes_no"
     const val TAROT = "home_tarot"
 
     fun readingCard(id: String) = "home_reading_$id"
