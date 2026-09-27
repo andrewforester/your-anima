@@ -42,12 +42,12 @@ class HomeScreenTest {
             onNodeWithText(data.user.name).assertIsDisplayed()
             onNodeWithText("Sagittarius").assertIsDisplayed()
             onNodeWithTag(HomeScreenTags.BIRTH_CHART).assertIsDisplayed()
+            assertEquals(1, data.readings.size)
             data.readings.forEach { offer ->
                 onNodeWithTag(HomeScreenTags.readingCard(offer.id)).performScrollTo().assertIsDisplayed()
                 onNodeWithTag(HomeScreenTags.askButton(offer.id)).performScrollTo().assertIsDisplayed()
             }
             onNodeWithText("a free personal reading", substring = true).assertExists()
-            onNodeWithText("a paid personal reading", substring = true).assertExists()
         }
 
     @Test
