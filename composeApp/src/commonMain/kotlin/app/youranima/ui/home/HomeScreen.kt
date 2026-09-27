@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
@@ -40,7 +39,7 @@ import app.youranima.ui.theme.appColors
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
-/** Stateful entry point: loads the data and keeps the tab / nav selection. */
+/** Stateful entry point: loads the data and keeps the date-tab selection. */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -48,11 +47,9 @@ fun HomeScreen(
 ) {
     val data = remember(repository) { repository.homeData() }
     var period by rememberSaveable { mutableStateOf(ForecastPeriod.Today) }
-    var navItem by rememberSaveable { mutableStateOf(HomeNavItem.Today) }
     HomeScreen(
-        state = data.toUiState(period, navItem),
+        state = data.toUiState(period),
         onPeriodSelect = { period = it },
-        onNavSelect = { navItem = it },
         modifier = modifier,
     )
 }
@@ -61,7 +58,6 @@ fun HomeScreen(
 fun HomeScreen(
     state: HomeUiState,
     onPeriodSelect: (ForecastPeriod) -> Unit,
-    onNavSelect: (HomeNavItem) -> Unit,
     modifier: Modifier = Modifier,
     onAddStoryClick: () -> Unit = {},
     onAvatarClick: () -> Unit = {},
@@ -72,73 +68,61 @@ fun HomeScreen(
     onCategoryClick: (String) -> Unit = {},
     onTarotClick: () -> Unit = {},
 ) {
-    Box(
+    Column(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(MaterialTheme.appColors.background)
-                .testTag(HomeScreenTags.SCREEN),
+                .testTag(HomeScreenTags.SCREEN)
+                .verticalScroll(rememberScrollState()),
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-        ) {
-            Box {
-                HeroBackground()
-                Column(Modifier.statusBarsPadding()) {
-                    TopBar(
-                        onAddStoryClick = onAddStoryClick,
-                        onAvatarClick = onAvatarClick,
-                        onSettingsClick = onSettingsClick,
-                    )
-                    ProfileHeader(user = state.user, onBirthChartClick = onBirthChartClick)
+        Box {
+            HeroBackground()
+            Column(Modifier.statusBarsPadding()) {
+                TopBar(
+                    onAddStoryClick = onAddStoryClick,
+                    onAvatarClick = onAvatarClick,
+                    onSettingsClick = onSettingsClick,
+                )
+                ProfileHeader(user = state.user, onBirthChartClick = onBirthChartClick)
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = ContentBottomPadding)
+                            .padding(WindowInsets.navigationBars.asPaddingValues()),
+                    verticalArrangement = Arrangement.spacedBy(ContentGap),
+                ) {
                     Column(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = ContentBottomPadding)
-                                .padding(WindowInsets.navigationBars.asPaddingValues()),
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(ContentGap),
                     ) {
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(ContentGap),
-                        ) {
-                            state.readings.forEach { offer ->
-                                ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
-                            }
-                            DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
-                            FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
+                        state.readings.forEach { offer ->
+                            ReadingCard(offer = offer, onAskClick = { onAskClick(offer) })
                         }
-                        // Full width: the row scrolls under the screen edges.
-                        CategoryRow(categories = state.categories, onCategoryClick = onCategoryClick)
-                        Column(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(ContentGap),
-                        ) {
-                            TipCard(tip = state.tipOfTheDay)
-                            YesNoCard(yes = state.yesForToday, no = state.noForToday)
-                            TarotCard(onClick = onTarotClick)
-                        }
+                        DateTabs(selected = state.selectedPeriod, onSelect = onPeriodSelect)
+                        FocusMoodCard(scores = state.mood, onInfoClick = onMoodInfoClick)
+                    }
+                    // Full width: the row scrolls under the screen edges.
+                    CategoryRow(categories = state.categories, onCategoryClick = onCategoryClick)
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(ContentGap),
+                    ) {
+                        TipCard(tip = state.tipOfTheDay)
+                        YesNoCard(yes = state.yesForToday, no = state.noForToday)
+                        TarotCard(onClick = onTarotClick)
                     }
                 }
             }
         }
-        HomeBottomBar(
-            selected = state.selectedNavItem,
-            badges = state.badges,
-            onSelect = onNavSelect,
-            modifier = Modifier.align(Alignment.BottomCenter),
-        )
     }
 }
 
 /** Gap between the blocks of the content column. */
 private val ContentGap = 20.dp
 
-/** Clearance under the scrollable content for the bottom bar. */
+/** Clearance under the scrollable content for the shared bottom bar drawn by [app.youranima.ui.navigation.AppShell]. */
 private val ContentBottomPadding = 100.dp
 
 // Hero art in the design: a 402x420 sky inside a 550x480 vector that overflows 70dp to the left
@@ -177,6 +161,6 @@ private fun HeroBackground() {
 @Composable
 private fun HomeScreenPreview() {
     AppTheme {
-        HomeScreen(state = PreviewHomeUiState, onPeriodSelect = {}, onNavSelect = {})
+        HomeScreen(state = PreviewHomeUiState, onPeriodSelect = {})
     }
 }

@@ -10,7 +10,6 @@ object HomeScreenTags {
     const val USER_NAME = "home_user_name"
     const val BIRTH_CHART = "home_birth_chart"
     const val FOCUS_MOOD = "home_focus_mood"
-    const val BOTTOM_BAR = "home_bottom_bar"
     const val CATEGORIES = "home_categories"
     const val TIP = "home_tip"
     const val YES = "home_yes"
@@ -29,6 +28,4 @@ object HomeScreenTags {
     fun tab(period: ForecastPeriod) = "home_tab_${period.name.lowercase()}"
 
     fun moodRing(category: MoodCategory) = "home_mood_${category.name.lowercase()}"
-
-    fun navItem(item: HomeNavItem) = "home_nav_${item.name.lowercase()}"
 }

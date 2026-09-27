@@ -1,5 +1,7 @@
 package app.youranima.data.home
 
+import app.youranima.data.navigation.NavBadges
+
 object MockHomeRepository : HomeRepository {
     private const val QUESTION = "Will my ex and I get back together?"
 
@@ -24,7 +26,6 @@ object MockHomeRepository : HomeRepository {
                     ForecastPeriod.Tomorrow to mood(career = 75, love = 45, health = 60, family = 70),
                     ForecastPeriod.Week to mood(career = 60, love = 65, health = 70, family = 55),
                 ),
-            badges = NavBadges(psychicsFree = true, unreadChats = 3),
             categories =
                 listOf(
                     CategoryForecast(
@@ -52,6 +53,8 @@ object MockHomeRepository : HomeRepository {
         )
 
     override fun homeData(): HomeData = data
+
+    override fun navBadges() = NavBadges(psychicsFree = true, unreadChats = 3)
 
     private fun mood(
         career: Int,
