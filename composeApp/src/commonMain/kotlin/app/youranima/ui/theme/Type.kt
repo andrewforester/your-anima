@@ -7,6 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import app.youranima.resources.Res
 import app.youranima.resources.geist_bold
@@ -15,7 +16,10 @@ import app.youranima.resources.geist_regular
 import app.youranima.resources.geist_semibold
 import org.jetbrains.compose.resources.Font
 
-/** Text styles from the Figma frame `astrology-home`. Geist, line height `normal` (unspecified). */
+/**
+ * Text styles from the Figma frame `astrology-home` and docs/design/home-feed/SPEC.md.
+ * Geist, line height `normal` (unspecified) unless the spec gives one.
+ */
 @Immutable
 data class AppTypography(
     val name: TextStyle,
@@ -29,6 +33,10 @@ data class AppTypography(
     val ringValue: TextStyle,
     val caption: TextStyle,
     val badge: TextStyle,
+    val sectionTitle: TextStyle,
+    val preview: TextStyle,
+    val bodyRegular: TextStyle,
+    val headline: TextStyle,
 )
 
 @Composable
@@ -44,7 +52,13 @@ internal fun appTypography(fontFamily: FontFamily): AppTypography {
     fun style(
         size: Int,
         weight: FontWeight,
-    ) = TextStyle(fontFamily = fontFamily, fontSize = size.sp, fontWeight = weight)
+        lineHeight: Int? = null,
+    ) = TextStyle(
+        fontFamily = fontFamily,
+        fontSize = size.sp,
+        fontWeight = weight,
+        lineHeight = lineHeight?.sp ?: TextUnit.Unspecified,
+    )
 
     return AppTypography(
         name = style(24, FontWeight.SemiBold),
@@ -58,6 +72,10 @@ internal fun appTypography(fontFamily: FontFamily): AppTypography {
         ringValue = style(12, FontWeight.SemiBold),
         caption = style(11, FontWeight.Medium),
         badge = style(8, FontWeight.Bold),
+        sectionTitle = style(18, FontWeight.Bold, lineHeight = 26),
+        preview = style(16, FontWeight.Normal, lineHeight = 23),
+        bodyRegular = style(14, FontWeight.Normal, lineHeight = 18),
+        headline = style(22, FontWeight.Bold),
     )
 }
 
