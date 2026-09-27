@@ -1,0 +1,43 @@
+package app.youranima.data.home
+
+object MockHomeRepository : HomeRepository {
+    private const val QUESTION = "Will my ex and I get back together?"
+
+    private val data =
+        HomeData(
+            user =
+                UserProfile(
+                    name = "Andrew",
+                    sun = ZodiacSign.Sagittarius,
+                    moon = ZodiacSign.Scorpio,
+                    ascendant = ZodiacSign.Pisces,
+                ),
+            readings =
+                listOf(
+                    ReadingOffer(id = "free", type = ReadingType.Free, suggestedQuestion = QUESTION),
+                    ReadingOffer(id = "paid", type = ReadingType.Paid, suggestedQuestion = QUESTION),
+                ),
+            moodByPeriod =
+                mapOf(
+                    ForecastPeriod.Yesterday to mood(career = 40, love = 55, health = 70, family = 80),
+                    ForecastPeriod.Today to mood(career = 50, love = 70, health = 65, family = 60),
+                    ForecastPeriod.Tomorrow to mood(career = 75, love = 45, health = 60, family = 70),
+                    ForecastPeriod.Week to mood(career = 60, love = 65, health = 70, family = 55),
+                ),
+            badges = NavBadges(psychicsFree = true, unreadChats = 3),
+        )
+
+    override fun homeData(): HomeData = data
+
+    private fun mood(
+        career: Int,
+        love: Int,
+        health: Int,
+        family: Int,
+    ) = listOf(
+        MoodScore(MoodCategory.Career, career),
+        MoodScore(MoodCategory.Love, love),
+        MoodScore(MoodCategory.Health, health),
+        MoodScore(MoodCategory.Family, family),
+    )
+}
