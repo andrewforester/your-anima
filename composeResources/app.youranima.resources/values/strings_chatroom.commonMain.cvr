@@ -1,0 +1,10 @@
+version:0
+plurals|chatroom_cd_unread|ONE:JTEkZCB1bnJlYWQgbWVzc2FnZQ==,OTHER:JTEkZCB1bnJlYWQgbWVzc2FnZXM=
+string|chatroom_cd_call_badge|QXZhaWxhYmxlIGZvciBjYWxscw==
+string|chatroom_cd_offline|T2ZmbGluZQ==
+string|chatroom_cd_online|T25saW5l
+string|chatroom_promo_subtitle|TW9yZSB0aGFuICUxJGQgcHN5Y2hpY3M=
+string|chatroom_promo_title|Q2hlY2sgb3VyIFBzeWNoaWNz
+string|chatroom_see_psychics|U2VlIFBzeWNoaWNz
+string|chatroom_title|Q2hhdHJvb20=
+string|chatroom_unread_overflow|OTkr
