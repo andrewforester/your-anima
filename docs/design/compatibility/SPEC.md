@@ -171,6 +171,7 @@ None. The glow uses `cardGlow` at a 50 % alpha literal (like the `primary` @ 20 
 7. **Visual only**: Partner "+" not clickable, no callbacks; no mock data or repository this round.
 8. **Vertical centring** between top bar and bottom bar; fits 402 × 874 without scrolling; on short screens the page scrolls (top bar and hero scroll with it, as Psychics/Readings).
 9. **Comets not tinted**, colours baked into the vector (plain paths with alpha; no gradients per COORDINATION).
+10. **Orchestrator (overrides 7 where they differ):** follow Issue #51: a small `data/compatibility/` repository with a mock (user name + avatar, partner `null`) and an empty `onAddPartner` callback hoisted to the screen, so the add-partner flow can plug in later. Still visually static. Moving `HeroBackground` and `ProfileAvatar` out of `ui/home/` is in scope, after #47 (collapsing header) is merged.
 
 ## Open questions
 
