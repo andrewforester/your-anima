@@ -204,6 +204,7 @@ None. Colours, type and shapes all map to existing tokens. The chip fill is `pri
 10. **No section "View All"**, no badges, no subtitles (none in the original).
 11. **Not clickable, no callbacks** (Issue: visual only).
 12. **Top bar** scrolls with the content (as Psychics).
+13. **Orchestrator:** don't rename `home_ic_star` / `home_ic_moon` in the screen Issue (`ic_*` belongs to Theme): reuse them under their current names; the rename is a later Theme task. Moving `PsychicsTopBar` → `ScreenTopBar` and `StatusChip` → `TagChip` into `ui/components/` is in scope of the screen Issue; `CardCarousel` only if it removes real duplication.
 
 ## Open questions
 
