@@ -5,10 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,66 +48,77 @@ import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+// Pieces of the profile header (Figma item 4). [CollapsingProfileHeader] places and scales them.
+
+/** Avatar at its expanded size; the header scales it down to [TopBarButtonSize] when collapsed. */
 @Composable
-fun ProfileHeader(
-    user: UserProfile,
-    modifier: Modifier = Modifier,
-    onBirthChartClick: () -> Unit = {},
-) {
-    val colors = MaterialTheme.appColors
-    val typography = MaterialTheme.appTypography
-    Column(
-        modifier = modifier.fillMaxWidth().padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Image(
-            painter = painterResource(Res.drawable.home_avatar_character),
-            contentDescription = stringResource(Res.string.home_avatar),
-            contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .size(100.dp)
-                    .padding(4.dp)
-                    .background(colors.background, CircleShape)
-                    .clip(CircleShape),
-        )
-        Text(
-            text = user.name,
-            style = typography.name,
-            color = colors.onSurface,
-            modifier = Modifier.testTag(HomeScreenTags.USER_NAME),
-        )
-        ZodiacRow(user)
-        BirthChartPill(onClick = onBirthChartClick)
-    }
+fun ProfileAvatar(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(Res.drawable.home_avatar_character),
+        contentDescription = stringResource(Res.string.home_avatar),
+        contentScale = ContentScale.Crop,
+        modifier =
+            modifier
+                .size(ProfileAvatarSize)
+                .padding(4.dp)
+                .background(MaterialTheme.appColors.background, CircleShape)
+                .clip(CircleShape),
+    )
 }
 
 @Composable
-private fun ZodiacRow(user: UserProfile) {
+fun ProfileName(
+    name: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = name,
+        style = MaterialTheme.appTypography.name,
+        color = MaterialTheme.appColors.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier.testTag(HomeScreenTags.USER_NAME),
+    )
+}
+
+/** ☉ sun · ☽ moon · Asc ascendant, one line. [labelColor] is read at draw time, so it can animate without recomposition. */
+@Composable
+fun ZodiacRow(
+    user: UserProfile,
+    modifier: Modifier = Modifier,
+    labelColor: ColorProducer? = null,
+) {
     val colors = MaterialTheme.appColors
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-        ZodiacItem(user.sun) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ZodiacItem(user.sun, labelColor) {
             SymbolIcon(painterResource(Res.drawable.home_ic_sun), stringResource(Res.string.home_sun_symbol), colors.accentGold)
         }
-        ZodiacItem(user.moon) {
+        ZodiacItem(user.moon, labelColor) {
             SymbolIcon(painterResource(Res.drawable.home_ic_moon), stringResource(Res.string.home_moon_symbol), colors.accentPink)
         }
-        ZodiacItem(user.ascendant) { AscendantSymbol() }
+        ZodiacItem(user.ascendant, labelColor) { AscendantSymbol() }
     }
 }
 
 @Composable
 private fun ZodiacItem(
     sign: ZodiacSign,
+    labelColor: ColorProducer?,
     symbol: @Composable () -> Unit,
 ) {
+    val style = MaterialTheme.appTypography.body.copy(color = MaterialTheme.appColors.accentLavender)
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
         symbol()
-        Text(
+        BasicText(
             text = stringResource(sign.label),
-            style = MaterialTheme.appTypography.body,
-            color = MaterialTheme.appColors.accentLavender,
+            style = style,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = labelColor,
         )
     }
 }
@@ -138,11 +151,14 @@ private fun AscendantSymbol() {
 }
 
 @Composable
-private fun BirthChartPill(onClick: () -> Unit) {
+fun BirthChartPill(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     GlassPill(
         label = stringResource(Res.string.home_birth_chart),
         onClick = onClick,
-        modifier = Modifier.testTag(HomeScreenTags.BIRTH_CHART),
+        modifier = modifier.testTag(HomeScreenTags.BIRTH_CHART),
         icon = {
             Image(
                 painter = painterResource(Res.drawable.home_ic_crystal_ball),
@@ -153,8 +169,17 @@ private fun BirthChartPill(onClick: () -> Unit) {
     )
 }
 
+internal val ProfileAvatarSize = 100.dp
+
 @Preview
 @Composable
-private fun ProfileHeaderPreview() {
-    HomePreview { ProfileHeader(user = PreviewHomeUiState.user) }
+private fun ProfilePartsPreview() {
+    HomePreview {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            ProfileAvatar()
+            ProfileName(PreviewHomeUiState.user.name)
+            ZodiacRow(PreviewHomeUiState.user)
+            BirthChartPill(onClick = {})
+        }
+    }
 }
