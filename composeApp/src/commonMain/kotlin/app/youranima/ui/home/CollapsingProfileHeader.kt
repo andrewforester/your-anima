@@ -95,6 +95,7 @@ fun CollapsingProfileHeader(
         val compactTextTop = bar.top + (bar.height - compactNameHeight - zodiac.height) / 2
         val visibleHeight = lerp(expandedHeight, compactHeight, f)
         val fade = (1f - f / FADE_END).coerceIn(0f, 1f)
+        val zodiacY = lerp(zodiacTop, compactTextTop + compactNameHeight, f)
         val background = part(HeaderPart.Background).measure(Constraints.fixed(width, visibleHeight))
 
         layout(width, expandedHeight) {
@@ -102,14 +103,16 @@ fun CollapsingProfileHeader(
             if (fade > 0f) {
                 addStory.placeWithLayer(bar.edge, bar.centerInBar(addStory.height)) { alpha = fade }
                 thumb.placeWithLayer(bar.edge + bar.buttonSize + bar.gap, bar.centerInBar(thumb.height)) { alpha = fade }
-                // Moves up with the feed while it fades.
-                pill.placeWithLayer((width - pill.width) / 2, pillTop - (expandedHeight - visibleHeight)) { alpha = fade }
+                // Follows the zodiac row while it fades.
+                pill.placeWithLayer((width - pill.width) / 2, zodiacY + zodiac.height + bar.columnGap) { alpha = fade }
             }
             settings.place(width - bar.edge - settings.width, bar.centerInBar(settings.height))
-            val avatarScale = lerp(1f, bar.buttonSize.toFloat() / avatar.width, f)
+            // Eased out: the avatar shrinks ahead of the name, so the name never slides under it.
+            val avatarF = 1f - (1f - f) * (1f - f)
+            val avatarScale = lerp(1f, bar.buttonSize.toFloat() / avatar.width, avatarF)
             avatar.placeWithLayer(
-                x = lerp((width - avatar.width) / 2, bar.edge, f),
-                y = lerp(avatarTop, bar.centerInBar(bar.buttonSize), f),
+                x = lerp((width - avatar.width) / 2, bar.edge, avatarF),
+                y = lerp(avatarTop, bar.centerInBar(bar.buttonSize), avatarF),
             ) {
                 scaleX = avatarScale
                 scaleY = avatarScale
@@ -124,10 +127,7 @@ fun CollapsingProfileHeader(
                 scaleY = nameScale
                 transformOrigin = TransformOrigin(0f, 0f)
             }
-            zodiac.place(
-                x = lerp((width - zodiac.width) / 2, textStart, f),
-                y = lerp(zodiacTop, compactTextTop + compactNameHeight, f),
-            )
+            zodiac.place(x = lerp((width - zodiac.width) / 2, textStart, f), y = zodiacY)
         }
     }
 }
@@ -135,7 +135,7 @@ fun CollapsingProfileHeader(
 private enum class HeaderPart { Background, AddStory, Thumb, Settings, Pill, Avatar, Name, Zodiac }
 
 /** Collapse fraction at which the disappearing elements are fully transparent. */
-private const val FADE_END = 0.5f
+private const val FADE_END = 0.3f
 
 private fun Constraints.textWidth(maxWidth: Int) = copy(maxWidth = maxWidth.coerceAtLeast(0))
 
