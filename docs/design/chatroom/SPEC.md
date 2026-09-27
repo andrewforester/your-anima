@@ -209,6 +209,7 @@ None. The unread badge is the nav badge's `accentOrange`; everything else maps t
 11. **Timestamps preformatted** in the mock; no date formatting logic this round.
 12. **Two extra mock chats** (Mystic Orion online/read, Luna read) so the list scrolls and online/no-badge states are visible.
 13. **Behaviour visual only** (Issue): button, rows and avatars do nothing; nav badge not synced with unread counts.
+14. **Orchestrator:** don't rename `psychics_ic_phone` → `ic_phone` in the screen Issue (`ic_*` belongs to Theme); reuse it under its current name. Moving `ChannelButton` → `PrimaryButton`, `RatingRow` and `PhotoOrPlaceholder` into `ui/components/` is in scope (Psychics must look identical). `CountBadge`: keep the row badge local unless extracting it leaves the nav bar pixel-identical.
 
 ## Open questions
 
