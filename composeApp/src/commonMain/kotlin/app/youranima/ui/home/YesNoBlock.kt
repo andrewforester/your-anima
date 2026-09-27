@@ -33,6 +33,11 @@ import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+// The design splits the row 50/50, but Geist is wider than the original font and the longer items
+// would wrap; a bit more room for the list keeps them on one line at 402 dp.
+private const val TITLE_WEIGHT = 0.9f
+private const val ITEMS_WEIGHT = 1.1f
+
 enum class YesNoKind { Yes, No }
 
 /** "Yes for today" / "No for today": badge + title on the left, three marked items on the right. */
@@ -75,7 +80,7 @@ fun YesNoBlock(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(TITLE_WEIGHT),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -97,7 +102,7 @@ fun YesNoBlock(
                 color = colors.onSurface,
             )
         }
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(ITEMS_WEIGHT)) {
             items.forEach { item -> MarkedItem(text = item, mark = mark, color = colors.onSurface) }
         }
     }
