@@ -3,7 +3,6 @@ string|home_add_story|QWRkIHN0b3J5
 string|home_ascendant_symbol|QXNj
 string|home_ask|QXNr
 string|home_avatar|UHJvZmlsZSBwaWN0dXJl
-string|home_badge_free|RnJlZQ==
 string|home_birth_chart|QmlydGggQ2hhcnQ=
 string|home_category_career|Q2FyZWVy
 string|home_category_health|SGVhbHRo
@@ -17,11 +16,6 @@ string|home_mood_health|SGVhbHRo
 string|home_mood_love|TG92ZQ==
 string|home_mood_percent|JTEkZCU=
 string|home_moon_symbol|4pi9
-string|home_nav_chatroom|Q2hhdHJvb20=
-string|home_nav_compatibility|Q29tcGF0aWJpbGl0eQ==
-string|home_nav_psychics|UHN5Y2hpY3M=
-string|home_nav_readings|UmVhZGluZ3M=
-string|home_nav_today|VG9kYXk=
 string|home_no_title|Tm8gZm9yIHRvZGF5
 string|home_reading_chat|Q2hhdA==
 string|home_reading_free|YSBmcmVlIHBlcnNvbmFsIHJlYWRpbmc=
