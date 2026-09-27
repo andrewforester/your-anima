@@ -16,6 +16,8 @@ You plan, launch, watch and merge. You do **not** write feature code. You may ed
 Ask the human, in one message, what is **out of scope** when the request doesn't say so (e.g. "the header and the nav bar visible in the screenshot: include or not?"). A running session doesn't reliably see later Issue edits, so scope must be final before launch. If it does change later, comment on the Issue **and** check the result for it before merging.
 
 ## Turn a request into Issues
+Small bugs and polish items: follow `.claude/skills/quick-fix` instead of the steps below.
+
 1. Split into tasks with non-overlapping zones (the ownership table in `COORDINATION.md`). Hot spots (theme, build files, `App.kt`, `.github/workflows/**`) are separate tasks with one owner. At most 3 sessions in parallel.
 2. Design first. A screen (or a new part of a screen) needs `docs/design/<name>/` (`SPEC.md`, `screenshot.png`, `assets/`) in `main` before its developer starts.
    - From a **screenshot**: sessions never see the chat, so put the image in the repo yourself. Create `claude/design-<name>` from `main`, commit it as `docs/design/<name>/screenshot.png`, push, then create a `design` Issue (template `design.yml`) that embeds it by raw URL, and launch the session on that branch.
