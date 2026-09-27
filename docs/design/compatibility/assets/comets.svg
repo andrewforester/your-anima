@@ -1,0 +1,16 @@
+<!-- Two shooting stars (comets) for the Compatibility background. Artboard 160x80 dp, placed at (228, 188)
+     in the 402-wide hero frame (scaled with the screen width, like the home hero). Plain single-colour paths
+     with alpha only (no gradients): tail = two stacked tapered polygons (#B388FF accentPurple @ 25 % / 45 %),
+     head = soft halo (#B388FF @ 35 %) + 4-point white sparkle. Convert to drawable/compatibility_comets.xml as is (not tinted). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="80" viewBox="0 0 160 80">
+  <!-- comet 1: head (8,32), tail to (40,6) -->
+  <path d="M9.3 33.6L6.7 30.4L40 6Z" fill="#B388FF" fill-opacity=".25"/>
+  <path d="M9.3 33.6L6.7 30.4L27.2 16.4Z" fill="#B388FF" fill-opacity=".45"/>
+  <path d="M8 29a3 3 0 1 1 0 6a3 3 0 1 1 0-6Z" fill="#B388FF" fill-opacity=".35"/>
+  <path d="M8 29Q8 32 11 32Q8 32 8 35Q8 32 5 32Q8 32 8 29Z" fill="#FFFFFF"/>
+  <!-- comet 2: head (144,72), tail to (156,62) -->
+  <path d="M145 73.2L143 70.8L156 62Z" fill="#B388FF" fill-opacity=".25"/>
+  <path d="M145 73.2L143 70.8L151 66.4Z" fill="#B388FF" fill-opacity=".45"/>
+  <path d="M144 69.5a2.5 2.5 0 1 1 0 5a2.5 2.5 0 1 1 0-5Z" fill="#B388FF" fill-opacity=".35"/>
+  <path d="M144 69.5Q144 72 146.5 72Q144 72 144 74.5Q144 72 141.5 72Q144 72 144 69.5Z" fill="#FFFFFF"/>
+</svg>
