@@ -1,62 +1,77 @@
-# Работа нескольких сессий в одном репозитории
+# Parallel sessions in one repository
 
-Этот файл содержит только постоянные правила: кто какие файлы меняет и как не мешать друг другу. Он **не обновляется под каждую задачу**.
+Standing rules only: who changes which files and how sessions stay out of each other's way. This file does **not** change per task.
 
-- **Задачи и их статус** хранятся в GitHub Issues. Метки описаны ниже.
-- **Процесс оркестрации** (кто запускает сессии, кто мержит, когда уведомлять) описан в инструкциях проекта Claude Code, а не в репозитории.
+- **Tasks, their status and the whole working process** live in GitHub Issues (see below).
+- **Orchestration** (who launches sessions, who merges, when to notify the human) is in `.claude/skills/orchestrate`.
 
-## Общие правила
+## General rules
 
-1. **Одна сессия — одна зона.** Зона — это набор путей, которые сессия может менять. Её задаёт Issue. Всё остальное сессия только читает.
-2. **Один экран — одна сессия.** Экран живёт в пакете `ui/<screen>/` (`XxxScreen.kt`, компоненты, `XxxScreenTags`), а его тест — в `commonTest/.../ui/<screen>/`.
-3. **Мелкие PR и частый мерж `main`.** Перед началом работы и перед PR выполни `git merge origin/main`. Rebase не используем.
-4. **Арбитр — CI.** Перед пушем выполни `./gradlew ktlintCheck :composeApp:jvmTest`. На PR CI гоняет только lint и JVM-тесты. Сборки Android/Web/iOS идут после мержа в `main`. Если после мержа `main` покраснел, первым делом его чинит автор PR.
-5. **Нужно что-то вне своей зоны** — не правь сам. Напиши об этом в своём Issue или PR и продолжай на локальной заглушке.
-6. **Роли — скиллы:** `orchestrate` (координатор), `develop` (сессия на Issue), `design` (дизайн-пакет по скриншоту), `implement-screen` (как собрать экран).
-7. **Figma MCP вызывает только координатор.** Лимит плана — 20 вызовов в месяц. Он кладёт спецификацию экрана в `docs/design/<screen>/`: `SPEC.md`, `screenshot.png` и `assets/`. Сессии работают по этим файлам.
+1. **One session, one zone.** A zone is the set of paths a session may change. The Issue sets it. Everything else is read-only for that session.
+2. **One screen part, one session.** A screen lives in the package `ui/<screen>/` (`XxxScreen.kt`, components, `XxxScreenTags`), its test in `commonTest/.../ui/<screen>/`. A screen can be built in several rounds (one design package and one Issue per round).
+3. **Small PRs, frequent merges of `main`.** Run `git merge origin/main` before starting and before the PR. No rebase.
+4. **CI is the referee.** Before pushing, run `./gradlew ktlintCheck :composeApp:jvmTest`. PR CI runs only lint and JVM tests. Android/Web/iOS builds run after merge to `main`. If `main` goes red after a merge, fixing it is the top priority.
+5. **Need something outside your zone?** Don't change it. Say so in an Issue comment and continue on a local stub.
+6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen).
+7. **Only the coordinator calls Figma MCP.** The plan allows 20 calls a month. The coordinator exports each frame once into `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`). Sessions work from those files.
 
-## Горячие точки
+## Design source of truth
 
-У каждой из этих точек один владелец — роль, а не конкретная сессия. Роль указывается в Issue.
+1. **The Figma file is the reference** for sizes, colours, type, radii, spacing and component style. It is an improved version of the app, but it covers only the top of the first screen (`docs/design/astrology-home/`).
+2. **Screenshots of the original app** show *what* is on a screen (blocks, content, texts, icons, behaviour). They don't set the style. A design package from a screenshot restyles every block in the Figma language: existing theme tokens, Geist, the Figma card style (fill, border, radius, padding), the Figma spacing grid. Screenshot colours, fonts and sizes are used only when Figma has no equivalent role, and then they become new tokens.
+3. When a screenshot and Figma disagree, Figma wins. Record the difference in the package, don't copy the screenshot.
 
-| Что | Владелец | Остальные |
+## Process lives in Issues
+
+Everything about *how the work is going* goes into the Issue, as comments: launch (session id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**. The repository holds only the product (code, resources, design packages) and the standing rules. The PR body stays short: what changed and `Closes #N`.
+
+**Screenshots** are stored on the orphan branch `screens` (never merged), path `issue-<N>/<name>.png`, and embedded in the Issue comment by their raw URL:
+`https://raw.githubusercontent.com/andrewforester/your-anima/screens/issue-<N>/<name>.png`.
+Don't commit screenshots to feature branches.
+
+**Questions never block a session.** Nobody is watching it. Write the question in an Issue comment, pick the most conservative option, note it, and keep going. The coordinator or the human answers in the Issue.
+
+## Hot spots
+
+Each has one owner: a role, not a particular session. The Issue names the role.
+
+| What | Owner | Others |
 |---|---|---|
-| `settings.gradle.kts`, `*/build.gradle.kts`, `gradle/libs.versions.toml`, модули, `.github/**` | «Каркас» (`infra`) | просят в Issue |
-| Точки входа: `MainActivity`, `MainViewController`, `wasmJsMain/**`, `App.kt` | «Каркас» | в `App.kt` экран может только подключить себя как стартовый |
-| `ui/theme/**`, `composeResources/font/**` | «Тема» (`theme`) | тема мержится **до** экранов, которые на неё опираются |
-| `ui/components/**` | «Тема» | компонент сначала живёт в пакете экрана; если он нужен второму экрану, его выносят отдельным PR |
-| Строки | у каждого экрана свой файл `values/strings_<screen>.xml` с ключами `<screen>_*` | общий `strings.xml` принадлежит «Теме» |
-| Картинки, иконки | `drawable/<screen>_*`; общие иконки `drawable/ic_*` принадлежат «Теме» | чужие ресурсы не переименовываем |
-| `data/**` | интерфейсы и модели: первый экран, которому они понадобились | моки экрана лежат в `data/<screen>/` |
-| `docs/**`, `CLAUDE.md`, `.claude/**` | координатор или человек | предлагают изменения в PR |
+| `settings.gradle.kts`, `*/build.gradle.kts`, `gradle/libs.versions.toml`, modules, `.github/workflows/**`, `.github/dependabot.yml` | Scaffold (`infra`) | ask in the Issue |
+| Entry points: `MainActivity`, `MainViewController`, `wasmJsMain/**`, `App.kt` | Scaffold | a screen may only register itself as the start screen in `App.kt` |
+| `ui/theme/**`, `composeResources/font/**` | Theme (`theme`) | the theme merges **before** screens that depend on it |
+| `ui/components/**` | Theme | a component lives in its screen package first; when a second screen needs it, a separate PR moves it |
+| Strings | each screen has its own `values/strings_<screen>.xml` with keys `<screen>_*` | the shared `strings.xml` belongs to Theme |
+| Images, icons | `drawable/<screen>_*`; shared icons `drawable/ic_*` belong to Theme | never rename other screens' resources |
+| `data/**` | interfaces and models: the first screen that needs them | a screen's mocks live in `data/<screen>/` |
+| `docs/**`, `CLAUDE.md`, `.claude/**`, `.github/ISSUE_TEMPLATE/**`, `.github/pull_request_template.md` | coordinator or human | others propose changes in a PR |
 
-## Задачи: GitHub Issues и метки
+## Issues and labels
 
-Один Issue — одна сессия — один PR (`Closes #N`). Issue заводится по шаблону `.github/ISSUE_TEMPLATE`: ссылка на дизайн, зона, зависимости и условие «готово, когда».
+One Issue = one session = one PR (`Closes #N`). Issues use the templates in `.github/ISSUE_TEMPLATE` (`design`, `screen`, `task`): design package, zone, **out of scope**, dependencies, done-when.
 
-| Метка | Значение |
+| Label | Meaning |
 |---|---|
-| `design`, `screen`, `theme`, `infra`, `docs` | тип задачи (зона по умолчанию). `design` — дизайн-пакет по скриншоту, зона `docs/design/<screen>/**` |
-| `status: ready` | описание полное, можно запускать |
-| `status: in progress` | над Issue работает сессия (ссылка на неё — в комментарии) |
-| `status: review` | PR открыт и ждёт мержа |
-| `status: blocked` | ждём зависимость или решение, причина — в комментарии |
-| `needs: human` | нужен ответ человека |
+| `design`, `screen`, `theme`, `infra`, `docs` | task type (default zone). `design` = design package from a screenshot, zone `docs/design/<screen>/**` |
+| `status: ready` | the Issue is complete and can be launched |
+| `status: in progress` | a session works on it (session id in a comment) |
+| `status: blocked` | waiting for a dependency or a decision, reason in a comment |
+| `needs: human` | needs an answer from the human |
 
-При смене статуса старая метка снимается. После мержа Issue закрывается через `Closes #N`, и метки на нём больше не важны.
+When the status changes, remove the old label. The PR closes the Issue via `Closes #N`; labels on closed Issues don't matter.
 
-## Порядок слияния
+## Merge order
 
-Сначала каркас, потом тема, потом экраны (параллельно, в любом порядке). Экран может начаться до мержа темы, если в Issue темы зафиксирован API-контракт (имена токенов). Тогда экран вливает к себе ветку темы, как только она появилась.
+Scaffold first, then theme, then screens (in parallel, any order). A screen can start before the theme is merged if the theme Issue fixes the API contract (token names). The screen then merges the theme branch as soon as it appears.
 
-## Решения каркаса (справочно)
+## Scaffold decisions (reference)
 
-- **Пакет:** `app.youranima`. UI-код лежит в `composeApp/src/commonMain/kotlin/app/youranima/ui/**`.
-- **Ресурсы:** `composeApp/src/commonMain/composeResources/`, класс `Res` в пакете `app.youranima.resources`.
-- **Модули:**
-  - `composeApp`: KMP-библиотека (Android, iOS, Wasm, JVM для тестов) и точка входа веба;
-  - `androidApp`: тонкая оболочка (AGP 9 не разрешает application-плагин в KMP-модуле);
-  - `iosApp`: проект Xcode, фреймворк `ComposeApp`.
-- **Зависимости** подключаются через version catalog. `compose-material3` держим на той же линейке, что и `compose-multiplatform`: более новая alpha ломает запуск веба (LinkError в skiko). Dependabot её не поднимает.
-- **Тема:** `app.youranima.ui.theme.AppTheme`, `MaterialTheme.appColors`, `MaterialTheme.appTypography`. Шрифт — Geist. Символов вне Geist (эмодзи, ⊙, ☽) в вебе нет, поэтому их рисуем векторами.
-- **ktlint** 1.8.0. `@Composable`-функции в PascalCase разрешены.
+- **Package:** `app.youranima`. UI code is in `composeApp/src/commonMain/kotlin/app/youranima/ui/**`.
+- **Resources:** `composeApp/src/commonMain/composeResources/`, class `Res` in package `app.youranima.resources`.
+- **Modules:**
+  - `composeApp`: KMP library (Android, iOS, Wasm, JVM for tests) and the web entry point;
+  - `androidApp`: thin host (AGP 9 doesn't allow the application plugin in a KMP module);
+  - `iosApp`: Xcode project, framework `ComposeApp`.
+- **Dependencies** go through the version catalog. Keep `compose-material3` on the same line as `compose-multiplatform`: a newer alpha breaks the web start (LinkError in skiko). Dependabot doesn't bump it.
+- **Theme:** `app.youranima.ui.theme.AppTheme`, `MaterialTheme.appColors`, `MaterialTheme.appTypography`. Font: Geist. Glyphs outside Geist (emoji, ⊙, ☽) don't exist on web, so draw them as vectors.
+- **ktlint** 1.8.0. `@Composable` functions in PascalCase are allowed.

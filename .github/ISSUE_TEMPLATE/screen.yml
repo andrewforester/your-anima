@@ -1,5 +1,5 @@
 name: Screen
-description: A screen to build (from Figma or a screenshot)
+description: A screen, or a new part of an existing screen, to build from a design package
 labels: [screen]
 body:
   - type: input
@@ -17,6 +17,19 @@ body:
     attributes:
       label: Screenshot / reference
       description: Paste an image if there is no Figma frame
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - New screen
+        - New part of an existing screen
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What must stay untouched even if the design shows it.
+      value: "- "
   - type: textarea
     id: behavior
     attributes:
@@ -44,7 +57,7 @@ body:
     attributes:
       label: Done when
       value: |
-        - Matches the design (web screenshot 402×874 attached to the PR)
+        - Matches the design (web screenshot 402×874 posted as an Issue comment, branch `screens`)
         - @Preview for the screen and components, UI test in commonTest
         - ./gradlew ktlintCheck :composeApp:jvmTest green
-        - PR to main with "Closes #N"
+        - PR to main with "Closes #N"; process notes (deviations, stubs, questions) in Issue comments

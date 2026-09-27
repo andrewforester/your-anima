@@ -15,8 +15,8 @@ Demo clone of an existing mobile app. One Compose Multiplatform codebase for **A
 | `composeApp/src/iosMain/` | `MainViewController()` for the iOS host. |
 | `androidApp/` | Thin Android host (`MainActivity` → `App()`). Separate module because AGP 9 forbids an application in a KMP module. |
 | `iosApp/` | Thin Xcode host (SwiftUI → `MainViewControllerKt.MainViewController()`), framework `ComposeApp`. |
-| `docs/COORDINATION.md` | Standing rules for parallel Claude sessions: file ownership, Issue labels. Read it before touching files. Task status lives in GitHub Issues, not in the repo. |
-| `docs/design/<screen>/` | Design package exported once from Figma (`SPEC.md`, `screenshot.png`, `assets/`). Build from it; don't call Figma MCP. |
+| `docs/COORDINATION.md` | Standing rules for parallel Claude sessions: file ownership, design source of truth, Issue labels. Read it before touching files. |
+| `docs/design/<name>/` | Design packages (`SPEC.md`, `screenshot.png`, `assets/`). Build from them; don't call Figma MCP. `astrology-home` = top of the home screen, from Figma. `home-feed` = home screen below Focus & Mood, from a screenshot. |
 
 Platform hosts must stay thin. Put platform-specific code in `composeApp/src/<platform>Main` via `expect`/`actual` only when unavoidable.
 
@@ -48,9 +48,15 @@ Cloud sessions: the SessionStart hook (`.claude/hooks/session-start.sh`) install
 
 `.claude/skills/`: `orchestrate` (coordinator: Issues, sessions, merge, reports), `develop` (a session working one Issue), `design` (design package from a screenshot, no Figma), `implement-screen` (how to build a screen).
 
-## Design (Figma)
+## Design
 
-The source of truth for UI is the Figma file. When the Figma connector is available: read variables/styles first and map them into `ui/theme` before building screens; then build screens from frames. See `.claude/skills/implement-screen`.
+- **Figma is the reference** for sizes, colours, type, radii and spacing. It is an improved version of the original app but covers only the top of the first screen (`docs/design/astrology-home/`).
+- **Screenshots of the original app** set only the content of further screens/parts; their blocks are restyled in the Figma language (existing tokens, Geist, Figma card style). Details: `docs/COORDINATION.md` → Design source of truth.
+- Only the orchestrator calls Figma MCP (20 calls/month); see `.claude/skills/orchestrate`.
+
+## Process
+
+GitHub Issues hold the whole working process: status labels, session ids, scope changes, questions and decisions, web screenshots of results (stored on the orphan branch `screens`, embedded in Issue comments). The repository holds only the product and the standing rules; PR bodies are short (`Closes #N` + what changed).
 
 ## Git & CI
 

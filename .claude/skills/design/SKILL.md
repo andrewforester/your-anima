@@ -11,20 +11,20 @@ Output: `docs/design/<screen>/` in the same shape as `docs/design/astrology-home
 
 ## 1. Get the image into the repo
 - Find the screenshot:
+  - usually the orchestrator has already committed it as `docs/design/<screen>/screenshot.png` on your branch (the Issue says so);
   - a path the human or Issue gives you;
-  - an attachment saved under `~/.claude/uploads/`;
-  - a file in the repo.
+  - an attachment saved under `~/.claude/uploads/`.
 
   If you can only *see* it in the chat and have no file, ask the human to attach it as a file or commit it, and stop.
 - Save it as `docs/design/<screen>/screenshot.png`, keeping the original resolution.
 - Record the pixel size and the scale: dp = px ÷ (image width ÷ logical width). Assume a 402 dp-wide phone unless the image says otherwise (status-bar height, known device).
 
-## 2. Map to the existing design system first
-- Read `ui/theme/Color.kt`, `ui/theme/Type.kt` and `ui/theme/Shape.kt`.
-- Sample colours from the image. For example, use Python/PIL: average a few pixels in flat areas, never on antialiased edges.
-- Match each colour to an existing `AppColors` token when it's within about 3% per channel, and each text style to an `AppTypography` style when size and weight match.
-- Put only the genuinely new values in a **"New tokens needed"** table, with suggested names. The theme owner adds them in a separate `theme` Issue.
-- Font: assume Geist unless it's clearly different; if it is, say so.
+## 2. Figma is the style, the screenshot is the content
+The screenshot comes from the original app. The Figma design (`docs/design/astrology-home/` and the theme in `ui/theme/`) is an improved version of it and is **the reference for sizes, colours, type, radii and spacing** (`docs/COORDINATION.md` → Design source of truth). So:
+- Take from the screenshot *what* is there: blocks, order, content, texts, icons, illustrations, behaviour.
+- Specify *how it looks* in the Figma language: read `ui/theme/Color.kt`, `Type.kt`, `Shape.kt` and `astrology-home/SPEC.md`, then give every block the matching Figma treatment (card fill/border/radius/padding/shadow, Geist styles, spacing grid, text colours).
+- Sample screenshot colours (Python/PIL, flat areas only) to identify the *role* of each colour, then map the role to an existing token. A new token is justified only when Figma has no colour for that role (e.g. a gradient unique to a new block); list it in **"New tokens needed"** with a suggested name. The theme owner adds it in a separate `theme` Issue.
+- Record notable screenshot-vs-Figma differences in one short table, for information only.
 
 ## 3. Measure and describe
 Write `SPEC.md` with these sections (copy the headings from `astrology-home/SPEC.md`):
@@ -37,7 +37,9 @@ Write `SPEC.md` with these sections (copy the headings from `astrology-home/SPEC
   - which existing drawable matches (`drawable/home_ic_*`, `ic_*`);
   - or a precise description (shape, stroke width, size, colour) for a new vector;
   - or, for photos and avatars, a crop saved to `assets/` (PIL crop at full resolution, noting it's a placeholder).
-- **States and behaviour**: taps, selection, scrolling, and anything implied but not shown. List the open questions for the human instead of inventing answers.
+- **States and behaviour**: taps, selection, scrolling, and anything implied but not shown.
+- **Decisions**: for each question the image doesn't answer, the conservative default you chose. The orchestrator may change them.
+- Skip anything the Issue lists as **out of scope**, even if it's in the screenshot.
 - **Data**: what should come from mocks (names, numbers, lists).
 
 ## 4. Check yourself
@@ -45,5 +47,8 @@ Write `SPEC.md` with these sections (copy the headings from `astrology-home/SPEC
 - Check the sums: the widths of the items in a row plus the gaps and paddings should equal the screen width.
 
 ## 5. Deliver
-- Commit only `docs/design/<screen>/**` and open a PR with `Closes #N`, listing the new tokens and open questions.
+- Re-read the Issue and all its comments first: scope may have changed while you worked.
+- Commit only `docs/design/<screen>/**`.
+- **Comment on the Issue** with the open questions (each with the default you put in Decisions), the new tokens, and anything you're unsure of. Never stop to wait for an answer: nobody is watching.
+- Open a PR with a short summary and `Closes #N`. Process details stay in the Issue.
 - Don't merge; the orchestrator merges and then files the `theme` and `screen` Issues from your package.
