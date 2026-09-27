@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="readings_title">Readings</string>
+    <string name="readings_challenge_days">%1$d-day challenge</string>
+    <string name="readings_quiz">Quiz</string>
+    <string name="readings_duration_minutes">%1$d min</string>
+</resources>

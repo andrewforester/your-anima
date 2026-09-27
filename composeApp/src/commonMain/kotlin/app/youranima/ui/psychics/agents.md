@@ -4,13 +4,13 @@ The "Psychics" tab (`AppTab.Psychics` in `ui/navigation/AppShell`): browse psych
 
 ## What the user sees (top → bottom)
 
-`PsychicsTopBar` (heart = favourites, centred title) → `PromoBanner` ("You have 3 minutes FREE / with 3 psychics") → `PsychicFilterRow` (All / Call / Chat `GlassPill`s, All selected) → one `PsychicsSection` per data section: badge + title + "View All", subtitle, full-width `LazyRow` of `PsychicCard`s. The shared bottom bar is drawn by `AppShell`, the screen only leaves 100dp clearance.
+`PsychicsTopBar` (shared `ScreenTopBar` with the heart = favourites, centred title) → `PromoBanner` ("You have 3 minutes FREE / with 3 psychics") → `PsychicFilterRow` (All / Call / Chat `GlassPill`s, All selected) → one `PsychicsSection` per data section: badge + title + "View All", subtitle, full-width `LazyRow` of `PsychicCard`s. The shared bottom bar is drawn by `AppShell`, the screen only leaves 100dp clearance.
 
 ## Components (one per file)
 
-- `PsychicCard` (168dp wide): `PsychicPhotoHeader` (photo or `ic_user` placeholder, bottom fade, `StatusChip`, name) + experience line, `RatingRow`, two `ChannelButton`s (Call/Chat; disabled when busy or the channel is unavailable), price ("3 free minutes / then $3,99/min").
+- `PsychicCard` (168dp wide): `PsychicPhotoHeader` (photo or `ic_user` placeholder, bottom fade, `StatusChip` = shared `TagChip` with a status dot, name) + experience line, `RatingRow`, two `ChannelButton`s (Call/Chat; disabled when busy or the channel is unavailable), price ("3 free minutes / then $3,99/min").
 - `PsychicsResources.kt`: `SectionIcon` → icon/tint, `PsychicPhoto` → drawable, `ScreenPadding`, `PsychicsPreview` helper.
-- Reuses `ui/components/`: `appCard`, `GlassPill`, `TintedIconBox`.
+- Reuses `ui/components/`: `appCard`, `GlassPill`, `TintedIconBox`, `ScreenTopBar`, `TagChip`.
 
 ## State & events
 
