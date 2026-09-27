@@ -8,9 +8,9 @@ The "Psychics" tab (`AppTab.Psychics` in `ui/navigation/AppShell`): browse psych
 
 ## Components (one per file)
 
-- `PsychicCard` (168dp wide): `PsychicPhotoHeader` (photo or `ic_user` placeholder, bottom fade, `StatusChip` = shared `TagChip` with a status dot, name) + experience line, `RatingRow`, two `ChannelButton`s (Call/Chat; disabled when busy or the channel is unavailable), price ("3 free minutes / then $3,99/min").
+- `PsychicCard` (168dp wide): `PsychicPhotoHeader` (shared `PhotoOrPlaceholder`, bottom fade, `StatusChip` = shared `TagChip` with a status dot, name) + experience line, shared `RatingRow`, two shared `PrimaryButton`s with an icon (Call/Chat; disabled when busy or the channel is unavailable), price ("3 free minutes / then $3,99/min").
 - `PsychicsResources.kt`: `SectionIcon` → icon/tint, `PsychicPhoto` → drawable, `ScreenPadding`, `PsychicsPreview` helper.
-- Reuses `ui/components/`: `appCard`, `GlassPill`, `TintedIconBox`, `ScreenTopBar`, `TagChip`.
+- Reuses `ui/components/`: `appCard`, `GlassPill`, `TintedIconBox`, `ScreenTopBar`, `TagChip`, `PrimaryButton` (was `ChannelButton`), `RatingRow`, `PhotoOrPlaceholder` (moved out in #50 for the Chatroom).
 
 ## State & events
 

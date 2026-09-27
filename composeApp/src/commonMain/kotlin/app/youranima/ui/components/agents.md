@@ -12,7 +12,7 @@ The bottom nav bar, shown once by `AppShell` under whichever tab is selected (pr
 
 ## ComingSoonScreen (`ComingSoonScreen.kt`)
 
-Placeholder for tabs without a real screen yet (now Compatibility and Chatroom): centered title + "Coming soon" subtitle, theme tokens only. `ComingSoonScreen(title: String)` — the title string is passed in by `AppShell` per tab.
+Placeholder for tabs without a real screen yet (now Compatibility): centered title + "Coming soon" subtitle, theme tokens only. `ComingSoonScreen(title: String)` — the title string is passed in by `AppShell` per tab.
 
 ## appCard (`AppCard.kt`)
 
@@ -34,10 +34,22 @@ Tab-screen top bar: 56 high, padding 20, centred `cardTitle` title, optional `le
 
 Non-interactive chip: 20 high, radius 10, padding 8, gap 4, optional `leading` + `caption` label on a `fill` colour. Users: Psychics `StatusChip` (`backgroundDeep` @ 80 % + status dot), Readings `ReadingsChip` (`primary` @ 20 %, optional clock). Moved from `ui/psychics/StatusChip` in #42.
 
+## PrimaryButton (`PrimaryButton.kt`)
+
+32-high button, radius 16, `pill` label, optional 14dp leading `icon`: `primary` fill when `enabled`, glass + muted content (no clicks) when not. Users: Psychics Call/Chat (with icons), Chatroom "See Psychics" (no icon). Moved from `ui/psychics/ChannelButton` in #50.
+
+## RatingRow (`RatingRow.kt`)
+
+Five 12dp stars (rating rounded; `accentGold` / `outline`), a 1×10 divider and the review count grouped by thousands with a space (`groupedDigits()`: "1 000 324", "1 204"); read out as one phrase (`psychics_cd_rating`). Users: Psychics cards, Chatroom promo. Moved from `ui/psychics` in #50.
+
+## PhotoOrPlaceholder (`PhotoOrPlaceholder.kt`)
+
+A psychic photo (crop, top-aligned) filling its bounds, or an `outline` fill with a centred `ic_user` of `iconSize`. The caller clips it: Psychics card header full-bleed, Chatroom avatars circle. Extracted from `ui/psychics/PsychicPhotoHeader` in #50.
+
 ## Shared icons
 
 `drawable/ic_heart`, `ic_message_circle`, `ic_user`, `ic_briefcase` (were `home_ic_*` / `home_ic_category_career`) are used by home, the bottom bar and Psychics; Theme owns `ic_*`.
 
 ## Stubs
 
-Compatibility and Chatroom render `ComingSoonScreen` until their own screens exist (Psychics got its screen in #36, Readings in #42).
+Compatibility renders `ComingSoonScreen` until its own screen exists (Psychics got its screen in #36, Readings in #42, Chatroom in #50). `RatingRow` still uses the Psychics-named `psychics_cd_rating` / `psychics_ic_star_filled` (renaming is a Theme task).

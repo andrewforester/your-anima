@@ -16,8 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import app.youranima.data.home.HomeRepository
 import app.youranima.data.home.MockHomeRepository
 import app.youranima.resources.Res
-import app.youranima.resources.nav_chatroom
 import app.youranima.resources.nav_compatibility
+import app.youranima.ui.chatroom.ChatroomScreen
 import app.youranima.ui.components.AppBottomBar
 import app.youranima.ui.components.AppTab
 import app.youranima.ui.components.ComingSoonScreen
@@ -41,7 +41,7 @@ fun AppShell(
             AppTab.Today -> HomeScreen()
             AppTab.Psychics -> PsychicsScreen()
             AppTab.Compatibility -> ComingSoonScreen(title = stringResource(Res.string.nav_compatibility))
-            AppTab.Chatroom -> ComingSoonScreen(title = stringResource(Res.string.nav_chatroom))
+            AppTab.Chatroom -> ChatroomScreen()
             AppTab.Readings -> ReadingsScreen()
         }
         AppBottomBar(

@@ -1,10 +1,11 @@
-package app.youranima.ui.psychics
+package app.youranima.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import app.youranima.resources.Res
 import app.youranima.resources.psychics_cd_rating
 import app.youranima.resources.psychics_ic_star_filled
+import app.youranima.ui.theme.AppTheme
 import app.youranima.ui.theme.appColors
 import app.youranima.ui.theme.appTypography
 import org.jetbrains.compose.resources.painterResource
@@ -28,7 +30,10 @@ import kotlin.math.roundToInt
 
 private const val MAX_STARS = 5
 
-/** Five stars (rating rounded to whole stars), a thin divider and the review count. Read out as one phrase. */
+/**
+ * Five stars (rating rounded to whole stars), a thin divider and the review count grouped by thousands
+ * ("1 000 324"). Read out as one phrase. Psychics cards, Chatroom promo.
+ */
 @Composable
 fun RatingRow(
     rating: Double,
@@ -37,6 +42,7 @@ fun RatingRow(
 ) {
     val colors = MaterialTheme.appColors
     val stars = rating.roundToInt().coerceIn(0, MAX_STARS)
+    // TODO(theme): psychics_cd_rating / psychics_ic_star_filled are shared now; renaming them is a Theme task.
     val description = stringResource(Res.string.psychics_cd_rating, stars, reviewCount)
     Row(
         modifier = modifier.clearAndSetSemantics { contentDescription = description },
@@ -54,12 +60,24 @@ fun RatingRow(
             }
         }
         Box(Modifier.width(1.dp).height(10.dp).background(colors.outline))
-        Text(text = reviewCount.toString(), style = MaterialTheme.appTypography.caption, color = colors.accentLavender)
+        Text(text = reviewCount.groupedDigits(), style = MaterialTheme.appTypography.caption, color = colors.accentLavender)
     }
 }
+
+/** "1000324" → "1 000 324": digits grouped by three with a space (SPEC chatroom, Decision 5). */
+internal fun Int.groupedDigits(): String =
+    toString()
+        .reversed()
+        .chunked(3)
+        .joinToString(" ")
+        .reversed()
 
 @Preview
 @Composable
 private fun RatingRowPreview() {
-    PsychicsPreview { RatingRow(rating = 4.0, reviewCount = 436) }
+    AppTheme {
+        Box(Modifier.background(MaterialTheme.appColors.background).padding(16.dp)) {
+            RatingRow(rating = 4.4, reviewCount = 1_000_324)
+        }
+    }
 }
