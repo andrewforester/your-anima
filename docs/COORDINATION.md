@@ -10,7 +10,7 @@ Standing rules only: who changes which files and how sessions stay out of each o
 1. **One session, one zone.** A zone is the set of paths a session may change. The Issue sets it. Everything else is read-only for that session.
 2. **One screen part, one session.** A screen lives in the package `ui/<screen>/` (`XxxScreen.kt`, components, `XxxScreenTags`), its test in `commonTest/.../ui/<screen>/`. A screen can be built in several rounds (one design package and one Issue per round).
 3. **Small PRs, frequent merges of `main`.** Run `git merge origin/main` before starting and before the PR. No rebase.
-4. **CI is the referee.** Before pushing, run `./gradlew ktlintCheck :composeApp:jvmTest`. PR CI runs lint, JVM tests and a Web smoke job (build + Playwright startup/navigation check, screenshots in the `web-smoke-screenshots` artifact). Android/iOS builds run after merge to `main`. If `main` goes red after a merge, fixing it is the top priority.
+4. **CI is the referee.** Before pushing, run `./gradlew ktlintCheck :composeApp:jvmTest`. PR CI runs (only once the PR is out of draft) lint, JVM tests and a Web smoke job (build + Playwright startup/navigation check, screenshots in the `web-smoke-screenshots` artifact). Android/iOS builds run after merge to `main`. If `main` goes red after a merge, fixing it is the top priority.
 5. **Need something outside your zone?** Don't change it. Say so in an Issue comment and continue on a local stub.
 6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen), `quick-fix` (small fixes).
 7. **Only the coordinator calls Figma MCP.** The plan allows 20 calls a month. The coordinator exports each frame once into `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`). Sessions work from those files.
@@ -48,7 +48,7 @@ Each has one owner: a role, not a particular session. The Issue names the role.
 
 ## Issues and labels
 
-One Issue = one session = one PR (`Closes #N`). Issues use the templates in `.github/ISSUE_TEMPLATE` (`design`, `screen`, `task`): design package, zone, **out of scope**, dependencies, done-when.
+One Issue = one session = one PR (`Closes #N`). The orchestrator opens the branch and a **draft** PR before launching the session and subscribes to it; the session pushes there and marks the PR Ready for review when done, which starts CI and signals the orchestrator. Issues use the templates in `.github/ISSUE_TEMPLATE` (`design`, `screen`, `task`): design package, zone, **out of scope**, dependencies, done-when.
 
 | Label | Meaning |
 |---|---|
