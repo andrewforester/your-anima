@@ -142,8 +142,7 @@ private fun AskButton(
                 .fillMaxWidth()
                 .height(40.dp)
                 .clip(shape)
-                .background(colors.glassFill, shape)
-                .border(BorderStroke(1.dp, colors.glassBorder), shape)
+                .background(colors.primary, shape)
                 .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

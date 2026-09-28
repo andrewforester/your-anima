@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Coordinate work on Your Anima as the orchestrator session — turn the human's requests into GitHub Issues, launch one cloud session per Issue, follow their PRs by events, verify and merge, and report results with web/APK links. Use when the user makes you the orchestrator/coordinator/PM, hands you a screen or feature to "get done", or asks to launch, watch, merge or report on work sessions.
+description: Coordinate work on Your Anima as the orchestrator session — turn the human's requests into GitHub Issues, open a branch and draft PR per Issue, launch one cloud session on it, follow the PR by events, verify and merge, and report results with web/APK links. Use when the user makes you the orchestrator/coordinator/PM, hands you a screen or feature to "get done", or asks to launch, watch, merge or report on work sessions.
 ---
 
 # Orchestrate
@@ -8,9 +8,15 @@ description: Coordinate work on Your Anima as the orchestrator session — turn 
 You plan, launch, watch and merge. You do **not** write feature code. You may edit only `docs/**`, `CLAUDE.md`, `.claude/**`, `.github/ISSUE_TEMPLATE/**`, `.github/pull_request_template.md` (via your own PRs), and a design package on its design branch before merging it. Read `CLAUDE.md` and `docs/COORDINATION.md` first, especially **Design source of truth** and **Process lives in Issues**.
 
 ## State lives in GitHub Issues
-- One task = one Issue = one session = one branch `claude/<short>` = one PR with `Closes #N`.
+- One task = one Issue = one session = one branch `claude/<short>` = one PR with `Closes #N`. **You** open the branch and the PR (as a draft) before launching the session; the session only pushes to it and marks it ready (see Open the branch and draft PR).
 - Labels (see `docs/COORDINATION.md`): type `screen|theme|infra|docs|design`; status `status: ready` → `status: in progress` → closed by the PR; `status: blocked`, `needs: human`. Swap the status label as it changes.
 - Everything about the process is an Issue comment: launch (session id), scope changes, answers to questions, decisions, your verification result with the web screenshot. Never keep task tables or status in the repo.
+
+## Tracker pilot: ClickUp
+The human is trialling ClickUp as the tracker (workspace "Workspace" → space "Team Space" → list "Project 1"; statuses `to do` → `in progress` → `complete`). When a task is filed there instead of an Issue:
+- The task description starts with a header: **Role** (skill the session uses), **Author session** (your session URL), **Assignee session** (filled after launch), **Branch**, **PR**. There are no custom fields yet.
+- The rest of this skill applies with "Issue" read as "ClickUp task": its URL goes into the PR body instead of `Closes #N`, the branch is `task/<clickup-id>-<short>`, and status/comments go to the task. Sessions may not have the ClickUp connector, so the launch prompt must carry the whole brief.
+- ClickUp can't wake a session (its webhooks can't reach one): the PR is the only event channel.
 
 ## Before writing Issues: settle the scope
 Ask the human, in one message, what is **out of scope** when the request doesn't say so (e.g. "the header and the nav bar visible in the screenshot: include or not?"). A running session doesn't reliably see later Issue edits, so scope must be final before launch. If it does change later, comment on the Issue **and** check the result for it before merging.
@@ -27,20 +33,26 @@ Small bugs and polish items: follow `.claude/skills/quick-fix` instead of the st
 4. Write each implementation Issue from `.github/ISSUE_TEMPLATE/`: what to build, design package path, zone (may change / must not change), **out of scope**, dependencies, done-when. It must be self-contained: the session never sees your conversation.
 5. Theme and screen can run in parallel only if the theme Issue fixes the API contract (exact token names) and the screen Issue says to merge the theme branch as soon as it exists.
 
+## Open the branch and draft PR
+Before every launch, so you can follow the PR by events from the start:
+1. From `origin/main` create the branch and push one empty commit: `git commit --allow-empty -m "Start #N: <title> [skip ci]"` (GitHub won't open a PR without a commit; `[skip ci]` keeps CI off it). That marker anywhere in a head commit's message skips CI, so never quote it in any other commit message.
+2. Open a **draft** PR to `main`: title = the task, body = `Closes #N` (or the ClickUp link) and one line saying the session marks it ready when done.
+3. `subscribe_pr_activity` on it right away. CI skips draft PRs; it runs when the session marks the PR **Ready for review**, and that run (its `check_suite.completed` event) is your signal to verify and merge.
+
 ## Launch a session
 `create_session` with `source_url` = repo, `outcome_branch` = `claude/<short>` (and `source_revision` = that branch if you pre-created it), `permission_mode: auto`, tags `your-anima`, `issue-N`, a `model` by task size (below), and a prompt like:
 
 ```
 You are a working session on Your Anima. No human is watching; work until the PR is open.
-Task: GitHub Issue #N in andrewforester/your-anima. Branch: claude/<short>.
+Task: GitHub Issue #N in andrewforester/your-anima. Branch: claude/<short>. Draft PR: #P (already open; don't open another).
 Use the `develop` skill (or `design` for a design Issue). Read the Issue and all its comments via the GitHub MCP tools.
 Start with `git fetch origin && git merge origin/main`.
 Don't call Figma MCP. Don't merge the PR; the orchestrator does.
 Never wait for an answer: post questions in the Issue, take the conservative option, continue.
-After the PR is open and green, stop: don't schedule check-ins (send_later); the orchestrator follows the PR.
+When done, mark PR #P Ready for review (that's the signal), then keep it green; don't schedule check-ins (send_later): the orchestrator follows the PR.
 ```
 
-Then set `status: in progress` and comment on the Issue with the session id.
+Use `source_revision` = `outcome_branch` = the branch you opened. Then set `status: in progress` and comment on the Issue with the session id (in ClickUp: fill **Assignee session**).
 
 **Model:** `claude-sonnet-5` for theme tokens, small fixes, docs and mechanical tasks; the default (Opus) for design packages and screens. The model is not the main cost driver: long exploration and repeated heavy checks are. Keep Issues precise (likely cause, exact files, how much verification is enough).
 
@@ -61,7 +73,8 @@ The human sends tasks one after another. File each one as soon as it arrives; do
 
 ## Follow by events, not polling
 - **No recurring check-ins.** Every wake-up re-reads your whole context and burns the usage limit.
-- You get notified when a child session's turn fails. A clean finish does **not** notify you. So set a one-off `send_later` for when it should be done: design ≈ 15 min, theme ≈ 10 min, screen part ≈ 20–25 min. As soon as its PR exists, call `subscribe_pr_activity` on it.
+- You are subscribed to the draft PR from launch. The session marking it Ready for review starts CI, and CI's result reaches you as a PR event. You also get notified when a child session's turn fails. A clean finish without marking the PR ready does **not** notify you, so keep one fallback `send_later` for when it should be done: design ≈ 15 min, theme ≈ 10 min, screen part ≈ 20–25 min; cancel it (`delete_trigger`) when the ready signal arrives.
+- Don't use Routines to pass messages between sessions: `fire_trigger` always starts a new session, even for a Routine bound to an existing one.
 - You **cannot message a cloud session directly**. Steer it with an Issue comment, which it reads when it checks. If it's idle and needs more, launch a follow-up session on the same branch with a precise prompt.
 - Check the rate limit (`get_session` → `rate_limit_info`) before launching a batch. If you're near the limit, launch fewer sessions.
 

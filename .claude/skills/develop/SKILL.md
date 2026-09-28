@@ -1,6 +1,6 @@
 ---
 name: develop
-description: Work a Your Anima GitHub Issue as a developer session — stay inside the Issue's zone, build the feature or screen, verify locally (lint, tests, web check), and open a PR with "Closes #N" for the orchestrator to merge. Use when a session is started on an Issue, told to implement a task/feature/fix/screen from an Issue, or given the develop role.
+description: Work a Your Anima GitHub Issue as a developer session — stay inside the Issue's zone, build the feature or screen, verify locally (lint, tests, web check), push to the draft PR the orchestrator opened and mark it Ready for review for the orchestrator to merge. Use when a session is started on an Issue, told to implement a task/feature/fix/screen from an Issue, or given the develop role.
 ---
 
 # Develop
@@ -8,7 +8,7 @@ description: Work a Your Anima GitHub Issue as a developer session — stay insi
 You are one working session on one Issue. The orchestrator launched you; a human is usually not watching.
 
 ## Start
-1. `git fetch origin && git merge origin/main` on your branch (`claude/<short>`). Never rebase or force-push.
+1. `git fetch origin && git merge origin/main` on your branch (`claude/<short>`). Never rebase or force-push. The orchestrator already opened a **draft PR** from this branch (the prompt names it): never open another one.
 2. Read `CLAUDE.md`, `docs/COORDINATION.md` and the **whole Issue with all its comments** through the GitHub MCP tools: task, design package, zone, out of scope, depends-on, done-when. The Issue is your only brief, and the place for everything about the process.
 3. If the Issue depends on another branch that isn't in `main` yet, merge that branch (`git merge origin/<branch>`) as soon as it exists. Use only the API contract the Issue names.
 
@@ -30,7 +30,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
 
 ## Verify before every push
 - `./gradlew ktlintCheck :composeApp:jvmTest` must be green. Run `ktlintFormat` to auto-fix.
-- CI also runs a Web smoke job on the PR (build + Playwright startup/navigation check). That doesn't replace your own check below: the Issue needs your screenshot, and your own run catches problems before you push.
+- CI skips draft PRs: nothing checks your pushes until you mark the PR ready, so your local run is the only gate until then. Once ready, CI runs lint, JVM tests and a Web smoke job (build + Playwright startup/navigation check). That doesn't replace your own check below: the Issue needs your screenshot, and your own run catches problems before you push.
 - For UI:
   1. Build `./gradlew :composeApp:wasmJsBrowserDistribution`.
   2. Serve `composeApp/build/dist/wasmJs/productionExecutable` with `python3 -m http.server`.
@@ -50,7 +50,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
    - stubs, `TODO`s, questions and the options you took;
    - how you verified it.
    Never commit screenshots to your feature branch.
-4. Open a PR to `main` (template: `.github/pull_request_template.md`): short summary of what changed and `Closes #N`. Process details stay in the Issue.
-5. `subscribe_pr_activity` on your PR. Fix red CI and review comments until it's green. Don't schedule check-ins (`send_later`): the orchestrator follows the PR and archives your session after merging.
+4. Update the draft PR's body (template: `.github/pull_request_template.md`): keep `Closes #N` (or the ClickUp link), add a short summary of what changed. Process details stay in the Issue.
+5. Mark the PR **Ready for review** (GitHub MCP `update_pull_request`, `draft: false`) as the last step of the work: it starts CI and is the orchestrator's signal. Then `subscribe_pr_activity` on it and fix red CI and review comments until it's green. Don't schedule check-ins (`send_later`): the orchestrator follows the PR and archives your session after merging.
 6. Don't merge. The orchestrator verifies and merges.
 7. If you're blocked (you can't continue even on a stub), comment on the Issue with exactly what is missing, push what you have, and stop.
