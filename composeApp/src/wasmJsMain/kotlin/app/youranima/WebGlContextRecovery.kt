@@ -50,7 +50,8 @@ private fun reloadWhenVisible() {
     }
 }
 
-private fun isVisible(): Boolean = !document.hidden
+// Kotlin/Wasm's DOM bindings have no `Document.visibilityState`.
+private fun isVisible(): Boolean = js("document.visibilityState === 'visible'")
 
 private fun showLoader() {
     document.getElementById("loader")?.classList?.remove("hidden")
