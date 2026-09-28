@@ -12,7 +12,7 @@ Standing rules only: who changes which files and how sessions stay out of each o
 3. **Small PRs, frequent merges of `main`.** Run `git merge origin/main` before starting and before the PR. No rebase.
 4. **CI is the referee.** Before pushing, run `./gradlew ktlintCheck :composeApp:jvmTest`. PR CI runs (only once the PR is out of draft) lint, JVM tests and a Web smoke job (build + Playwright startup/navigation check, screenshots in the `web-smoke-screenshots` artifact). Android/iOS builds run after merge to `main`. If `main` goes red after a merge, fixing it is the top priority.
 5. **Need something outside your zone?** Don't change it. Say so in an Issue comment and continue on a local stub.
-6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen), `quick-fix` (small fixes).
+6. **Roles are skills:** `orchestrate` (coordinator), `develop` (session on an Issue), `design` (design package from a screenshot), `implement-screen` (how to build a screen), `quick-fix` (small fixes), `qa-release` (health of `main` after merges: CI, web and APK checks, reverts).
 7. **Only the coordinator calls Figma MCP.** The plan allows 20 calls a month. The coordinator exports each frame once into `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`). Sessions work from those files.
 
 ## Design source of truth

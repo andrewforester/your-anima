@@ -90,14 +90,14 @@ After merging:
 - Post a closing comment in the Issue: merged PR, verification summary, and a usage line:
   `Claude: <model> · $<cost> · context <used>k / <max>k · tokens in <input+cache_read+cache_write>k (cache read <cache_read>k) / out <output>k`.
 - Then run **Dispatch** (Queue with dependencies).
-- Wait for CI on `main` (lint, Android, Web, iOS, the two publish jobs). After merging, watch CI on `main`. If it goes red, the top priority is a revert PR or a fix.
+- Don't watch CI on `main`: the `qa-release` session does (via the CI-watch PR #75) and reverts or files a fix when it goes red. Before each merge, check that the latest push run of `ci.yml` on `main` isn't red; if it is, merge only the fix or revert.
 - Report the result with these links. Use a `PushNotification` (it may not reach the phone) **and** a chat message:
   - Web: https://andrewforester.github.io/your-anima/
   - APK: https://github.com/andrewforester/your-anima/releases/download/main-latest/your-anima-debug.apk
   - **Cost** table: each Issue's session (model, USD, context used, output tokens), the orchestrator's own spend since the previous report (`get_session` without an id → `usage.cost_usd`; subtract the total you gave last time) and its current context (`context_usage.used_tokens`), and the round total.
   - The queue: Issues still `ready`/`blocked` and what each waits for.
   - What a human still has to check on a device (Android visuals, iOS): there is no emulator in the container.
-- A red `main` is the top priority.
+- A red `main` is the top priority: pick up the QA session's fix task first.
 
 ## Keep the orchestrator cheap
 The orchestrator is usually the most expensive session: every wake-up re-reads the whole conversation. So:
