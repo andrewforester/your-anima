@@ -51,5 +51,5 @@ Write `SPEC.md` with these sections (copy the headings from `astrology-home/SPEC
 - Re-read the Issue and all its comments first: scope may have changed while you worked.
 - Commit only `docs/design/<screen>/**`.
 - **Comment on the Issue** with the open questions (each with the default you put in Decisions), the new tokens, and anything you're unsure of. Never stop to wait for an answer: nobody is watching.
-- Open a PR with a short summary and `Closes #N`. Process details stay in the Issue.
+- Push to the draft PR the orchestrator opened (never open another), add a short summary to its body next to `Closes #N`, and mark it **Ready for review** (`update_pull_request`, `draft: false`) as your last step: that starts CI and signals the orchestrator. Process details stay in the Issue.
 - Don't merge; the orchestrator merges and then files the `theme` and `screen` Issues from your package.
