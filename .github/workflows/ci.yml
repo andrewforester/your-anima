@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+    # The CI-watch PR (main -> ci-watch) only relays main's push runs to the QA session.
+    branches-ignore: [ci-watch]
   workflow_dispatch:
 
 concurrency:
