@@ -1,6 +1,6 @@
 # ui/paywall
 
-The Paywall ("Anima Premium"), #59: a full-screen overlay opened from locked elements (today: the locked home category cards). `ui/navigation/AppShell` draws it over the tab content and hides the bottom bar; X closes it back to the same tab. Design: `docs/design/paywall/SPEC.md`.
+The Paywall ("Anima Premium"), #59: a full-screen navigation destination (`paywall`, #66) opened from locked elements (today: the locked home category cards). `ui/navigation/AppShell` pushes it (no bottom bar); X or the platform back (Android back, iOS edge swipe, browser back) returns to the same tab (on web X goes through `history.back()`, like browser back). Design: `docs/design/paywall/SPEC.md`.
 
 ## Entry points (`PaywallScreen.kt`)
 
@@ -24,4 +24,4 @@ The Paywall ("Anima Premium"), #59: a full-screen overlay opened from locked ele
 
 ## Stubs
 
-Subscribe, Restore and the three links are no-ops (hoisted callbacks). No system back handling: `BackHandler` isn't on the compile classpath without a new dependency (build files are infra). Slide icons reuse `home_ic_sun` / `home_ic_moon` (renaming to `ic_*` is a Theme task).
+Subscribe, Restore and the three links are no-ops (hoisted callbacks). Slide icons reuse `home_ic_sun` / `home_ic_moon` (renaming to `ic_*` is a Theme task).
