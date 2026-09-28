@@ -17,6 +17,7 @@ The human is trialling ClickUp as the tracker (workspace "Workspace" → space "
 - The task description starts with a header: **Role** (skill the session uses), **Author session** (your session URL), **Assignee session** (filled after launch), **Branch**, **PR**. There are no custom fields yet.
 - The rest of this skill applies with "Issue" read as "ClickUp task": its URL goes into the PR body instead of `Closes #N`, the branch is `task/<clickup-id>-<short>`, and status/comments go to the task. Sessions may not have the ClickUp connector, so the launch prompt must carry the whole brief.
 - ClickUp can't wake a session (its webhooks can't reach one): the PR is the only event channel.
+- Screenshots: the session attaches them to the ClickUp task and posts its report as a task comment (fallback: `screens/task-<clickup-id>/`, raw URLs in the PR body). Say so in the launch prompt, and check for them before merging.
 
 ## Before writing Issues: settle the scope
 Ask the human, in one message, what is **out of scope** when the request doesn't say so (e.g. "the header and the nav bar visible in the screenshot: include or not?"). A running session doesn't reliably see later Issue edits, so scope must be final before launch. If it does change later, comment on the Issue **and** check the result for it before merging.

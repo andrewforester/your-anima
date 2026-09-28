@@ -50,6 +50,7 @@ You are one working session on one Issue. The orchestrator launched you; a human
    - stubs, `TODO`s, questions and the options you took;
    - how you verified it.
    Never commit screenshots to your feature branch.
+   **Task in ClickUp** (the prompt gives a ClickUp task instead of an Issue): attach the screenshot(s) to the task (`clickup_attach_task_file`) and post the same report as a task comment. Without the ClickUp connector: push them to `screens` at `task-<clickup-id>/<name>.png` and put the raw URLs in the PR body.
 4. Update the draft PR's body (template: `.github/pull_request_template.md`): keep `Closes #N` (or the ClickUp link), add a short summary of what changed. Process details stay in the Issue.
 5. Mark the PR **Ready for review** (GitHub MCP `update_pull_request`, `draft: false`) as the last step of the work: it starts CI and is the orchestrator's signal. Then `subscribe_pr_activity` on it and fix red CI and review comments until it's green. Don't schedule check-ins (`send_later`): the orchestrator follows the PR and archives your session after merging.
 6. Don't merge. The orchestrator verifies and merges.
