@@ -11,6 +11,7 @@
 import { createRequire } from 'node:module';
 import { mkdir, appendFile } from 'node:fs/promises';
 import path from 'node:path';
+import { measureWebPerf } from './web-perf.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
@@ -202,6 +203,8 @@ async function main() {
   await page.screenshot({ path: reloadShot });
   shots.push({ name: 'after-context-loss', file: reloadShot });
 
+  const perf = await measureWebPerf(browser, BASE_URL, VIEWPORT, errors, isKnownBenign);
+
   await browser.close();
 
   const pass = errors.length === 0;
@@ -212,6 +215,8 @@ async function main() {
     '',
     '## Screens captured',
     ...shots.map((s) => `- ${s.name}: \`${s.file}\``),
+    '',
+    ...perf.lines,
   ];
   if (!pass) {
     summary.push('', '## Errors', ...errors.map((e) => `- ${e}`));
