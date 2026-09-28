@@ -11,10 +11,10 @@ You own `main` after merges; the orchestrator owns everything before them. You d
 - There is no event for a push to `main`, so a **permanent draft PR** stands in for it: **#75 "CI watch: main (never merge)"**, head `main`, base `ci-watch`. Every merge moves its head, and main's push CI reports on that same commit, so its results reach whoever is subscribed to #75.
 - At start: `subscribe_pr_activity` on #75. Then you only wake on its events (`check_suite.completed`, CI failures). No recurring check-ins.
 - Never merge, close or mark #75 ready, and never push to `ci-watch` (it must stay behind `main`). If #75 is gone, recreate it the same way (branch `ci-watch` at any older `main` commit, draft PR `main → ci-watch`) and tell the orchestrator and the human its new number.
-- CI on `main` cancels a running build when the next merge lands (`cancel-in-progress`). A cancelled run means nothing; judge only the latest completed run.
+- Each event names a `head_sha`: look up the push run for that sha, not just "the latest". CI on `main` cancels a running build when the next merge lands (`cancel-in-progress`), and a cancelled run's suite still sends an event: it means nothing, wait for the run of the newer commit. Merges can come from anyone (other sessions, the human), not only the orchestrator.
 
 ## On each event
-Look at the latest push run of `ci.yml` on `main` (`actions_list` → `list_workflow_runs`, branch `main`, event `push`) and its jobs: Lint & unit tests, Web smoke, Android, Web (Wasm), iOS, Publish web preview, Publish APK.
+Look at the push run of `ci.yml` for the event's `head_sha` (`actions_list` → `list_workflow_runs`, branch `main`, event `push`); act only if it is the newest completed, non-cancelled run. Its jobs: Lint & unit tests, Web smoke, Android, Web (Wasm), iOS, Publish web preview, Publish APK.
 
 **Green:**
 1. Check what users get: the web build at https://andrewforester.github.io/your-anima/ (Playwright 402×874, `locale: 'en-US'`, any `pageerror` fails; look at the screens touched by the merges since the last green run) and that the `main-latest` APK was re-published. If the container can't reach Pages, use the run's `web-smoke-screenshots` artifact.
