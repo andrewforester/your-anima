@@ -17,3 +17,9 @@ No navigation library, back stack or deep links (out of scope for #35) — just 
 ## Stubs
 
 Badge data is mocked; see `data/home/agents.md`.
+
+## Pull to reload (#65, web only)
+
+The tab content (not the bottom bar, not the paywall) is wrapped in `PullToReload(onReload)` (`PullToReload.kt`): M3 `PullToRefreshBox` with the indicator in theme colours (`appColors.surface` / `primary`). A pull past the threshold at the very top of the tab (Home: feed at scroll 0, header fully expanded — Home is one `verticalScroll`, so its leftover overscroll reaches the box) calls `onReload` once and keeps spinning until the page goes away. `AppShell(onReload = appReloader)`:
+- `appReloader` (`AppReloader.kt`, `expect`): wasmJs → `window.location.reload()`; Android, iOS, JVM → `null`, and with `null` `PullToReload` emits the content with no wrapper (native apps get a real data refresh once a backend exists).
+- Test tag: `AppShellTags.PULL_TO_RELOAD`. Tests: `commonTest/.../ui/navigation/PullToReloadTest.kt`.

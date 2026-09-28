@@ -16,13 +16,16 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.preloadFont
 import org.jetbrains.compose.resources.preloadImageBitmap
 
+private const val COMPOSE_TARGET = "composeTarget"
+
 /**
  * Warms the Geist weights and the first-screen avatars before `App()` mounts, so the HTML/CSS
- * loader in index.html is the only thing visible until the UI can render fully styled.
+ * loader in index.html is the only thing visible until the UI can render fully styled. Once shown, the app
+ * reloads itself if the browser drops its WebGL context ([reloadOnWebGlContextLoss]).
  */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
 fun main() {
-    ComposeViewport(viewportContainerId = "composeTarget") {
+    ComposeViewport(viewportContainerId = COMPOSE_TARGET) {
         val geistRegular by preloadFont(Res.font.geist_regular)
         val geistMedium by preloadFont(Res.font.geist_medium)
         val geistSemibold by preloadFont(Res.font.geist_semibold)
@@ -35,7 +38,10 @@ fun main() {
                 avatarThumb != null && avatarCharacter != null
 
         if (ready) {
-            LaunchedEffect(Unit) { hideLoader() }
+            LaunchedEffect(Unit) {
+                hideLoader()
+                reloadOnWebGlContextLoss(COMPOSE_TARGET)
+            }
             App()
         }
     }
@@ -43,5 +49,5 @@ fun main() {
 
 private fun hideLoader() {
     document.getElementById("loader")?.classList?.add("hidden")
-    document.getElementById("composeTarget")?.classList?.add("ready")
+    document.getElementById(COMPOSE_TARGET)?.classList?.add("ready")
 }

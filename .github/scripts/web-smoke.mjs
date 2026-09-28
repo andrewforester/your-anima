@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // CI smoke test for the wasm web build. Loads the served bundle in Chromium,
-// taps through the 5 bottom-bar tabs by coordinate, and fails on any page or
-// console error. Playwright is installed by the caller outside the repo tree
+// taps through the 5 bottom-bar tabs by coordinate, forces a WebGL context loss
+// (the app must reload itself and come back), and fails on any page or console
+// error. Playwright is installed by the caller outside the repo tree
 // (see .github/workflows/ci.yml); NODE_PATH points this script at it since a
 // bare `import 'playwright'` ignores NODE_PATH but `require()` honours it.
 import { createRequire } from 'node:module';
@@ -49,6 +50,48 @@ async function waitForCanvasReady(page) {
   }
 }
 
+// Finds the Compose canvas under #composeTarget (possibly in a shadow root),
+// drops its WebGL context and restores it shortly after, as Chrome on Android
+// does to background tabs. Returns false if the canvas or extension is missing.
+function loseWebGlContext() {
+  const find = (root) => {
+    const canvas = root.querySelector('canvas');
+    if (canvas) return canvas;
+    for (const el of root.querySelectorAll('*')) {
+      const found = el.shadowRoot && find(el.shadowRoot);
+      if (found) return found;
+    }
+    return null;
+  };
+  const canvas = find(document.getElementById('composeTarget'));
+  const gl = canvas && (canvas.getContext('webgl2') || canvas.getContext('webgl'));
+  const ext = gl && gl.getExtension('WEBGL_lose_context');
+  if (!ext) return false;
+  ext.loseContext();
+  setTimeout(() => ext.restoreContext(), 100);
+  return true;
+}
+
+async function checkContextLossReload(page, errors) {
+  const reloaded = page.waitForEvent('load', { timeout: 15000 }).then(() => true, () => false);
+  if (!(await page.evaluate(loseWebGlContext))) {
+    errors.push('context loss: no Compose canvas with WEBGL_lose_context');
+    return;
+  }
+  if (!(await reloaded)) {
+    errors.push('context loss: the page did not reload');
+    return;
+  }
+  try {
+    await page.waitForFunction(() => document.getElementById('loader')?.classList.contains('hidden'), null, {
+      timeout: 30000,
+    });
+    await page.waitForTimeout(1000);
+  } catch {
+    errors.push('context loss: the app did not come back after the reload (loader still shown)');
+  }
+}
+
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
 
@@ -77,6 +120,11 @@ async function main() {
     await page.screenshot({ path: file });
     shots.push({ name: tab.name, file });
   }
+
+  await checkContextLossReload(page, errors);
+  const reloadShot = path.join(OUT_DIR, '06-after-context-loss.png');
+  await page.screenshot({ path: reloadShot });
+  shots.push({ name: 'after-context-loss', file: reloadShot });
 
   await browser.close();
 
