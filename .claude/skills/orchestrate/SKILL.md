@@ -35,7 +35,7 @@ Small bugs and polish items: follow `.claude/skills/quick-fix` instead of the st
 
 ## Open the branch and draft PR
 Before every launch, so you can follow the PR by events from the start:
-1. From `origin/main` create the branch and push one empty commit: `git commit --allow-empty -m "Start #N: <title> [skip ci]"` (GitHub won't open a PR without a commit; `[skip ci]` keeps CI off it).
+1. From `origin/main` create the branch and push one empty commit: `git commit --allow-empty -m "Start #N: <title> [skip ci]"` (GitHub won't open a PR without a commit; `[skip ci]` keeps CI off it). That marker anywhere in a head commit's message skips CI, so never quote it in any other commit message.
 2. Open a **draft** PR to `main`: title = the task, body = `Closes #N` (or the ClickUp link) and one line saying the session marks it ready when done.
 3. `subscribe_pr_activity` on it right away. CI skips draft PRs; it runs when the session marks the PR **Ready for review**, and that run (its `check_suite.completed` event) is your signal to verify and merge.
 
