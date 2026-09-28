@@ -27,7 +27,7 @@ Everything about *how the work is going* goes into the Issue, as comments: launc
 
 **Screenshots** are stored on the orphan branch `screens` (never merged), path `issue-<N>/<name>.png`, and embedded in the Issue comment by their raw URL:
 `https://raw.githubusercontent.com/andrewforester/your-anima/screens/issue-<N>/<name>.png`.
-Don't commit screenshots to feature branches.
+Don't commit screenshots to feature branches. For a task tracked in ClickUp (pilot), screenshots are attached to the ClickUp task instead (fallback: `screens` at `task-<clickup-id>/<name>.png`).
 
 **Questions never block a session.** Nobody is watching it. Write the question in an Issue comment, pick the most conservative option, note it, and keep going. The coordinator or the human answers in the Issue.
 
