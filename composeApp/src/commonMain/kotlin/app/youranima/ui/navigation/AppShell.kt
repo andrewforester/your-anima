@@ -29,22 +29,26 @@ import app.youranima.ui.theme.appColors
 /**
  * App-level shell: holds the selected [AppTab] and draws its content under the shared [AppBottomBar]. A tap on a
  * locked element opens the [PaywallScreen] over everything (the bottom bar is hidden while it is shown).
+ * The tab content (not the bar or the paywall) is wrapped in [PullToReload] where the platform can reload.
  */
 @Composable
 fun AppShell(
     modifier: Modifier = Modifier,
     homeRepository: HomeRepository = MockHomeRepository,
+    onReload: (() -> Unit)? = appReloader,
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(AppTab.Today) }
     var showPaywall by rememberSaveable { mutableStateOf(false) }
     val badges = remember(homeRepository) { homeRepository.navBadges() }
     Box(modifier.fillMaxSize().background(MaterialTheme.appColors.background)) {
-        when (selectedTab) {
-            AppTab.Today -> HomeScreen(onLockedClick = { showPaywall = true })
-            AppTab.Psychics -> PsychicsScreen()
-            AppTab.Compatibility -> CompatibilityScreen()
-            AppTab.Chatroom -> ChatroomScreen()
-            AppTab.Readings -> ReadingsScreen()
+        PullToReload(onReload = onReload) {
+            when (selectedTab) {
+                AppTab.Today -> HomeScreen(onLockedClick = { showPaywall = true })
+                AppTab.Psychics -> PsychicsScreen()
+                AppTab.Compatibility -> CompatibilityScreen()
+                AppTab.Chatroom -> ChatroomScreen()
+                AppTab.Readings -> ReadingsScreen()
+            }
         }
         if (showPaywall) {
             PaywallScreen(onClose = { showPaywall = false })
