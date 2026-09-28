@@ -1,6 +1,6 @@
 # ui/paywall
 
-The Paywall ("Anima Premium"), #59: a full-screen navigation destination (`paywall`, #66) opened from locked elements (today: the locked home category cards). `ui/navigation/AppShell` pushes it (no bottom bar); X or the platform back (Android back, iOS edge swipe, browser back) returns to the same tab. Design: `docs/design/paywall/SPEC.md`.
+The Paywall ("Anima Premium"), #59: a full-screen navigation destination (`paywall`, #66) opened from locked elements (today: the locked home category cards). `ui/navigation/AppShell` pushes it (no bottom bar); X or the platform back (Android back, iOS edge swipe, browser back) returns to the same tab (on web X goes through `history.back()`, like browser back). Design: `docs/design/paywall/SPEC.md`.
 
 ## Entry points (`PaywallScreen.kt`)
 

@@ -72,4 +72,23 @@ class PaywallNavigationTest {
             onNodeWithTag(AppBottomBarTags.BAR).assertIsDisplayed()
             assertEquals(AppRoutes.MAIN, navController.currentDestination?.route)
         }
+
+    @Test
+    fun closeGoesThroughTheHookOnceWhenOneIsGiven() =
+        runComposeUiTest {
+            lateinit var navController: NavHostController
+            var closeCalls = 0
+            setContent {
+                navController = rememberNavController()
+                AppTheme { AppShell(navController = navController, onCloseScreen = { closeCalls++ }) }
+            }
+
+            onNodeWithTag(lockedCard).performScrollTo().performClick()
+            onNodeWithTag(PaywallScreenTags.CLOSE).performClick()
+            onNodeWithTag(PaywallScreenTags.CLOSE).performClick()
+
+            // The hook (web: history.back()) owns the pop; X itself leaves the back stack alone.
+            assertEquals(1, closeCalls)
+            assertEquals(AppRoutes.PAYWALL, navController.currentDestination?.route)
+        }
 }
