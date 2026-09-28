@@ -14,6 +14,24 @@
     <link rel="preload" href="composeApp.js" as="script">
     <script>window.webPreloads = Object.fromEntries(["composeResources/app.youranima.resources/drawable/home_avatar_character.jpg","composeResources/app.youranima.resources/drawable/home_avatar_thumb.jpg","composeResources/app.youranima.resources/drawable/home_hero_background.xml","composeResources/app.youranima.resources/drawable/home_ic_book.xml","composeResources/app.youranima.resources/drawable/home_ic_category_health.xml","composeResources/app.youranima.resources/drawable/home_ic_category_love.xml","composeResources/app.youranima.resources/drawable/home_ic_check.xml","composeResources/app.youranima.resources/drawable/home_ic_cross.xml","composeResources/app.youranima.resources/drawable/home_ic_crystal_ball.xml","composeResources/app.youranima.resources/drawable/home_ic_info.xml","composeResources/app.youranima.resources/drawable/home_ic_lock.xml","composeResources/app.youranima.resources/drawable/home_ic_moon.xml","composeResources/app.youranima.resources/drawable/home_ic_plus.xml","composeResources/app.youranima.resources/drawable/home_ic_settings.xml","composeResources/app.youranima.resources/drawable/home_ic_star.xml","composeResources/app.youranima.resources/drawable/home_ic_sun.xml","composeResources/app.youranima.resources/drawable/home_tip_stars.xml","composeResources/app.youranima.resources/drawable/ic_briefcase.xml","composeResources/app.youranima.resources/drawable/ic_heart.xml","composeResources/app.youranima.resources/drawable/ic_message_circle.xml","composeResources/app.youranima.resources/drawable/ic_user.xml","composeResources/app.youranima.resources/font/geist_bold.ttf","composeResources/app.youranima.resources/font/geist_medium.ttf","composeResources/app.youranima.resources/font/geist_regular.ttf","composeResources/app.youranima.resources/font/geist_semibold.ttf","composeResources/app.youranima.resources/values/strings.commonMain.cvr","composeResources/app.youranima.resources/values/strings_home.commonMain.cvr"].map((p) => 
     [p, fetch(p).then((r) => r.ok ? r.arrayBuffer() : Promise.reject(r.status))]));</script>
+    <script>if ("serviceWorker" in navigator) {
+      const sw = navigator.serviceWorker, script = new URL("sw.js", location.href).href;
+      let reloading = false;
+      sw.addEventListener("controllerchange", () => {
+        if (!reloading && sw.controller?.scriptURL === script) { reloading = true; location.reload(); }
+      });
+      sw.getRegistration().then((r) => {
+        if (r?.waiting && sw.controller?.scriptURL === script) r.waiting.postMessage("skipWaiting");
+      });
+      addEventListener("DOMContentLoaded", () => {
+        const loader = document.getElementById("loader");
+        new MutationObserver((_, observer) => {
+          if (!loader.classList.contains("hidden")) return;
+          observer.disconnect();
+          sw.register("sw.js", { updateViaCache: "none" });
+        }).observe(loader, { attributes: true });
+      });
+    }</script>
 </head>
 <body>
     <div id="loader"><div id="loader-spinner"></div></div>
