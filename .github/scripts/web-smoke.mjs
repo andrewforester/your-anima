@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // CI smoke test for the wasm web build. Loads the served bundle in Chromium,
-// taps through the 5 bottom-bar tabs by coordinate, forces a WebGL context loss
-// (the app must reload itself and come back), and fails on any page or console
-// error. Playwright is installed by the caller outside the repo tree
+// taps through the 5 bottom-bar tabs by coordinate, opens the paywall from a
+// locked Home card and closes it with browser back (must stay on the site),
+// forces a WebGL context loss (the app must reload itself and come back), and
+// fails on any page or console error. Playwright is installed by the caller outside the repo tree
 // (see .github/workflows/ci.yml); NODE_PATH points this script at it since a
 // bare `import 'playwright'` ignores NODE_PATH but `require()` honours it.
 import { createRequire } from 'node:module';
@@ -24,6 +25,11 @@ const TABS = [
   { name: 'tab-4', x: 281 },
   { name: 'tab-5', x: 362 },
 ];
+
+// Home, scrolled down by HOME_SCROLL px from the top: the first category card
+// (Career, locked) is at LOCKED_CARD.
+const HOME_SCROLL = 400;
+const LOCKED_CARD = { x: 88, y: 420 };
 
 // Kotlin/Wasm-Skiko runtime notice, logged on every startup regardless of app
 // code (tracked upstream at https://kotl.in/vr3szr). Not a regression to catch.
@@ -92,6 +98,34 @@ async function checkContextLossReload(page, errors) {
   }
 }
 
+// Home tab -> locked card -> paywall (URL gets #paywall) -> browser back -> Home.
+async function checkPaywallBack(page, errors, shots) {
+  const shot = async (name) => {
+    const file = path.join(OUT_DIR, `${name}.png`);
+    await page.screenshot({ path: file });
+    shots.push({ name, file });
+  };
+  await page.mouse.click(TABS[0].x, TAB_Y); // switching tabs resets Home to the top
+  await page.waitForTimeout(1000);
+  await page.mouse.move(VIEWPORT.width / 2, VIEWPORT.height / 2);
+  await page.mouse.wheel(0, HOME_SCROLL);
+  await page.waitForTimeout(1000);
+  await page.mouse.click(LOCKED_CARD.x, LOCKED_CARD.y);
+  await page.waitForTimeout(1500);
+  await shot('06-paywall');
+  if (!page.url().includes('#paywall')) {
+    errors.push(`paywall: URL has no #paywall after tapping a locked card (${page.url()})`);
+    return;
+  }
+  await page.goBack();
+  await page.waitForTimeout(1500);
+  await shot('07-back-on-home');
+  const url = page.url();
+  if (!url.startsWith(BASE_URL) || url.includes('#paywall')) {
+    errors.push(`paywall: browser back did not return to Home on the site (${url})`);
+  }
+}
+
 async function main() {
   await mkdir(OUT_DIR, { recursive: true });
 
@@ -121,8 +155,10 @@ async function main() {
     shots.push({ name: tab.name, file });
   }
 
+  await checkPaywallBack(page, errors, shots);
+
   await checkContextLossReload(page, errors);
-  const reloadShot = path.join(OUT_DIR, '06-after-context-loss.png');
+  const reloadShot = path.join(OUT_DIR, '08-after-context-loss.png');
   await page.screenshot({ path: reloadShot });
   shots.push({ name: 'after-context-loss', file: reloadShot });
 
@@ -134,7 +170,7 @@ async function main() {
     '',
     pass ? '**Result: PASS**' : '**Result: FAIL**',
     '',
-    '## Tabs captured',
+    '## Screens captured',
     ...shots.map((s) => `- ${s.name}: \`${s.file}\``),
   ];
   if (!pass) {
