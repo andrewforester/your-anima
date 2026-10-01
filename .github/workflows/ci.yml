@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    # The CI-watch PR (main -> ci-watch) only relays main's push runs to the QA session.
+    branches-ignore: [ci-watch]
   workflow_dispatch:
 
 concurrency:
@@ -16,10 +19,13 @@ permissions:
 # PRs run lint, JVM tests and a web build + Playwright smoke test. Android/iOS builds
 # and the Pages deploy run after merge (push to main) or on a manual run. Pushes to
 # feature branches trigger nothing: sessions run `ktlintCheck :composeApp:jvmTest`
-# (and the web check) locally, the PR re-checks it.
+# (and the web check) locally, the PR re-checks it. Draft PRs run nothing: the task
+# author opens the PR as a draft before work starts, and CI runs once the developer
+# marks it Ready for review (and on every push after that).
 jobs:
   checks:
     name: Lint & unit tests
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -41,6 +47,7 @@ jobs:
 
   web-smoke:
     name: Web smoke
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     env:
       PLAYWRIGHT_VERSION: 1.56.1

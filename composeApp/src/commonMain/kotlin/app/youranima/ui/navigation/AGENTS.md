@@ -17,7 +17,7 @@ Transitions are the NavHost defaults. No deep links, no other destinations. Test
 
 ## Stubs
 
-Badge data is mocked; see `data/home/agents.md`.
+Badge data is mocked; see `data/home/AGENTS.md`.
 
 ## Pull to reload (#65, web only)
 

@@ -1,0 +1,66 @@
+// Service worker of the production web build (#71): one cache per build, cache-first for the app's files, so a
+// repeat visit starts without waiting for GitHub Pages' `max-age=600` revalidations. The wasmJsBrowserDistribution
+// post-step in composeApp/build.gradle.kts replaces the two placeholders below; every deploy therefore produces a
+// byte-different sw.js, which the browser picks up on its next navigation (index.html registers it with
+// `updateViaCache: 'none'`). The dev server serves this file unfilled, and nothing registers it there.
+// Lifecycle and the update flow are described in composeApp/src/wasmJsMain/kotlin/app/youranima/AGENTS.md.
+const BUILD_ID = '__BUILD_ID__';
+// Paths relative to the scope: index.html, composeApp.js, both wasm, styles/icons and the first-frame resources.
+const PRECACHE = ['__PRECACHE__'];
+
+const SCOPE = self.registration.scope;
+// Scoped cache names: the prod app and branch previews (a sub-path of it) share one origin, hence one Cache Storage.
+const CACHE_PREFIX = `your-anima@${SCOPE}@`;
+const CACHE = CACHE_PREFIX + BUILD_ID;
+const PRECACHED = new Set(PRECACHE);
+const MATCH = { ignoreVary: true };
+
+self.addEventListener('install', (event) => {
+  // `no-cache`: revalidate against the server (304s after a cold load) so an HTTP-cached file of the previous build
+  // can't slip into this build's cache; any failure (e.g. a half-propagated deploy) fails the install.
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE.map((path) => new Request(path, { cache: 'no-cache' })))),
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE).map((key) => caches.delete(key))),
+    ),
+  );
+});
+
+// A waiting build takes over only when a page asks for it, right at its start (index.html), never under a running app.
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') self.skipWaiting();
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET' || !request.url.startsWith(SCOPE)) return;
+  const path = new URL(request.url).pathname.slice(new URL(SCOPE).pathname.length);
+  if (request.mode === 'navigate') {
+    // Only the app's own page; a branch preview under this scope has its own page and service worker.
+    if (path === '' || path === 'index.html') event.respondWith(fromCache('index.html', request));
+  } else if (PRECACHED.has(path)) {
+    event.respondWith(fromCache(path, request));
+  } else if (path.startsWith('composeResources/')) {
+    event.respondWith(fromCacheOrFetchAndStore(request));
+  }
+});
+
+async function fromCache(path, request) {
+  const cached = await caches.match(new URL(path, SCOPE).href, { ...MATCH, cacheName: CACHE });
+  return cached ?? fetch(request);
+}
+
+// Resources outside the first frame (other screens' images, strings): cached on first use, within this build.
+async function fromCacheOrFetchAndStore(request) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(request, MATCH);
+  if (cached) return cached;
+  const response = await fetch(request);
+  if (response.ok && response.type === 'basic') await cache.put(request, response.clone());
+  return response;
+}
