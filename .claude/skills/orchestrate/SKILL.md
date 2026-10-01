@@ -53,9 +53,9 @@ Launch every task as a **new agent in a new background session**, with the launc
 The human sends tasks one after another. File each one as soon as it arrives; don't wait for the batch.
 
 - **Dependencies are explicit** tracker relations (hard: blocked by; soft: starts on branch of). Two tasks touching the same file are always a hard dependency. A screen always depends on its design task.
-- **Status on filing:** an open hard dependency (or a soft one without a branch yet) → Backlog with a comment "Waiting for {{TRACKER_KEY}}-12, {{TRACKER_KEY}}-15"; otherwise Todo.
+- **Status on filing:** an open hard dependency (or a soft one without a branch yet) → Backlog with a comment "Waiting for YOU-12, YOU-15"; otherwise Todo.
 - **Dispatch** is one step you run at every wake-up (a new task, a merge, a session's expected finish, a failed session):
-  1. For each Backlog ticket: if every hard dependency is Done (merged) and every soft one has a branch, move it to Todo and comment "Unblocked by {{TRACKER_KEY}}-N".
+  1. For each Backlog ticket: if every hard dependency is Done (merged) and every soft one has a branch, move it to Todo and comment "Unblocked by YOU-N".
   2. Count running sessions (In Progress). While fewer than the limit are running and the usage limit allows, launch the Todo tickets, oldest first.
   3. Nothing launchable: do nothing, write nothing.
 - **Merge first, then dispatch**, in the same wake-up: a merge is what unblocks the next tasks, so the queue moves without the human.

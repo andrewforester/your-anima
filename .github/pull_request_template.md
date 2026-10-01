@@ -1,4 +1,4 @@
-Closes {{TRACKER_KEY}}-
+Closes YOU-
 
 ## What changed
 

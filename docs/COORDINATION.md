@@ -27,9 +27,9 @@ The style reference is the **Figma file**, Starter plan: **20 MCP calls/month**,
 
 GitHub Issues are **not** used. Everything about *how the work is going* lives in Linear: launch (session name/id), scope changes, questions, decisions, blockers, verification results, **web screenshots of the result**, and at closing **the Claude usage of the work (model, USD, context, tokens)**. The repository holds only the product (code, resources, design packages) and the standing rules.
 
-- **Where:** team **{{TRACKER_TEAM}}** (key `{{TRACKER_KEY}}`). Linear project **Your Anima** (a separate project only for a big epic); one **ticket per task** (`{{TRACKER_KEY}}-N`) = one session = one branch `claude/<short>` = one PR.
+- **Where:** team **Your Anima** (key `YOU`). Linear project **Your Anima** (a separate project only for a big epic); one **ticket per task** (`YOU-N`) = one session = one branch `claude/<short>` = one PR.
 - **Statuses:** Backlog (filed, blocked by a dependency or a decision) → Todo (complete, can be launched) → In Progress (a session works on it) → In Review (PR marked Ready, waiting for verify/merge) → Done (merged). Canceled / Duplicate as usual.
-- **Dependencies:** Linear relations, not text: `blocked by` for hard dependencies (must be merged first); a soft dependency ("may start once {{TRACKER_KEY}}-N's branch exists and merge it") is written in the brief as `Starts on branch of: {{TRACKER_KEY}}-N` and linked as `related`. Two tasks touching the same file are always a hard dependency. A screen is always blocked by its design task.
+- **Dependencies:** Linear relations, not text: `blocked by` for hard dependencies (must be merged first); a soft dependency ("may start once YOU-N's branch exists and merge it") is written in the brief as `Starts on branch of: YOU-N` and linked as `related`. Two tasks touching the same file are always a hard dependency. A screen is always blocked by its design task.
 - **Brief (ticket description)**, self-contained because the session never sees the chat:
   ```
   ## What needs to be done
@@ -39,7 +39,7 @@ GitHub Issues are **not** used. Everything about *how the work is going* lives i
   ## Dependencies          (blocked by / starts on branch of; mirrors the relations)
   ## Done when
   ```
-- **PR ↔ ticket:** the branch is `claude/<short>`; the PR body starts with `Closes {{TRACKER_KEY}}-N` (Linear's GitHub integration links the PR and moves the ticket to Done on merge). Template: `.github/pull_request_template.md`. The `linear-code` / Linear bot comments on PRs are not requests.
+- **PR ↔ ticket:** the branch is `claude/<short>`; the PR body starts with `Closes YOU-N` (Linear's GitHub integration links the PR and moves the ticket to Done on merge). Template: `.github/pull_request_template.md`. The `linear-code` / Linear bot comments on PRs are not requests.
 
 ### Labels
 Label groups, one label from each group per ticket:
@@ -54,7 +54,7 @@ Plus **Needs human**: waiting for the human's answer or action (the question is 
 ### Where sessions write
 Working sessions may not have the Linear tools. They post questions, deviations and their final report as **PR comments**, and on the ticket too when they can. The orchestrator mirrors decisions, the verification result and the closing comment to the ticket.
 
-**Screenshots** (web results, before/after, the human's device screenshots) are uploaded **straight to the Linear ticket** and embedded in a ticket comment as `![<name>](<assetUrl>)` (steps in Tooling → Tracker); the PR comment links to that ticket comment. They are never committed to git. A session without the Linear tools leaves its PNGs in `/tmp/{{TRACKER_KEY}}-<N>/` and says so in its PR comment; the orchestrator uploads them.
+**Screenshots** (web results, before/after, the human's device screenshots) are uploaded **straight to the Linear ticket** and embedded in a ticket comment as `![<name>](<assetUrl>)` (steps in Tooling → Tracker); the PR comment links to that ticket comment. They are never committed to git. A session without the Linear tools leaves its PNGs in `/tmp/YOU-<N>/` and says so in its PR comment; the orchestrator uploads them.
 
 **Questions never block a session.** Nobody is watching it. Write the question as a comment, pick the most conservative option, note it, and keep going. The coordinator or the human answers.
 
@@ -65,10 +65,11 @@ Working sessions may not have the Linear tools. They post questions, deviations 
 Concrete commands behind the general steps in the skills. When a tool here stops working, fix this section, not the skills.
 
 ### Tracker (Linear MCP)
-- File / update a ticket: `save_issue` (`team: {{TRACKER_TEAM}}`, `project`, `labels: [<Role>, <Type>]`, `state`, `blockedBy`, `relatedTo`, `description` = the brief). Project per epic: `save_project`.
+- Server: **`linear-your-anima`** (workspace https://linear.app/your-anima), a local-scope MCP of the main checkout `~/workspace/your-anima`: sessions started there (or with `claude --bg` from there) have it; worktree and cloud sessions don't, so they report in PR comments and the orchestrator mirrors. Never use another Linear connector for this project.
+- File / update a ticket: `save_issue` (`team: Your Anima`, `project`, `labels: [<Role>, <Type>]`, `state`, `blockedBy`, `relatedTo`, `description` = the brief). Project per epic: `save_project`.
 - Comment: `save_comment`. Read: `get_issue`, `list_issues` (`project`, `state`), `list_comments`.
 - Attach a screenshot, one file at a time:
-  1. `prepare_attachment_upload` (`issue: {{TRACKER_KEY}}-N`, `filename`, `contentType: image/png`, `size` = exact bytes, e.g. `stat -f%z` on macOS).
+  1. `prepare_attachment_upload` (`issue: YOU-N`, `filename`, `contentType: image/png`, `size` = exact bytes, e.g. `stat -f%z` on macOS).
   2. Within 60 s: `curl -sS -o /dev/null -w "%{http_code}" -X PUT --data-binary @<file> <uploadRequest.url>` with **every** header from `uploadRequest.headers` verbatim (`content-type`, `cache-control`, `x-goog-content-length-range`, `Content-Disposition`); expect `200`.
   3. `create_attachment_from_upload` (`issue`, `assetUrl`).
   4. Embed in a ticket comment (`save_comment`) as `![<name>](<assetUrl>)`, the plain `assetUrl` without a signature (Linear signs it). Read images back with `extract_images`.
@@ -76,7 +77,7 @@ Concrete commands behind the general steps in the skills. When a tool here stops
 
 ### Code host (GitHub)
 - Cloud sessions use the GitHub MCP tools; local sessions use the `gh` CLI.
-- **Open the branch and draft PR** (orchestrator, before launch): from `origin/main` push one empty commit without touching the checkout: `c=$(git commit-tree "$(git rev-parse 'origin/main^{tree}')" -p origin/main -m "Start {{TRACKER_KEY}}-N: <title> [skip ci]")`, `git push origin "${c}:refs/heads/claude/<short>"` (braces matter in zsh). `[skip ci]` anywhere in a head commit message skips CI, so never quote it in other commit messages. Then a **draft** PR to `main`: title = the task, body = `Closes {{TRACKER_KEY}}-N` + one line "the session marks it ready when done" (`create_pull_request` with `draft: true` / `gh pr create --draft`).
+- **Open the branch and draft PR** (orchestrator, before launch): from `origin/main` push one empty commit without touching the checkout: `c=$(git commit-tree "$(git rev-parse 'origin/main^{tree}')" -p origin/main -m "Start YOU-N: <title> [skip ci]")`, `git push origin "${c}:refs/heads/claude/<short>"` (braces matter in zsh). `[skip ci]` anywhere in a head commit message skips CI, so never quote it in other commit messages. Then a **draft** PR to `main`: title = the task, body = `Closes YOU-N` + one line "the session marks it ready when done" (`create_pull_request` with `draft: true` / `gh pr create --draft`).
 - **Mark ready** (session, last step): `update_pull_request` with `draft: false` / `gh pr ready <P>`. It starts CI and is the orchestrator's signal.
 - **Follow a PR** (orchestrator; sessions after marking ready): cloud → `subscribe_pr_activity` (events for CI, comments, ready, merge). Local → one `Monitor` script polling all open task PRs every ≥ 120 s with `gh pr view <P> --json isDraft,state,statusCheckRollup,comments`, printing a line only when the draft flag, the state, the `Lint & tests` / `web-smoke` results or the count of non-bot comments change (ignore `linear-code` and `vercel`); re-arm when it expires (30 min). The GitHub API limit (5,000/h) is shared with every session.
 - `ready_for_review` events can get lost: always keep a fallback check-in (below) and, when it fires, look at **all** open PRs.
@@ -85,10 +86,10 @@ Concrete commands behind the general steps in the skills. When a tool here stops
 ### Sessions
 The orchestrator launches each task as a new agent in a **new session of the same kind as itself**, with the brief, the branch, the draft PR, the skill to use and the standing rules in the prompt (template in `.claude/skills/orchestrate` → Launch a session): the orchestrator runs in the cloud → a new cloud session; the orchestrator runs locally → a new local background session **with Remote Control**, so the human can follow and steer it from the Claude app.
 
-- **Cloud orchestrator → new cloud session:** `create_session` with `source_url` = repo, `source_revision` = `outcome_branch` = `claude/<short>`, `permission_mode: auto`, `model` (below), `tags: [your-anima, {{TRACKER_KEY}}-N]`, `title: "{{TRACKER_KEY}}-N <short title>"`. Fallback check-in with `send_later` at the expected finish (design ≈ 15 min, theme ≈ 10, screen part ≈ 20–25, quick fix ≈ 12); cancel with `delete_trigger` when the ready signal comes. Usage after merge: `get_session` → `external_metadata.usage` (`cost_usd`, tokens) and `context_usage`; then `archive_session`. A cloud session can't be messaged: steer it with a comment it reads, or launch a follow-up session on the same branch. Don't pass messages via Routines (`fire_trigger` always starts a new session).
-- **Local orchestrator → new local background session with Remote Control:** one git worktree per task (`git worktree add .claude/worktrees/<short> claude/<short>`), prompt written to `<scratchpad>/prompt-{{TRACKER_KEY}}-N.md`, then from the worktree:
+- **Cloud orchestrator → new cloud session:** `create_session` with `source_url` = repo, `source_revision` = `outcome_branch` = `claude/<short>`, `permission_mode: auto`, `model` (below), `tags: [your-anima, YOU-N]`, `title: "YOU-N <short title>"`. Fallback check-in with `send_later` at the expected finish (design ≈ 15 min, theme ≈ 10, screen part ≈ 20–25, quick fix ≈ 12); cancel with `delete_trigger` when the ready signal comes. Usage after merge: `get_session` → `external_metadata.usage` (`cost_usd`, tokens) and `context_usage`; then `archive_session`. A cloud session can't be messaged: steer it with a comment it reads, or launch a follow-up session on the same branch. Don't pass messages via Routines (`fire_trigger` always starts a new session).
+- **Local orchestrator → new local background session with Remote Control:** one git worktree per task (`git worktree add .claude/worktrees/<short> claude/<short>`), prompt written to `<scratchpad>/prompt-YOU-N.md`, then from the worktree:
   ```
-  claude --bg -n "{{TRACKER_KEY}}-N <short title>" --remote-control "{{TRACKER_KEY}}-N <short title>" \
+  claude --bg -n "YOU-N <short title>" --remote-control "YOU-N <short title>" \
     --model <model> --effort <effort> --permission-mode auto "$(cat <prompt file>)"
   ```
   `--bg` runs it in the background and prints its id; `--remote-control` turns Remote Control on from the start (the log shows `/remote-control is active` and a claude.ai/code link), so it appears in the Claude app under that name. Record the id and name on the ticket. It shows in `claude agents` (attach: `claude attach <id>`, log: `claude logs <id>`). Message it with `SendMessage` (name from `ListAgents`), e.g. to resume after a usage-limit stop (`claude --bg --resume <id>` also works). Remove the worktree after merge (`git worktree remove`). Usage: what the session reports (model, tokens, duration; USD when shown).
