@@ -1,57 +1,47 @@
 ---
 name: develop
-description: Work a Your Anima GitHub Issue as a developer session — stay inside the Issue's zone, build the feature or screen, verify locally (lint, tests, web check), push to the draft PR the orchestrator opened and mark it Ready for review for the orchestrator to merge. Use when a session is started on an Issue, told to implement a task/feature/fix/screen from an Issue, or given the develop role.
+description: Work a Your Anima task as a developer session — stay inside the task's zone, build the feature or screen, verify locally (lint, tests, web check), push to the draft PR the orchestrator opened and mark it Ready for review for the orchestrator to merge. Use when a session is started on a task/ticket, told to implement a feature/fix/screen from one, or given the develop role.
 ---
 
 # Develop
 
-You are one working session on one Issue. The orchestrator launched you; a human is usually not watching.
+You are one working session on one task. The orchestrator launched you; a human is usually not watching. Concrete tools for every step (tracker, code host, marking a PR ready) are in `docs/COORDINATION.md` → Tooling.
 
 ## Start
 1. `git fetch origin && git merge origin/main` on your branch (`claude/<short>`). Never rebase or force-push. The orchestrator already opened a **draft PR** from this branch (the prompt names it): never open another one.
-2. Read `CLAUDE.md`, `docs/COORDINATION.md` and the **whole Issue with all its comments** through the GitHub MCP tools: task, design package, zone, out of scope, depends-on, done-when. The Issue is your only brief, and the place for everything about the process.
-3. If the Issue depends on another branch that isn't in `main` yet, merge that branch (`git merge origin/<branch>`) as soon as it exists. Use only the API contract the Issue names.
+2. Read the root `AGENTS.md`, `docs/COORDINATION.md` and the **brief**: your launch prompt carries it; if you can read the tracker, read the ticket and all its comments too (task, design package, zone, out of scope, dependencies, done-when). The brief is your only source; everything about the process goes into comments.
+3. **Environment.** A cloud container is prepared by the session-start hook. In a local session install what you need yourself (see `AGENTS.md` → Commands for the toolchain and the *web check* browser) and say in your report what you installed.
+4. If the task starts on another task's branch that isn't in `main` yet, merge that branch as soon as it exists. Use only the API contract the brief names.
 
 ## Work
-- **Zone.** Change only the paths the Issue lists. If you need something outside the zone (a token, a dependency, an `App.kt` hookup that isn't listed), comment on the Issue with exactly what and why, and continue on a local stub (e.g. a private constant marked `TODO(<owner>)`). List every stub in your final Issue comment.
-- **Questions never block you.** Nobody is watching. Post the question in the Issue, take the most conservative option, note it, continue.
-- **Out of scope** items in the Issue stay untouched even if the design package or screenshot shows them.
-- **Style comes from Figma** (the theme and `docs/design/astrology-home/`), not from screenshots of the original app. See `COORDINATION.md` → Design source of truth.
-- **Screens and UI components:** follow `.claude/skills/implement-screen`. Work from `docs/design/<screen>/` (`SPEC.md`, `screenshot.png`, `assets/`). **Never call Figma MCP.**
-- **Conventions** are in `CLAUDE.md`:
-  - theme tokens only, no hardcoded colours or sizes;
-  - `stringResource` with a per-screen strings file;
-  - a `@Preview` for every screen and component;
-  - hoisted state;
-  - mocks behind an interface in `data/<screen>/`.
-- **Architecture and code quality** (`CLAUDE.md` → Architecture & code quality): layered data → state → stateless UI, small files, no duplication (reuse `ui/components/` and tokens; if another screen already has the piece you need, say so in the Issue instead of copying it).
-- **`agents.md` in every package you touch.** As you go, create or update `agents.md` next to the code (e.g. `ui/<screen>/agents.md`, `data/<screen>/agents.md`): a short business description of what the package does, what the user sees, the main types and how they connect, where data comes from, stubs/TODOs. Update it in the same commit as the code it describes.
-- Commit and push early and often. The sandbox can restart, and the orchestrator watches your branch.
+- **Zone.** Change only the paths the brief lists. If you need something outside the zone (a token, a dependency, a route registration that isn't listed), comment with exactly what and why, and continue on a local stub (e.g. a private constant marked `TODO(<owner>)`). List every stub in your final report.
+- **Questions never block you.** Nobody is watching. Post the question as a comment, take the most conservative option, note it, continue.
+- **Out of scope** items stay untouched even if the design package or screenshot shows them.
+- **Style comes from the style reference**, not from screenshots (`COORDINATION.md` → Design source of truth).
+- **How to write the code** is in `AGENTS.md` → Conventions (including *Building a screen or UI component*) and → Architecture & code quality, and it is not repeated here. **Never call design-tool MCPs.** If another screen already has the piece you need, say so instead of copying it.
+- **Tests:** decide what to test with `engineering:testing-strategy` when available; every screen gets a UI test.
+- **A bug or failing test you don't understand:** `engineering:debug` when available (reproduce, isolate, then fix).
+- **Package docs** (`AGENTS.md` + `CLAUDE.md` with `@AGENTS.md`, root `AGENTS.md` → Package docs) in every folder you touch, updated in the same commit as the code.
+- Commit and push early and often: the environment can restart and a shared usage limit can stop you mid-task. After a stop, `git status` first: uncommitted work may still be there.
+- Backend: previews may be behind authentication. Push a minimal deploy spike early so the preview proves the build, and say in the report if you couldn't call it.
 
 ## Verify before every push
-- `./gradlew ktlintCheck :composeApp:jvmTest` must be green. Run `ktlintFormat` to auto-fix.
-- CI skips draft PRs: nothing checks your pushes until you mark the PR ready, so your local run is the only gate until then. Once ready, CI runs lint, JVM tests and a Web smoke job (build + Playwright startup/navigation check). That doesn't replace your own check below: the Issue needs your screenshot, and your own run catches problems before you push.
-- For UI:
-  1. Build `./gradlew :composeApp:wasmJsBrowserDistribution`.
-  2. Serve `composeApp/build/dist/wasmJs/productionExecutable` with `python3 -m http.server`.
-  3. Take a Playwright screenshot at 402×874 with `locale: 'en-US'`, and treat any `pageerror` as a failure.
-  4. Compare with `screenshot.png` and fix visible differences.
-- Glyphs missing from Geist (emoji, ⊙, ☽) don't render on web; draw them as vectors.
-- There is no Android emulator: in your Issue report, list what needs a check on a real device.
-- If the environment can, also run `./gradlew :androidApp:assembleDebug`.
+- *lint* and *test* (`AGENTS.md` → Commands) must be green. Run *format* to auto-fix.
+- CI skips draft PRs, so your local run is the only gate until you mark the PR ready.
+- For UI, the *web check* from `AGENTS.md` → Commands: build, serve, screenshot at the target viewport, treat any page error or console error as a failure, compare with the design and fix visible differences.
+- For backend changes: the endpoint/contract tests the brief names; call the changed endpoints once locally and put the request/response in your report.
+- List in your report what you could not verify (real devices, other browsers, external services).
 
 ## Finish
-0. Self-review the diff: no file past ≈250 lines, no copy-pasted blocks, no hardcoded colours/sizes/strings, `agents.md` present and current in each package you touched.
-1. Re-read the Issue and all its comments: scope or decisions may have changed while you worked. Adjust.
+0. Self-review the diff: no file past ≈250 lines, no copy-pasted blocks, no hardcoded colours/sizes/strings, `AGENTS.md` (with its `CLAUDE.md`) present and current in each folder you touched.
+1. Re-read the brief and all comments: scope or decisions may have changed while you worked. Adjust.
 2. `git merge origin/main` again, re-run the checks, then push.
-3. Post the web screenshot(s) to the branch `screens` at `issue-<N>/<name>.png` (a worktree on `origin/screens`; `git pull --rebase` before pushing, it's append-only) and **comment on the Issue** with:
-   - the screenshot, embedded by `https://raw.githubusercontent.com/andrewforester/your-anima/screens/issue-<N>/<name>.png`;
+3. Upload the web screenshot(s) to the ticket as `COORDINATION.md` → Tracker → Screenshots says (never into git) and write the **report** as a PR comment (and on the ticket if you can):
+   - the link to the ticket comment with the screenshots;
    - deviations from the design and why;
    - stubs, `TODO`s, questions and the options you took;
-   - how you verified it.
-   Never commit screenshots to your feature branch.
-   **Task in ClickUp** (the prompt gives a ClickUp task instead of an Issue): attach the screenshot(s) to the task (`clickup_attach_task_file`) and post the same report as a task comment. Without the ClickUp connector: push them to `screens` at `task-<clickup-id>/<name>.png` and put the raw URLs in the PR body.
-4. Update the draft PR's body (template: `.github/pull_request_template.md`): keep `Closes #N` (or the ClickUp link), add a short summary of what changed. Process details stay in the Issue.
-5. Mark the PR **Ready for review** (GitHub MCP `update_pull_request`, `draft: false`) as the last step of the work: it starts CI and is the orchestrator's signal. Then `subscribe_pr_activity` on it and fix red CI and review comments until it's green. Don't schedule check-ins (`send_later`): the orchestrator follows the PR and archives your session after merging.
+   - how you verified it, and what you installed.
+4. Update the PR body (template `.github/pull_request_template.md`): keep the ticket reference, add a short summary of what changed.
+5. Mark the PR **Ready for review** as the last step of the work: it starts CI and is the orchestrator's signal. Then follow the PR and fix red CI and review comments until it's green. Don't schedule check-ins: the orchestrator follows the PR and closes your session after merging.
 6. Don't merge. The orchestrator verifies and merges.
-7. If you're blocked (you can't continue even on a stub), comment on the Issue with exactly what is missing, push what you have, and stop.
+7. If you're blocked (you can't continue even on a stub), comment with exactly what is missing, push what you have, and stop.
