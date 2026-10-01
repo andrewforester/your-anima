@@ -10,6 +10,6 @@
   - Updates, no mixed builds: the new worker installs in the background and waits (no `skipWaiting()` on install, no `clients.claim()`), so a running page never gets files of another build. At the start of the next load, the page script sees the waiting worker and asks it to `skipWaiting`; `controllerchange` then reloads the page once into the new build (other open tabs reload as well). Pull-to-reload (`appReloader`) needs nothing extra: it is such a load.
   - Registered once `#loader` is hidden, so the install doesn't compete with the first visit's startup. The first visit itself is not controlled; the next one is.
   - Precache uses `cache: 'no-cache'` (304s right after a cold load) so a previous build's HTTP-cached `composeApp.js` can't enter the new cache; a 404 (half-propagated deploy) fails the install, which is retried on the next update check.
-- `ui/navigation/AppReloader.wasmJs.kt`: the web `actual` of `appReloader` (pull-to-reload, see `commonMain/.../ui/navigation/agents.md`).
+- `ui/navigation/AppReloader.wasmJs.kt`: the web `actual` of `appReloader` (pull-to-reload, see `commonMain/.../ui/navigation/AGENTS.md`).
 
 A killed renderer (sad-tab, memory pressure) can't be handled from code; the page just loads fresh next time.

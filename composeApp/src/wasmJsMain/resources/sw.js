@@ -3,7 +3,7 @@
 // post-step in composeApp/build.gradle.kts replaces the two placeholders below; every deploy therefore produces a
 // byte-different sw.js, which the browser picks up on its next navigation (index.html registers it with
 // `updateViaCache: 'none'`). The dev server serves this file unfilled, and nothing registers it there.
-// Lifecycle and the update flow are described in composeApp/src/wasmJsMain/kotlin/app/youranima/agents.md.
+// Lifecycle and the update flow are described in composeApp/src/wasmJsMain/kotlin/app/youranima/AGENTS.md.
 const BUILD_ID = '__BUILD_ID__';
 // Paths relative to the scope: index.html, composeApp.js, both wasm, styles/icons and the first-frame resources.
 const PRECACHE = ['__PRECACHE__'];
