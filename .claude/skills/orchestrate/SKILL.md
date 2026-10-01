@@ -32,7 +32,7 @@ Small bugs and polish items: follow `.claude/skills/quick-fix` instead of the st
 ## Launch a session
 Launch every task as a **new agent in a new background session**, with the launch command from `COORDINATION.md` → Tooling → Sessions (which kind of session, the exact command and flags, models and limits are all there).
 
-1. Open the branch and the draft PR (Tooling → Code host) and start following the PR right away.
+1. Open the branch and the draft PR (Tooling → Code host), attach the PR link to the ticket (the Linear–GitHub integration isn't connected, `COORDINATION.md` → Tracker → PR ↔ ticket), and start following the PR right away.
 2. Write the prompt: the whole brief (the session may not be able to read the tracker), the branch, the draft PR number, the skill to use, and the standing rules:
    ```
    You are a working session on Your Anima. No human is watching; work until the PR is ready.
@@ -63,7 +63,7 @@ The human sends tasks one after another. File each one as soon as it arrives; do
 
 ## Follow by events, not polling
 - **No recurring check-ins.** Every wake-up re-reads your whole context and burns the usage limit.
-- Follow each task's PR from the moment you open it. The session marking it Ready for review starts CI, and CI's result is your signal to verify. A session that finishes cleanly without marking the PR ready sends no signal, and ready signals can get lost: keep one fallback check-in per running task and, when it fires, look at **all** open PRs. Cancel it when the ready signal arrives.
+- Follow each task's PR from the moment you open it. The session marking it Ready for review starts CI, and CI's result is your signal to verify. A session that finishes cleanly without marking the PR ready sends no signal, and ready signals can get lost: keep one fallback check-in per running task and, when it fires, look at **all** open PRs. Cancel it when the ready signal arrives, and move the ticket to In Review.
 - Steer a running session through a comment it reads, or a message if your kind of session can reach it. If it's idle and needs more, launch a follow-up session on the same branch with a precise prompt.
 
 ## Verify and merge (only if the human has allowed autonomous merging; otherwise ask)
@@ -75,7 +75,7 @@ Merge a PR yourself when all of these hold:
 
 After merging:
 - **Close out the session right away:** read its usage (model, USD when known, context, tokens), then archive or remove it (Tooling → Sessions).
-- Closing comment on the ticket: merged PR, verification summary, and a usage line:
+- Move the ticket to Done (nothing does it automatically) and post the closing comment: merged PR, verification summary, and a usage line:
   `Claude: <model> · $<cost> · context <used>k / <max>k · tokens in <input+cache_read+cache_write>k (cache read <cache_read>k) / out <output>k`.
 - Then run **Dispatch**.
 - Don't watch CI on `main`: the `qa-release` session does and reverts or files a fix when it goes red. Before each merge, check that the latest CI run on `main` isn't red; if it is, merge only the fix or revert.

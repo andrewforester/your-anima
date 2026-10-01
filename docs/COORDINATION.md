@@ -39,7 +39,7 @@ GitHub Issues are **not** used. Everything about *how the work is going* lives i
   ## Dependencies          (blocked by / starts on branch of; mirrors the relations)
   ## Done when
   ```
-- **PR ↔ ticket:** the branch is `claude/<short>`; the PR body starts with `Closes YOU-N` (Linear's GitHub integration links the PR and moves the ticket to Done on merge). Template: `.github/pull_request_template.md`. The `linear-code` / Linear bot comments on PRs are not requests.
+- **PR ↔ ticket:** the branch is `claude/<short>`; the PR body starts with `Closes YOU-N`. Linear's GitHub integration is **not connected** (the GitHub account is already linked to another Linear workspace), so nothing moves by itself: the orchestrator attaches the PR link to the ticket when it opens the draft PR, moves the ticket to In Review when the PR is marked Ready, and to Done after the merge. Keep `Closes YOU-N` anyway, so a later integration picks it up. Template: `.github/pull_request_template.md`.
 
 ### Labels
 Label groups, one label from each group per ticket:
